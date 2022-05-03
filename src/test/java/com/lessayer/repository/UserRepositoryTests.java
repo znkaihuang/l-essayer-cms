@@ -3,6 +3,7 @@ package com.lessayer.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
@@ -14,6 +15,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 
 import com.lessayer.entity.Role;
@@ -30,10 +33,12 @@ public class UserRepositoryTests {
 	@Autowired
 	private EntityManager entityManager;
 	
+	private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	
 	@Test
 	public void createUserWithOneRoleTest() {
 		String email = "ohmygod8269@gmail.com";
-		String password = "ohmygod8269";
+		String password = passwordEncoder.encode("ohmygod8269");
 		String firstName = "Zhen Kai";
 		String lastName = "Huang";
 		User adminUser = new User(email, password, firstName, lastName);
@@ -48,7 +53,7 @@ public class UserRepositoryTests {
 	@Test
 	public void createUserWithMultiRolesTst() {
 		String email = "pomin@mail.com";
-		String password = "pomin123";
+		String password = passwordEncoder.encode("pomin123");
 		String firstName = "Po Min";
 		String lastName = "Shi";
 		User user = new User(email, password, firstName, lastName);
@@ -68,7 +73,8 @@ public class UserRepositoryTests {
 	public void findUserByEmailTest() {
 		String email = "ohmygod8269@gmail.com";
 		
-		User userInDB = userRepo.findUserByEmail(email);
+		Optional<User> userOptional = userRepo.findUserByEmail(email);
+		User userInDB = userOptional.get();
 		
 		assertThat(userInDB).isNotNull();
 		assertThat(userInDB.getEmail()).isEqualTo(email);

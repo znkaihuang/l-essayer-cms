@@ -1,5 +1,7 @@
 package com.lessayer.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,7 +13,7 @@ import com.lessayer.entity.User;
 public interface UserRepository extends PagingAndSortingRepository<User, Integer> {
 	
 	@Query("SELECT u FROM User u WHERE u.email = ?1")
-	public User findUserByEmail(String email);
+	public Optional<User> findUserByEmail(String email);
 	
 	@Query("SELECT u FROM User u")
 	public Page<User> findAllUsers(Pageable pageable);
