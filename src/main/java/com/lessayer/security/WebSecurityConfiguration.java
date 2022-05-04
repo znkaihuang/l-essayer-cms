@@ -19,17 +19,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		// TODO Auto-generated method stub
-		web.ignoring().antMatchers("/css/**", "/fonts/**", "/images/**", "/js/**", "style.css");
+		web.ignoring().antMatchers("/css/**", "/fonts/**", "/images/**", "/js/**");
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().anyRequest().authenticated()
 		.and().formLogin()
-				/*
-				 * .loginPage("/login") .usernameParameter("email")
-				 * .passwordParameter("password")
-				 */
+			.loginPage("/login")
+			.usernameParameter("email")
+			.passwordParameter("password")
 			.permitAll()
 		.and().logout()
 			.permitAll()

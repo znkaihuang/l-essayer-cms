@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head  th:fragment="page_head(title)">
+    <title>[[${title}]]</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" th:href="@{css/font-awesome.min.css}">
+
+    <!-- ElegantFonts CSS -->
+    <link rel="stylesheet" th:href="@{css/elegant-fonts.css}">
+
+    <!-- themify-icons CSS -->
+    <link rel="stylesheet" th:href="@{css/themify-icons.css}">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" th:href="@{css/swiper.min.css}">
+
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{css/style.css}">
+</head>
+<body>
+
+	<div th:fragment="top_header_bar(contactMail)" th:remove>
+	  <div class="top-header-bar">
+		<div class="container-fluid">
+	      <div class="row">
+		    <div class="col-12 col-lg-6 d-none d-md-flex flex-wrap justify-content-center justify-content-lg-start mb-3 mb-lg-0">
+		      <div class="header-bar-email d-flex align-items-center">
+			    <i class="fa fa-envelope"></i><a href="#">[[${contactMail}]]</a>
+			  </div> <!-- .header-bar-email -->
+		    </div> <!-- .col -->
+		    <div class="col-12 col-lg-6 d-flex flex-wrap justify-content-center justify-content-lg-end align-items-center">
+			  <div class="header-bar-menu">
+			    <ul class="flex justify-content-center align-items-center py-2 pt-md-0">
+				  <li>
+				    <form action="/logout" method="post">
+					  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+					  <input type="submit" value="Logout" class="btn btn-success">
+					</form>
+				  </li>
+				</ul>
+			  </div> <!-- .header-bar-menu -->
+			</div> <!-- .col -->
+		  </div> <!-- .row -->
+		</div> <!-- .container-fluid -->
+	  </div><!-- .top-header-bar -->
+	</div>
+	
+	<div th:fragment="nav_bar" th:remove>
+	  <div class="nav-bar">
+        <div class="container">
+          <div class="row">
+            <div class="col-9 col-lg-3">
+              <div class="site-branding">
+                <h1 class="site-title"><a th:href="@{/}" rel="home">L'<span>essayer</span></a></h1>
+              </div><!-- .site-branding -->
+            </div><!-- .col -->
+            <div class="col-3 col-lg-9 flex justify-content-end align-content-center">
+              <nav class="site-navigation flex justify-content-end align-items-center">
+                <ul class="flex flex-column flex-lg-row justify-content-lg-end align-content-center">
+                  <li class="current-menu-item"><a href="#">&nbsp;User</a></li>
+                  <li><a href="#">&nbsp;Content</a></li>
+                  <li><a href="#">&nbsp;Feedback</a></li>
+                  <li><a href="#">&nbsp;Sales</a></li>
+                  <li><a href="#">&nbsp;Setting</a></li>
+                </ul>
+                <div class="hamburger-menu d-lg-none">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div><!-- .hamburger-menu -->
+                <div class="header-bar-cart">
+                  <a href="#" class="flex justify-content-center align-items-center"><span></span></a>
+                </div><!-- .header-bar-search -->
+              </nav><!-- .site-navigation -->
+            </div><!-- .col -->
+          </div><!-- .row -->
+        </div><!-- .container -->
+      </div><!-- .nav-bar -->
+	</div>
+	
+	<div th:fragment="clients_logo" th:remove>
+	  <div class="clients-logo">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 flex flex-wrap justify-content-center justify-content-lg-between align-items-center">
+            <!--
+                    <div class="logo-wrap">
+                        <img src="images/logo-1.png" alt="">
+                    </div> .logo-wrap
+            -->
+            </div><!-- .col -->
+          </div><!-- .row -->
+        </div><!-- .container -->
+      </div><!-- .clients-logo -->
+	</div>
+	
+	<div th:fragment="site_footer" th:remove>
+	  <footer class="site-footer">
+        <div class="footer-widgets">
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-3 col-lg-3">
+                <div class="foot-about">
+                  <a class="foot-logo" href="#"><img src="images/l_essayer_logo.png" alt=""></a>
+                </div><!-- .foot-about -->
+              </div><!-- .col -->
+              <div class="col-12 col-md-9 col-lg-9 mt-5 mt-md-0">
+                <div class="foot-contact">
+                  <h2>Contact Us</h2>
+                  <ul>
+                    <li>Email: [[${contactMail}]]</li>
+                  </ul>
+                </div><!-- .foot-contact -->
+              </div><!-- .col -->
+            </div><!-- .row -->
+          </div><!-- .container -->
+        </div><!-- .footer-widgets -->
+      </footer><!-- .site-footer -->
+	</div>
+	
+	<div th:fragment="common_js" th:remove>
+	  <script type='text/javascript' th:src='@{js/jquery.js}'></script>
+	  <script type='text/javascript' th:src='@{js/swiper.min.js}'></script>
+	  <script type='text/javascript' th:src='@{js/masonry.pkgd.min.js}'></script>
+	  <script type='text/javascript' th:src='@{js/jquery.collapsible.min.js}'></script>
+	  <script type='text/javascript' th:src='@{js/custom.js}'></script>	
+	</div>
+	
+</body>
+</html>

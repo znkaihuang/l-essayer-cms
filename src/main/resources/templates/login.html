@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login - L'essayer Backend Console</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" th:href="@{css/font-awesome.min.css}">
+
+    <!-- ElegantFonts CSS -->
+    <link rel="stylesheet" th:href="@{css/elegant-fonts.css}">
+
+    <!-- themify-icons CSS -->
+    <link rel="stylesheet" th:href="@{css/themify-icons.css}">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" th:href="@{css/swiper.min.css}">
+
+    <!-- Styles -->
+    <link rel="stylesheet" th:href="@{css/style.css}">
+</head>
+<body>
+      <div class="container-fluid">
+
+        <div class="row align-items-center">
+          <div class="col-md-7">
+            <img class="img-fluid" alt="hero-background" src="images/hero-bg-half.jpg">
+          </div>
+          <div class="col-md-3">
+            <div class="form-block">
+
+              <div class="text-center mb-5">
+                <div th:if="${param.error}">
+					<p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+				</div>
+				
+				<div th:if="${param.logout}">
+					<p class="text-warning">You have been logged out.</p>
+				</div>
+              <h3>Login to <strong>L'essayer</strong></h3>
+              <!-- <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p> -->
+              </div>
+              <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                  <label for="username">Email</label>
+                  <input type="text" class="form-control" placeholder="your-email@gmail.com" id="email" name="email">
+                </div>
+                <div class="form-group mb-3">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" placeholder="Your Password" id="password" name="password">
+                </div>
+                
+                <div class="d-sm-flex mb-5 align-items-center">
+                  <label class="control mb-3 mb-sm-0"><span class="caption">Remember me</span>
+                    <input type="checkbox"/>
+                  </label>
+                  <span class="ml-auto"><a href="#" class="forgot-pass">Forgot Password</a></span> 
+                </div>
+
+                <input type="submit" value="Log In" class="btn btn-block btn-primary">
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<script type='text/javascript' th:src='@{js/jquery.js}'></script>
+<script type='text/javascript' th:src='@{js/swiper.min.js}'></script>
+<script type='text/javascript' th:src='@{js/masonry.pkgd.min.js}'></script>
+<script type='text/javascript' th:src='@{js/jquery.collapsible.min.js}'></script>
+<script type='text/javascript' th:src='@{js/custom.js}'></script>
+
+</body>
+</html>
