@@ -19,16 +19,16 @@
 							<p class="text-warning">You have been logged out.</p>
 						</div>
 						<h3>
-							Login to <strong>L'<span class="logo-text">ESSAYER</span></strong>
+							Login to <strong>L'<span class="color-primary">ESSAYER</span></strong>
 						</h3>
 					</div>
 					<form th:action="@{/login}" method="post">
-						<div class="form-group">
+						<div class="form-group my-3">
 							<label for="username">Email</label> <input type="text"
 								class="form-control" placeholder="your-email@gmail.com"
 								id="email" name="email">
 						</div>
-						<div class="form-group mb-3">
+						<div class="form-group mb-3 my-3">
 							<label for="password">Password</label> <input type="password"
 								class="form-control" placeholder="Your Password" id="password"
 								name="password">
@@ -36,10 +36,10 @@
 						<div class="d-flex mb-5 align-items-center">
 							<label class="control mb-3"><span class="caption">Remember
 									me</span> <input type="checkbox" /> </label> <span class="ms-auto mb-3"><a
-								href="#" class="forgot-pass">Forgot Password</a></span>
+								href="#" class="forgot-pass text-success">Forgot Password</a></span>
 						</div>
 						<div class="d-flex mb-5 justify-content-center">
-							<input type="submit" value="Log In" class="btn btn-block btn-primary">
+							<input type="submit" value="Log In" class="btn btn-block btn-success">
 						</div>
 					</form>
 				</div>

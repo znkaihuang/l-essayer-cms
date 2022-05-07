@@ -9,102 +9,105 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
     
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" th:href="@{/fontawesome/css/all.css}">
+    
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-	<div th:fragment="top_header_bar(contactMail)" th:remove>
-	  <div class="top-header-bar">
-		<div class="container-fluid">
-	      <div class="row">
-		    <div class="col-12 col-lg-6 d-none d-md-flex flex-wrap justify-content-center justify-content-lg-start mb-3 mb-lg-0">
-		      <div class="header-bar-email d-flex align-items-center">
-			    <i class="fa fa-envelope"></i><a href="#">[[${contactMail}]]</a>
-			  </div> <!-- .header-bar-email -->
-		    </div> <!-- .col -->
-		    <div class="col-12 col-lg-6 d-flex flex-wrap justify-content-center justify-content-lg-end align-items-center">
-			  <div class="header-bar-menu">
-			    <ul class="flex justify-content-center align-items-center py-2 pt-md-0">
-				  <li>
-				    <form action="/logout" method="post">
-					  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-					  <input type="submit" value="Logout" class="btn btn-success">
+	<div th:fragment="top_header_bar" th:remove>
+	    <div class="container-fluid bg-dark p-0">
+	        <div class="row gx-0 d-none d-lg-flex">
+	            <div class="col-lg-7 px-5 text-start">
+	                <div class="h-100 d-inline-flex align-items-center me-4 color-primary">
+	                    <small class="fa fa-map-marker-alt me-2"></small>
+	                    <small class="text-light">123 Street, New York, USA</small>
+	                </div>
+	                <div class="h-100 d-inline-flex align-items-center color-primary">
+	                    <small class="far fa-clock me-2"></small>
+	                    <small class="text-light">Mon - Fri : 09.00 AM - 09.00 PM</small>
+	                </div>
+	            </div>
+	            <div class="col-lg-5 text-end">
+					<form th:action="@{/logout}" method="post">
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+						<input type="submit" value="Logout" class="btn btn-success px-4 px-lg-5">
 					</form>
-				  </li>
-				</ul>
-			  </div> <!-- .header-bar-menu -->
-			</div> <!-- .col -->
-		  </div> <!-- .row -->
-		</div> <!-- .container-fluid -->
-	  </div><!-- .top-header-bar -->
+	            </div>
+	        </div>
+	    </div>
 	</div>
 	
 	<div th:fragment="nav_bar" th:remove>
-              <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  			    <div class="container-fluid">
-  			      <a class="navbar-brand" href="#">L'<span>essayer</span></a></a>
-    			  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      			    <span class="navbar-toggler-icon"></span>
-    			  </button>
-    			  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      			    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        			  <li class="nav-item dropdown">
-          			    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            		      User
-          			    </a>
-          			    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-			              <li><a class="dropdown-item" href="#">Action</a></li>
-			              <li><a class="dropdown-item" href="#">Another action</a></li>
-			            </ul>
-        			  </li>
-        			  <li class="nav-item"><a class="nav-link" href="#">Content</a></li>
-        			  <li class="nav-item"><a class="nav-link" href="#">Feedback</a></li>
-        			  <li class="nav-item"><a class="nav-link" href="#">Sales</a></li>
-        			  <li class="nav-item"><a class="nav-link" href="#">Setting</a></li>
-			        </ul>
-			      </div>
-			    </div>
-			  </nav>
-	</div>
-	
-	<div th:fragment="clients_logo" th:remove>
-	  <div class="clients-logo">
-        <div class="container">
-          <div class="row">
-            <div class="col-12 flex flex-wrap justify-content-center justify-content-lg-between align-items-center">
-            <!--
-                    <div class="logo-wrap">
-                        <img src="images/logo-1.png" alt="">
-                    </div> .logo-wrap
-            -->
-            </div><!-- .col -->
-          </div><!-- .row -->
-        </div><!-- .container -->
-      </div><!-- .clients-logo -->
+	    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+	        <a href="index.html" class="navbar-brand d-flex align-items-center border-end px-4 px-lg-5">
+	            <h2 class="m-0">L'<span class="color-primary">ESSAYER</span></h2>
+	        </a>
+	        <div class="greeting">
+	        	<h4 class="lead">Hello User!</h4>
+	        </div>
+	        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+	            <span class="navbar-toggler-icon"></span>
+	        </button>
+	        <div class="collapse navbar-collapse" id="navbarCollapse">
+	            <div class="navbar-nav ms-auto mx-4 p-lg-0">
+	                <a th:href="@{/}" class="nav-item nav-link">Home</a>
+	                <div class="nav-item dropdown">
+	                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">User</a>
+	                    <div class="dropdown-menu bg-light m-0">
+	                        <a th:href="@{/user/staffs}" class="dropdown-item">Staffs</a>
+	                        <a th:href="@{/user/subscribers}" class="dropdown-item">Subscribers</a>
+	                    </div>
+	                </div>
+	                <a href="service.html" class="nav-item nav-link">Content</a>
+	                <a href="project.html" class="nav-item nav-link">Feedback</a>
+	                <a href="contact.html" class="nav-item nav-link">Statistic</a>
+	                <a href="contact.html" class="nav-item nav-link">Setting</a>
+	    		</div>
+	    	</div>
+	    </nav>
 	</div>
 	
 	<div th:fragment="site_footer" th:remove>
-	  <footer class="site-footer">
-        <div class="footer-widgets">
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-3 col-lg-3">
-                <div class="foot-about">
-                  <a class="foot-logo" href="#"><img src="images/l_essayer_logo.png" alt=""></a>
-                </div><!-- .foot-about -->
-              </div><!-- .col -->
-              <div class="col-12 col-md-9 col-lg-9 mt-5 mt-md-0">
-                <div class="foot-contact">
-                  <h2>Contact Us</h2>
-                  <ul>
-                    <li>Email: [[${contactMail}]]</li>
-                  </ul>
-                </div><!-- .foot-contact -->
-              </div><!-- .col -->
-            </div><!-- .row -->
-          </div><!-- .container -->
-        </div><!-- .footer-widgets -->
-      </footer><!-- .site-footer -->
+	    <div class="container-fluid bg-dark text-body footer mt-5 pt-5">
+	        <div class="container py-2">
+	            <div class="row g-5 justify-content-center py-2">
+	                <div class="col-lg-4 col-md-6 color-light">
+	                    <h5 class="mb-4">Address</h5>
+	                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+	                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+	                    <div class="d-flex pt-2">
+	                        <a class="btn btn-square btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+	                        <a class="btn btn-square btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+	                        <a class="btn btn-square btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+	                        <a class="btn btn-square btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+	                    </div>
+	                </div>
+	                <div class="col-lg-6 col-md-6">
+	                    <h5 class="mb-4 color-light">Quick Links</h5>
+	                    <div class="row">
+	                    	<div class="col-lg-4">
+	                    		<a class="btn btn-link color-light" href="">About Us</a>
+	                    		<a class="btn btn-link color-light" href="">Contact Us</a>
+	                    		<a class="btn btn-link color-light" href="">Our Services</a>
+	                    	</div>
+							<div class="col-lg-4">
+								<a class="btn btn-link color-light" href="">Terms & Condition</a>
+	                    		<a class="btn btn-link color-light" href="">Support</a>
+							</div>
+	                    </div>
+	                </div>
+	        	</div>
+	        	<div class="row g-5 justify-content-center py-2">
+	            	<div class="copyright">
+	                    <div class="col-lg-4 col-md-12 col-sm-12 color-light text-md-center">
+	                        &copy; <a href="#">Your Site Name</a>, All Right Reserved.
+	                    </div>
+	            	</div>
+	        	</div>
+	    	</div>
+		</div>
 	</div>
 	
 	<div th:fragment="common_js" th:remove>
