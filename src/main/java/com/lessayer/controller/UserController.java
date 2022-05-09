@@ -21,8 +21,9 @@ public class UserController {
 		return "user";
 	}
 	
+	@GetMapping("/user/staffs/createStaff")
 	public String createUser() {
-		return "user";
+		return "user_form";
 	}
 	
 }

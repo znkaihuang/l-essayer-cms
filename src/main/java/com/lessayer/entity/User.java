@@ -1,6 +1,7 @@
 package com.lessayer.entity;
 
 import java.beans.Transient;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
@@ -49,6 +50,9 @@ public class User {
 
 	private boolean enabled;
 	
+	@Column(name = "registration_date", nullable = false)
+	private Date registrationDate;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 		name = "users_roles", 
@@ -57,13 +61,14 @@ public class User {
 	)
 	private Set<Role> roles = new HashSet<>();
 	
-	public User(String email, String password, String firstName, String lastName) {
+	public User(String email, String password, String firstName, String lastName, Date registrationDate) {
 		this.email = email;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.photos = "/images/default-avatar.png";
 		this.enabled = false;
+		this.registrationDate = registrationDate;
 	}
 	
 	@Override
@@ -86,7 +91,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", roles=" + roles + "]";
+				+ ", roles=" + roles + ", registrationDate=" + registrationDate + "]";
 	}
 	
 	public void addRole(Role role) {

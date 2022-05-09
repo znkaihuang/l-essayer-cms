@@ -2,6 +2,7 @@ package com.lessayer.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public class UserRepositoryTests {
 		String password = passwordEncoder.encode("ohmygod8269");
 		String firstName = "Zhen Kai";
 		String lastName = "Huang";
-		User adminUser = new User(email, password, firstName, lastName);
+		User adminUser = new User(email, password, firstName, lastName, new Date());
 		Role adminRole = entityManager.find(Role.class, 1);
 		adminUser.addRole(adminRole);
 		
@@ -56,7 +57,7 @@ public class UserRepositoryTests {
 		String password = passwordEncoder.encode("pomin123");
 		String firstName = "Po Min";
 		String lastName = "Shi";
-		User user = new User(email, password, firstName, lastName);
+		User user = new User(email, password, firstName, lastName, new Date());
 		Role editorRole = entityManager.find(Role.class, 2);
 		Role salesPersonRole = entityManager.find(Role.class, 3);
 		Role assistantRole = entityManager.find(Role.class, 4);
