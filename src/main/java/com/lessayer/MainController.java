@@ -13,7 +13,6 @@ public class MainController {
 	
 	@GetMapping("/")
 	public String showHomePage(Model model) {
-		model.addAttribute("contactMail", "zkhuang@protonmail.com");
 		return "index";
 	}
 	

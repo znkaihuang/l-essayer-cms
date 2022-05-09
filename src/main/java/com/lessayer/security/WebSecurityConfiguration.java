@@ -30,6 +30,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.usernameParameter("email")
 			.passwordParameter("password")
 			.permitAll()
+			.defaultSuccessUrl("/", true)
 		.and().logout()
 			.permitAll()
 		.and().rememberMe()
