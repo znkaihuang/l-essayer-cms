@@ -18,6 +18,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -51,6 +53,7 @@ public class User {
 	private boolean enabled;
 	
 	@Column(name = "registration_date", nullable = false)
+	@DateTimeFormat(pattern = "yyyy-mm-dd")
 	private Date registrationDate;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -61,14 +64,14 @@ public class User {
 	)
 	private Set<Role> roles = new HashSet<>();
 	
-	public User(String email, String password, String firstName, String lastName, Date registrationDate) {
+	public User(String email, String password, String firstName, String lastName) {
 		this.email = email;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.photos = "/images/default-avatar.png";
 		this.enabled = false;
-		this.registrationDate = registrationDate;
+		this.registrationDate = new Date();
 	}
 	
 	@Override
@@ -90,8 +93,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", roles=" + roles + ", registrationDate=" + registrationDate + "]";
+		return "User [id=" + id + ", email=" + email + ", password=" + this.password + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", photos=" + this.photos + ", enabled=" + this.enabled + ", roles=" + roles + ", registrationDate=" + registrationDate + "]";
 	}
 	
 	public void addRole(Role role) {
@@ -104,8 +107,6 @@ public class User {
 	
 	@Transient
 	public String getPhotosImagePath() {
-		if (this.id == null || photos == null)
-			return "/images/default-avatar.png";
 		return "/user-photos/" + this.id + "/" + this.photos;
 	}
 	

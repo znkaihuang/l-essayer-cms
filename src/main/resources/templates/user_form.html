@@ -10,62 +10,61 @@
     		<h2 class="text-center text-light bg-success py-2">Create New Staff</h2>
 	    </div>
 	    <div class="form border border-success border-3 rounded">
-		    <form class="row g-3 p-5 justify-content-center">
+		    <form class="row g-3 p-5 justify-content-center" th:action="@{/user/staffs/createStaff}"
+		    	method="post" th:object=${user} enctype="multipart/form-data">
 		    	<div class="col-md-5">
 		    		<label for="firstName" class="form-label">First Name</label>
-		    		<input type="text" class="form-control" id="firstName" minlength="3" maxlength="60" required="required">
+		    		<input type="text" class="form-control" id="firstName" th:field="*{firstName}" minlength="3" maxlength="60" required="required">
 		  		</div>
 		  		<div class="col-md-5">
 		    		<label for="lastName" class="form-label">Last Name</label>
-		    		<input type="text" class="form-control" id="lastName" minlength="3" maxlength="60" required="required">
+		    		<input type="text" class="form-control" id="lastName" th:field="*{lastName}" minlength="3" maxlength="60" required="required">
 		  		</div>
 		  		<div class="col-md-10">
 		    		<label for="email" class="form-label">Email</label>
-		    		<input type="email" class="form-control" id="email" minlength="8" maxlength="60" required="required">
+		    		<input type="email" class="form-control" id="email" th:field="*{email}" minlength="8" maxlength="60" required="required">
 		  		</div>
 		  		<div class="col-md-10">
 		    		<label for="password" class="form-label">Password</label>
-		    		<input type="password" class="form-control" id="password" minlength="8" maxlength="60" required="required">
+		    		<input type="password" class="form-control" id="password" th:field="*{password}" minlength="8" maxlength="60" required="required">
 		  		</div>
 		  		<div class="col-md-10">
 		  			<label class="form-label d-flex">Role</label>
-			  		<div class="form-check form-check-inline">
-			    		<label class="form-check-label">Adminstrator</label>
-			    		<input type="checkbox" class="form-check-input" id="admin">
-			    	</div>
-			    	<div class="form-check form-check-inline">
-			    		<label class="form-check-label">Editor</label>
-			    		<input type="checkbox" class="form-check-input" id="editor">
-			  		</div>
+		  			<th:block th:each="role : ${roleList}">
+		  				<div class="form-check form-check-inline">
+			    			<input type="checkbox" class="form-check-input" th:id="${role.name}" th:field="*{roles}" th:text="${role.name}" th:value="${role.id}">
+			    		</div>
+		  			</th:block>
 			  	</div>
 			  	<div class="col-md-10">
 		    		<label for="enable" class="form-label d-flex">Enabled</label>
 		    		<div class="form-check form-check-inline">
-					  	<input class="form-check-input" type="radio" name="enabled" id="enabled">
+					  	<input class="form-check-input" type="radio" name="enabled" value="true" id="enabled">
 					  	<label class="form-check-label" for="enabled">
 					    	Enabled
 					  	</label>
 					</div>
 					<div class="form-check form-check-inline">
-					  	<input class="form-check-input" type="radio" name="enabled" id="disabled" checked>
+					  	<input class="form-check-input" type="radio" name="enabled" value="false" id="disabled" checked>
 					  	<label class="form-check-label" for="disabled">
 					    	Disabled
 					  	</label>
 					</div>
 		  		</div>
 		  		<div class="col-md-10">
-				    	<label for="photo" class="form-label">Photo</label>
-				    	<input type="file" id="photo" accept="image/*">
-				    	<img class="img-fluid w-25 float-end" alt="photo" th:src="@{/images/user-solid.svg}">
+				    	<label for="imageFile" class="form-label">Photo</label>
+				    	<input type="file" id="imageFile" accept="image/**" name="imageFile">
+				    	<img class="img-fluid w-25 float-end" alt="photo" id="image" th:src="@{${user.photos}}">
 				</div>
 			  	<div class="d-flex gap-2 col-10 justify-content-center">
-			    	<button type="submit" class="btn btn-success">Create</button>
-			    	<button type="button" class="btn btn-success">Cancel</button>
+			    	<input type="submit" class="btn btn-success" value="Create">
+			    	<a th:href="@{/user/staffs}"><button type="button" class="btn btn-success">Cancel</button></a>
 			  	</div>
 			</form>
 	    </div>
     </div>
     <div th:replace="fragments :: site_footer" />
+    <script type="text/javascript" th:src="@{/js/common_form.js}" />
 	<div th:replace="fragments :: common_js" />
 </body>
 </html>

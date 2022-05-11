@@ -53,6 +53,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return authenticationProvicer;
 	}
 	
+	@Bean
 	protected PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}

@@ -38,7 +38,15 @@
 					</tr>
 				</thead>
 				<tbody>
-	
+					<th:block th:each="staff, iterStat : ${staffList}">
+						<tr class="align-middle">
+							<td>[[${iterStat.count}]]</td>
+							<td><img th:src="${staff.photos}" alt="avatar"></td>
+							<td>[[${staff.email}]]</td>
+							<td>[[${staff.fullName}]]</td>
+							<td>[[${staff.registrationDate}]]</td>
+						</tr>			
+					</th:block>
 				</tbody>
 			</table>
 		</div>
