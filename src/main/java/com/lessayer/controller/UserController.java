@@ -74,20 +74,14 @@ public class UserController {
 			String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
 			user.setPhotos(fileName);
 			User savedUser = userService.saveUser(user);
-			String uploadDir = "user-photos/" + savedUser.getId();
-			
-			
-			FileUploadUtil.cleanDir(uploadDir);
-			FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
+			uploadPhoto(savedUser.getId(), fileName, imageFile);
 		}
 		// Update existed staff
 		else {
 			if (!imageFile.isEmpty()) {
-				String uploadDir = "user-photos/" + user.getId();
 				String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
 				user.setPhotos(fileName);
-				FileUploadUtil.cleanDir(uploadDir);
-				FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
+				uploadPhoto(user.getId(), fileName, imageFile);
 			}
 			userService.saveUser(user);
 		}
@@ -116,6 +110,13 @@ public class UserController {
 		}
 		
 		return "user_form";
+	}
+	
+	private void uploadPhoto(Integer userId, String fileName, MultipartFile imageFile)
+		throws IOException {
+		String uploadDir = "user-photos/" + userId;
+		FileUploadUtil.cleanDir(uploadDir);
+		FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
 	}
 	
 }
