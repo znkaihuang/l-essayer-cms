@@ -2,6 +2,7 @@ package com.lessayer.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -48,6 +49,10 @@ public class UserService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		System.out.println(user);
 		return userRepo.save(user);
+	}
+
+	public Optional<User> findUserByEmail(String email) {
+		return userRepo.findUserByEmail(email);
 	}
 	
 }

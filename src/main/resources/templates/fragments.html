@@ -45,7 +45,7 @@
 	            <h2 class="m-0">L'<span class="color-primary">ESSAYER</span></h2>
 	        </a>
 	        <div class="greeting">
-	        	<h4 class="lead">Hello User!</h4>
+	        	<h4 class="lead">Hello <span th:text ="${#authentication.getPrincipal().getUserFullName()}"></span>!</h4>
 	        </div>
 	        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
 	            <span class="navbar-toggler-icon"></span>

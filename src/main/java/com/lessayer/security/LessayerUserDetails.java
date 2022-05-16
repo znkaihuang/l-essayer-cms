@@ -66,4 +66,8 @@ public class LessayerUserDetails implements UserDetails {
 		return user.hasRole(roleName);
 	}
 	
+	public String getUserFullName() {
+		return user.getFullName();
+	}
+	
 }
