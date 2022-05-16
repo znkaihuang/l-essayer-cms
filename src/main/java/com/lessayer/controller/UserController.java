@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lessayer.FileUploadUtil;
 import com.lessayer.entity.Role;
@@ -39,12 +40,7 @@ public class UserController {
 	public String showStaffPageByPage(Integer pageNum, Model model) {
 		Page<User> page = userService.listStaffsByPage(0);
 		model.addAttribute("staffList", page.getContent());
-		
 		return "users";
-	}
-	
-	public String showUserByPage() {
-		return "user";
 	}
 	
 	@GetMapping("/user/staffs/createStaff")
@@ -61,8 +57,8 @@ public class UserController {
 	
 	@PostMapping("/user/staffs/save")
 	public String saveStaff(User user, String enabled, String disabled,
+			RedirectAttributes redirectAttributes,
 			@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-		System.out.println(user);
 		// Create new staff
 		if (user.getId() == null) {
 			if (enabled.equals("true")) {
@@ -75,6 +71,8 @@ public class UserController {
 			user.setPhotos(fileName);
 			User savedUser = userService.saveUser(user);
 			uploadPhoto(savedUser.getId(), fileName, imageFile);
+			redirectAttributes.addFlashAttribute("modalTitle", "Success");
+			redirectAttributes.addFlashAttribute("modalBody", "Create User with ID " + savedUser.getId());
 		}
 		// Update existed staff
 		else {
@@ -84,6 +82,8 @@ public class UserController {
 				uploadPhoto(user.getId(), fileName, imageFile);
 			}
 			userService.saveUser(user);
+			redirectAttributes.addFlashAttribute("modalTitle", "Success");
+			redirectAttributes.addFlashAttribute("modalBody", "Update User with ID " + user.getId());
 		}
 		return "redirect:/user/staffs";
 	}
@@ -95,10 +95,13 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/staffs/editStaff/{userId}")
-	public String editStaff(@PathVariable("userId") Integer userId, Model model) {
+	public String editStaff(@PathVariable("userId") Integer userId, Model model,
+		RedirectAttributes redirectAttributes) {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
+			redirectAttributes.addFlashAttribute("modalTitle", "Error");
+			redirectAttributes.addFlashAttribute("modalBody", "Cannot find User with ID " + userId);
 			return "redirect:/user/staffs";
 		}
 		else {
@@ -110,6 +113,24 @@ public class UserController {
 		}
 		
 		return "user_form";
+	}
+	
+	@GetMapping("/user/staffs/viewStaff/{userId}/{showId}")
+	public String viewStaff(@PathVariable("userId") Integer userId,
+		@PathVariable("showId") Integer showId,
+		RedirectAttributes redirectAttributes, Model model) {
+		Optional<User> userOptional = userService.findUserById(userId);
+		
+		if (userOptional.isEmpty()) {
+			redirectAttributes.addFlashAttribute("modalTitle", "Error");
+			redirectAttributes.addFlashAttribute("modalBody", "Cannot find User with ID " + userId);
+		}
+		else {
+			Page<User> page = userService.listStaffsByPage(0);
+			redirectAttributes.addFlashAttribute("modalTitle", "User " + userOptional.get().getId());
+			redirectAttributes.addFlashAttribute("showId", showId);
+		}
+		return "redirect:/user/staffs";
 	}
 	
 	private void uploadPhoto(Integer userId, String fileName, MultipartFile imageFile)

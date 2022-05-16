@@ -547,6 +547,11 @@
     }
 }
 
+/*** User Details ***/
+.user-details {
+	font-size: 18px;
+	font-weight: 500;
+}
 
 /*** Footer ***/
 .footer .btn.btn-social {

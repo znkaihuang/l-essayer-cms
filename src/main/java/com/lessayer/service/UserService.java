@@ -58,7 +58,6 @@ public class UserService {
 				user.setPassword(userRepo.findById(user.getId()).get().getPassword());
 			}
 		}
-		System.out.println(user);
 		return userRepo.save(user);
 	}
 

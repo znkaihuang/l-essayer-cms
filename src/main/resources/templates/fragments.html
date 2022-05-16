@@ -16,7 +16,7 @@
 </head>
 <body>
 
-	<div th:fragment="top_header_bar" th:remove>
+	<div th:fragment="top_header_bar" th:remove="tag">
 	    <div class="container-fluid bg-dark p-0">
 	        <div class="row gx-0 d-none d-lg-flex">
 	            <div class="col-lg-7 px-5 text-start">
@@ -39,9 +39,9 @@
 	    </div>
 	</div>
 	
-	<div th:fragment="nav_bar" th:remove>
+	<div th:fragment="nav_bar" th:remove="tag">
 	    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
-	        <a href="index.html" class="navbar-brand d-flex align-items-center border-end px-4 px-lg-5">
+	        <a th:href="@{/}" class="navbar-brand d-flex align-items-center border-end px-4 px-lg-5">
 	            <h2 class="m-0">L'<span class="color-primary">ESSAYER</span></h2>
 	        </a>
 	        <div class="greeting">
@@ -69,7 +69,7 @@
 	    </nav>
 	</div>
 	
-	<div th:fragment="site_footer" th:remove>
+	<div th:fragment="site_footer" th:remove="tag">
 	    <div class="container-fluid bg-dark text-body footer mt-5 pt-5">
 	        <div class="container py-2">
 	            <div class="row g-5 justify-content-center py-2">
@@ -110,8 +110,9 @@
 		</div>
 	</div>
 	
-	<div th:fragment="common_js" th:remove>
-		<script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>	
+	<div th:fragment="common_js" th:remove="tag">
+		<script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
+		<script type="text/javascript" th:src="@{/js/common.js}"></script>	
 	</div>
 	
 </body>
