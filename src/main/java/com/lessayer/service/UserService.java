@@ -51,7 +51,12 @@ public class UserService {
 		}
 		else {
 			// Set the original password back
-			user.setPassword(passwordEncoder.encode(userRepo.findById(user.getId()).get().getPassword()));
+			if (user.getPassword().compareTo("") != 0) {
+				user.setPassword(passwordEncoder.encode(user.getPassword()));
+			}
+			else {
+				user.setPassword(userRepo.findById(user.getId()).get().getPassword());
+			}
 		}
 		System.out.println(user);
 		return userRepo.save(user);
