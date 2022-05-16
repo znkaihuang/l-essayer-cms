@@ -69,7 +69,7 @@ public class User {
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.photos = "/images/default-avatar.png";
+		this.photos = "/images/user-solid.svg";
 		this.enabled = false;
 		this.registrationDate = new Date();
 	}
@@ -107,7 +107,12 @@ public class User {
 	
 	@Transient
 	public String getPhotosImagePath() {
-		return "/user-photos/" + this.id + "/" + this.photos;
+		if (this.photos.compareTo("/images/user-solid.svg") == 0) {
+			return "/images/user-solid.svg";
+		}
+		else {
+			return "/user-photos/" + this.id + "/" + this.photos;
+		}
 	}
 	
 	@Transient

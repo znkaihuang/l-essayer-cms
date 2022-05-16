@@ -43,16 +43,25 @@ public class UserService {
 		return (userRepo.findUserByEmail(email).isEmpty()) ? true : false;
 	}
 	
-	public User createUser(User user) {
-		user.setPhotos(user.getPhotos().replace(",", ""));
-		user.setRegistrationDate(new Date());
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+	public User saveUser(User user) {
+		if (user.getId() == null) {
+			user.setPhotos(user.getPhotos().replace(",", ""));
+			user.setRegistrationDate(new Date());
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+		}
+		else {
+			user.setPassword(passwordEncoder.encode(userRepo.findById(user.getId()).get().getPassword()));
+		}
 		System.out.println(user);
 		return userRepo.save(user);
 	}
 
 	public Optional<User> findUserByEmail(String email) {
 		return userRepo.findUserByEmail(email);
+	}
+
+	public Optional<User> findUserById(Integer staffId) {
+		return userRepo.findById(staffId);
 	}
 	
 }

@@ -2,6 +2,7 @@ package com.lessayer.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -53,27 +55,42 @@ public class UserController {
 		
 		model.addAttribute("roleList", roleList);
 		model.addAttribute("user", user);
+		model.addAttribute("pageTitle", "Create New Staff");
 		return "user_form";
 	}
 	
-	@PostMapping("/user/staffs/createStaff")
-	public String createStaff(User user, String enabled, String disabled,
+	@PostMapping("/user/staffs/save")
+	public String saveStaff(User user, String enabled, String disabled,
 			@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
-		if (enabled.equals("true")) {
-			user.setEnabled(true);
+		System.out.println(user);
+		// Create new staff
+		if (user.getId() == null) {
+			if (enabled.equals("true")) {
+				user.setEnabled(true);
+			}
+			else {
+				user.setEnabled(false);
+			}
+			String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
+			user.setPhotos(fileName);
+			User savedUser = userService.saveUser(user);
+			String uploadDir = "user-photos/" + savedUser.getId();
+			
+			
+			FileUploadUtil.cleanDir(uploadDir);
+			FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
 		}
+		// Update existed staff
 		else {
-			user.setEnabled(false);
+			if (!imageFile.isEmpty()) {
+				String uploadDir = "user-photos/" + user.getId();
+				String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
+				user.setPhotos(fileName);
+				FileUploadUtil.cleanDir(uploadDir);
+				FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
+			}
+			userService.saveUser(user);
 		}
-		String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-		user.setPhotos(fileName);
-		User savedUser = userService.createUser(user);
-		String uploadDir = "user-photos/" + savedUser.getId();
-		
-		
-		FileUploadUtil.cleanDir(uploadDir);
-		FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
-		
 		return "redirect:/user/staffs";
 	}
 	
@@ -82,4 +99,23 @@ public class UserController {
 	public Boolean checkEmailUnique() {
 		return true;
 	}
+	
+	@GetMapping("/user/staffs/editStaff/{userId}")
+	public String editStaff(@PathVariable("userId") Integer userId, Model model) {
+		Optional<User> userOptional = userService.findUserById(userId);
+		
+		if (userOptional.isEmpty()) {
+			return "redirect:/user/staffs";
+		}
+		else {
+			List<Role> roleList = roleService.findStaffs();
+			
+			model.addAttribute("user", userOptional.get());
+			model.addAttribute("roleList", roleList);
+			model.addAttribute("pageTitle", "Edit Staff ID " + userId);
+		}
+		
+		return "user_form";
+	}
+	
 }

@@ -30,21 +30,27 @@
 			<table class="table">
 				<thead class="table-dark">
 					<tr>
-						<th>ID</th>
-						<th>Photos</th>
-						<th>Email</th>
-						<th>Name</th>
-						<th>Registration Date</th>
+						<th width="5%">ID</th>
+						<th width="10%">Photos</th>
+						<th width="35%">Email</th>
+						<th width="15%">Name</th>
+						<th width="20%">Registration Date</th>
+						<th width="10%"></th>
 					</tr>
 				</thead>
 				<tbody>
 					<th:block th:each="staff, iterStat : ${staffList}">
 						<tr class="align-middle">
 							<td>[[${iterStat.count}]]</td>
-							<td><img th:src="${staff.photos}" alt="avatar"></td>
+							<td><img th:src="${staff.photosImagePath}" alt="avatar" width="60%"></td>
 							<td>[[${staff.email}]]</td>
 							<td>[[${staff.fullName}]]</td>
 							<td>[[${staff.registrationDate}]]</td>
+							<td>
+								<a th:href="@{/user/staffs/editStaff/} + ${staff.id}" class="fa-solid fa-file fa-2x mx-2 color-primary"></a>
+								<a th:href="@{/user/staffs/editStaff/} + ${staff.id}" class="fa-solid fa-pen-to-square fa-2x mx-2 color-primary"></a>
+								<a th:href="@{/user/staffs/editStaff/} + ${staff.id}" class="fa-solid fa-trash-can fa-2x mx-2 color-primary"></a>
+							</td>
 						</tr>			
 					</th:block>
 				</tbody>
