@@ -35,13 +35,22 @@ public class UserController {
 	private RoleService roleService;
 	
 	@GetMapping("/user/staffs")
-	public String showStaffPage(Model model) {
-		return showStaffPageByPage(0, model);
+	public String showStaffPage(Model model, String keyword) {
+		System.out.println(keyword);
+		return showStaffPageByPage(0, model, keyword);
 	}
 	
 	@GetMapping("/user/staffs/{pageNum}")
-	public String showStaffPageByPage(@PathVariable("pageNum") Integer currentPage, Model model) {
-		Page<User> page = userService.listStaffsByPage(currentPage);
+	public String showStaffPageByPage(@PathVariable("pageNum") Integer currentPage, Model model,
+		String keyword) {
+		Page<User> page;
+		
+		if (keyword == null) {
+			page = userService.listStaffsByPage(currentPage);
+		}
+		else {
+			page = userService.listStaffsWithKeywordByPage(currentPage, keyword);
+		}
 		
 		Integer totalPages = page.getTotalPages();
 		Integer prevPage = (currentPage - 1 >= 0) ? currentPage - 1 : 0;
@@ -52,6 +61,7 @@ public class UserController {
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("prevPage", prevPage);
 		model.addAttribute("nextPage", nextPage);
+		model.addAttribute("keyword", keyword);
 		return "users";
 	}
 	
@@ -71,7 +81,7 @@ public class UserController {
 	@PostMapping("/user/staffs/save/{pageNum}")
 	public String saveStaff(@PathVariable("pageNum") Integer pageNum,
 			User user, String enabled, String disabled, RedirectAttributes redirectAttributes,
-			@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
+			@RequestParam("imageFile") MultipartFile imageFile, String keyword) throws IOException {
 		// Create new staff
 		if (user.getId() == null) {
 			if (enabled.equals("true")) {
@@ -98,7 +108,15 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("modalTitle", "Success");
 			redirectAttributes.addFlashAttribute("modalBody", "Update User with ID " + user.getId());
 		}
-		return "redirect:/user/staffs/" + pageNum;
+		
+		if (keyword == null) {
+			return "redirect:/user/staffs/" + pageNum;
+		}
+		else {
+			redirectAttributes.addFlashAttribute("keyword", keyword);
+			return "redirect:/user/staffs/" + pageNum + "?keyword=" + keyword;
+		}
+		
 	}
 	
 	@ResponseBody
@@ -109,7 +127,8 @@ public class UserController {
 	
 	@GetMapping("/user/staffs/editStaff/{pageNum}/{userId}/{showId}")
 	public String editStaff(@PathVariable("pageNum") Integer pageNum, 
-		@PathVariable("userId") Integer userId, Model model, RedirectAttributes redirectAttributes) {
+		@PathVariable("userId") Integer userId, Model model, RedirectAttributes redirectAttributes,
+		String keyword) {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
@@ -125,6 +144,10 @@ public class UserController {
 			model.addAttribute("pageTitle", "Edit Staff ID " + userId);
 			model.addAttribute("returnPage", pageNum);
 			
+			if (keyword != null) {
+				model.addAttribute("keyword", keyword);
+			}
+			
 			return "user_form";
 		}
 	}
@@ -132,7 +155,7 @@ public class UserController {
 	@GetMapping("/user/staffs/viewStaff/{pageNum}/{userId}/{showId}")
 	public String viewStaff(@PathVariable("pageNum") Integer pageNum,
 		@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
-		RedirectAttributes redirectAttributes) {
+		RedirectAttributes redirectAttributes, String keyword) {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
@@ -143,13 +166,20 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("modalTitle", "User " + userOptional.get().getId());
 			redirectAttributes.addFlashAttribute("showId", showId);
 		}
-		return "redirect:/user/staffs/" + pageNum;
+		
+		if (keyword == null) {
+			return "redirect:/user/staffs/" + pageNum;
+		}
+		else {
+			redirectAttributes.addFlashAttribute("keyword", keyword);
+			return "redirect:/user/staffs/" + pageNum.toString() + "?keyword=" + keyword;
+		}
 	}
 	
 	@GetMapping("/user/staffs/requestRemoveStaff/{pageNum}/{userId}/{showId}")
 	public String requestRemoveStaff(@PathVariable("pageNum") Integer pageNum,
 		@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
-		RedirectAttributes redirectAttributes) {
+		RedirectAttributes redirectAttributes, String keyword) {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
@@ -162,13 +192,20 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("userId", userId);
 			redirectAttributes.addFlashAttribute("showId", showId);
 		}
-		return "redirect:/user/staffs/" + pageNum;
+		
+		if (keyword == null) {
+			return "redirect:/user/staffs/" + pageNum;
+		}
+		else {
+			redirectAttributes.addFlashAttribute("keyword", keyword);
+			return "redirect:/user/staffs/" + pageNum + "?keyword=" + keyword;
+		}
 	}
 	
 	@GetMapping("/user/staffs/removeStaff/{pageNum}/{userId}/{showId}")
 	public String removeStaff(@PathVariable("pageNum") Integer pageNum,
 			@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes, String keyword) {
 		userService.deleteUserById(userId);
 		
 		if (showId == 0 && pageNum > 0) {
@@ -178,7 +215,13 @@ public class UserController {
 		redirectAttributes.addFlashAttribute("modalTitle", "Success");
 		redirectAttributes.addFlashAttribute("modalBody", "Successfully delete user with ID " + userId);
 		
-		return "redirect:/user/staffs/" + pageNum;
+		if (keyword == null) {
+			return "redirect:/user/staffs/" + pageNum;
+		}
+		else {
+			redirectAttributes.addFlashAttribute("keyword", keyword);
+			return "redirect:/user/staffs/" + pageNum + "?keyword=" + keyword;
+		}
 	}
 	
 	private void uploadPhoto(Integer userId, String fileName, MultipartFile imageFile)

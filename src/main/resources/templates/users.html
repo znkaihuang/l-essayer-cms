@@ -13,14 +13,14 @@
 	    		<a href="#" data-bs-toggle="tooltip" title="Export to pdf"><i class="fa-solid fa-file-pdf fa-2x mx-2 color-primary"></i></a>
     		</div>
     		<div class="col-6">
-	    		<form class="row g-3">
+	    		<form class="row g-3" th:action="@{/user/staffs}">
 					<div class="col-auto">
 				    	<label for="keyword" class="visually-hidden">Keyword</label>
-				    	<input type="search" class="form-control" id="keyword" placeholder="Keyword">
+				    	<input type="search" class="form-control" id="keyword" placeholder="Keyword" name="keyword" th:value="${keyword}">
 				  	</div>
 				  	<div class="col-auto">
 				  		<button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
-				  		<button type="button" class="btn btn-primary"><i class="fa-solid fa-eraser"></i></button>
+				  		<a class="btn btn-primary" th:href="@{/user/staffs}"><i class="fa-solid fa-eraser"></i></a>
 				  	</div>
 				</form>
     		</div>
@@ -46,11 +46,14 @@
 							<td>[[${staff.fullName}]]</td>
 							<td>[[${staff.registrationDate}]]</td>
 							<td>
-								<a th:href="@{/user/staffs/viewStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}" 
+								<a th:href="@{/user/staffs/viewStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}
+									+ ${keyword != null ? '?keyword=' + keyword : ''}" 
 									class="fa-solid fa-file fa-2x mx-2 color-primary link-detail"></a>
-								<a th:href="@{/user/staffs/editStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}" 
+								<a th:href="@{/user/staffs/editStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}
+									+ ${keyword != null ? '?keyword=' + keyword : ''}" 
 									class="fa-solid fa-pen-to-square fa-2x mx-2 color-primary link-edit"></a>
-								<a th:href="@{/user/staffs/requestRemoveStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}"
+								<a th:href="@{/user/staffs/requestRemoveStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}
+									+ ${keyword != null ? '?keyword=' + keyword : ''}"
 									class="fa-solid fa-trash-can fa-2x mx-2 color-primary link-delete"></a>
 							</td>
 						</tr>			
@@ -60,22 +63,22 @@
 		</div>
     </div>
 
-	<nav>
+	<nav th:if="${totalPages > 1}">
 		<ul class="pagination justify-content-center pagination-lg">
 			<li class="page-item">
-				<a class="page-link" th:href="@{/user/staffs/0}"><span>&laquo;</span></a>
+				<a class="page-link" th:href="@{/user/staffs/0} + ${keyword != null ? '?keyword=' + keyword : ''}"><span>&laquo;</span></a>
 			</li>
 			<li class="page-item" th:if="${prevPage} != ${currentPage}">
-				<a class="page-link" th:href="@{/user/staffs/} + ${prevPage}">[[${prevPage+1}]]</a>
+				<a class="page-link" th:href="@{/user/staffs/} + ${prevPage} + ${keyword != null ? '?keyword=' + keyword : ''}">[[${prevPage+1}]]</a>
 			</li>
 			<li class="page-item">
-				<a class="page-link" th:href="@{/user/staffs/} + ${currentPage}">[[${currentPage+1}]]</a>
+				<a class="page-link" th:href="@{/user/staffs/} + ${currentPage} + ${keyword != null ? '?keyword=' + keyword : ''}">[[${currentPage+1}]]</a>
 			</li>
 			<li class="page-item" th:if="${nextPage} != ${currentPage}">
-				<a class="page-link" th:href="@{/user/staffs/} + ${nextPage}">[[${nextPage+1}]]</a>
+				<a class="page-link" th:href="@{/user/staffs/} + ${nextPage} + ${keyword != null ? '?keyword=' + keyword : ''}">[[${nextPage+1}]]</a>
 			</li>
 			<li class="page-item">
-				<a class="page-link" th:href="@{/user/staffs/} + ${totalPages - 1}"><span>&raquo;</span></a>
+				<a class="page-link" th:href="@{/user/staffs/} + ${totalPages - 1} + ${keyword != null ? '?keyword=' + keyword : ''}"><span>&raquo;</span></a>
 			</li>
 		</ul>
 		<div class="text-center">
@@ -97,7 +100,8 @@
 					</th:block>
 					<th:block th:if="${modalTitle} == 'Warning'">
 						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="yesButton">
-							<a th:href="@{/user/staffs/removeStaff/} + ${currentPage} + '/' + ${userId} + '/' + ${showId}"
+							<a th:href="@{/user/staffs/removeStaff/} + ${currentPage} + '/' + ${userId} + '/' + ${showId} 
+								+ ${keyword != null ? '?keyword=' + keyword : ''}"
 								class="text-white text-decoration-none">Yes</a>
 						</button>
 						<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="noButton">No</button>

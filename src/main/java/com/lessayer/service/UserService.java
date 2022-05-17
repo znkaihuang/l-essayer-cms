@@ -39,6 +39,13 @@ public class UserService {
 		return page;
 	}
 	
+	public Page<User> listStaffsWithKeywordByPage(Integer pageNum, String keyword) {
+		Pageable pageable = PageRequest.of(pageNum, USERS_PER_PAGE);
+		Page<User> page = userRepo.findUsersWithKeyword(keyword, pageable);
+		
+		return page;
+	}
+	
 	public boolean checkEmailUnique(String email) {
 		return (userRepo.findUserByEmail(email).isEmpty()) ? true : false;
 	}
@@ -51,12 +58,14 @@ public class UserService {
 		}
 		else {
 			// Set the original password back
+			User userInDB = userRepo.findById(user.getId()).get();
 			if (user.getPassword().compareTo("") != 0) {
 				user.setPassword(passwordEncoder.encode(user.getPassword()));
 			}
 			else {
-				user.setPassword(userRepo.findById(user.getId()).get().getPassword());
+				user.setPassword(userInDB.getPassword());
 			}
+			user.setRegistrationDate(userInDB.getRegistrationDate());
 		}
 		return userRepo.save(user);
 	}
