@@ -40,14 +40,16 @@
 				<tbody>
 					<th:block th:each="staff, iterStat : ${staffList}">
 						<tr class="align-middle">
-							<td>[[${iterStat.count}]]</td>
+							<td>[[${staff.id}]]</td>
 							<td><img th:src="${staff.photosImagePath}" alt="avatar" width="60%"></td>
 							<td>[[${staff.email}]]</td>
 							<td>[[${staff.fullName}]]</td>
 							<td>[[${staff.registrationDate}]]</td>
 							<td>
-								<a th:href="@{/user/staffs/viewStaff/} + ${staff.id} + '/' + ${iterStat.index}" class="fa-solid fa-file fa-2x mx-2 color-primary link-detail"></a>
-								<a th:href="@{/user/staffs/editStaff/} + ${staff.id}" class="fa-solid fa-pen-to-square fa-2x mx-2 color-primary"></a>
+								<a th:href="@{/user/staffs/viewStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}" 
+									class="fa-solid fa-file fa-2x mx-2 color-primary link-detail"></a>
+								<a th:href="@{/user/staffs/editStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}" 
+									class="fa-solid fa-pen-to-square fa-2x mx-2 color-primary"></a>
 								<a href="" class="fa-solid fa-trash-can fa-2x mx-2 color-primary"></a>
 							</td>
 						</tr>			
@@ -56,6 +58,29 @@
 			</table>
 		</div>
     </div>
+
+	<nav>
+		<ul class="pagination justify-content-center pagination-lg">
+			<li class="page-item">
+				<a class="page-link" th:href="@{/user/staffs/0}"><span>&laquo;</span></a>
+			</li>
+			<li class="page-item" th:if="${prevPage} != ${currentPage}">
+				<a class="page-link" th:href="@{/user/staffs/} + ${prevPage}">[[${prevPage+1}]]</a>
+			</li>
+			<li class="page-item">
+				<a class="page-link" th:href="@{/user/staffs/} + ${currentPage}">[[${currentPage+1}]]</a>
+			</li>
+			<li class="page-item" th:if="${nextPage} != ${currentPage}">
+				<a class="page-link" th:href="@{/user/staffs/} + ${nextPage}">[[${nextPage+1}]]</a>
+			</li>
+			<li class="page-item">
+				<a class="page-link" th:href="@{/user/staffs/} + ${totalPages - 1}"><span>&raquo;</span></a>
+			</li>
+		</ul>
+		<div class="text-center">
+			<span>Total [[${totalPages}]] Pages</span>
+		</div>
+	</nav>
 
 	<div class="modal fade" id="messageModal">
 		<div class="modal-dialog">

@@ -37,9 +37,19 @@ public class UserController {
 		return showStaffPageByPage(0, model);
 	}
 	
-	public String showStaffPageByPage(Integer pageNum, Model model) {
-		Page<User> page = userService.listStaffsByPage(0);
+	@GetMapping("/user/staffs/{pageNum}")
+	public String showStaffPageByPage(@PathVariable("pageNum") Integer currentPage, Model model) {
+		Page<User> page = userService.listStaffsByPage(currentPage);
+		
+		Integer totalPages = page.getTotalPages();
+		Integer prevPage = (currentPage - 1 >= 0) ? currentPage - 1 : 0;
+		Integer nextPage = (currentPage + 1 < totalPages) ? currentPage + 1 : totalPages - 1;
+		
 		model.addAttribute("staffList", page.getContent());
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("prevPage", prevPage);
+		model.addAttribute("nextPage", nextPage);
 		return "users";
 	}
 	
@@ -52,12 +62,13 @@ public class UserController {
 		model.addAttribute("roleList", roleList);
 		model.addAttribute("user", user);
 		model.addAttribute("pageTitle", "Create New Staff");
+		model.addAttribute("returnPage", 0);
 		return "user_form";
 	}
 	
-	@PostMapping("/user/staffs/save")
-	public String saveStaff(User user, String enabled, String disabled,
-			RedirectAttributes redirectAttributes,
+	@PostMapping("/user/staffs/save/{pageNum}")
+	public String saveStaff(@PathVariable("pageNum") Integer pageNum,
+			User user, String enabled, String disabled, RedirectAttributes redirectAttributes,
 			@RequestParam("imageFile") MultipartFile imageFile) throws IOException {
 		// Create new staff
 		if (user.getId() == null) {
@@ -85,7 +96,7 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("modalTitle", "Success");
 			redirectAttributes.addFlashAttribute("modalBody", "Update User with ID " + user.getId());
 		}
-		return "redirect:/user/staffs";
+		return "redirect:/user/staffs/" + pageNum;
 	}
 	
 	@ResponseBody
@@ -94,9 +105,9 @@ public class UserController {
 		return true;
 	}
 	
-	@GetMapping("/user/staffs/editStaff/{userId}")
-	public String editStaff(@PathVariable("userId") Integer userId, Model model,
-		RedirectAttributes redirectAttributes) {
+	@GetMapping("/user/staffs/editStaff/{pageNum}/{userId}/{showId}")
+	public String editStaff(@PathVariable("pageNum") Integer pageNum, 
+		@PathVariable("userId") Integer userId, Model model, RedirectAttributes redirectAttributes) {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
@@ -110,14 +121,15 @@ public class UserController {
 			model.addAttribute("user", userOptional.get());
 			model.addAttribute("roleList", roleList);
 			model.addAttribute("pageTitle", "Edit Staff ID " + userId);
+			model.addAttribute("returnPage", pageNum);
+			
+			return "user_form";
 		}
-		
-		return "user_form";
 	}
 	
-	@GetMapping("/user/staffs/viewStaff/{userId}/{showId}")
-	public String viewStaff(@PathVariable("userId") Integer userId,
-		@PathVariable("showId") Integer showId,
+	@GetMapping("/user/staffs/viewStaff/{pageNum}/{userId}/{showId}")
+	public String viewStaff(@PathVariable("pageNum") Integer pageNum,
+		@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
 		RedirectAttributes redirectAttributes, Model model) {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
@@ -126,11 +138,10 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("modalBody", "Cannot find User with ID " + userId);
 		}
 		else {
-			Page<User> page = userService.listStaffsByPage(0);
 			redirectAttributes.addFlashAttribute("modalTitle", "User " + userOptional.get().getId());
 			redirectAttributes.addFlashAttribute("showId", showId);
 		}
-		return "redirect:/user/staffs";
+		return "redirect:/user/staffs/" + pageNum;
 	}
 	
 	private void uploadPhoto(Integer userId, String fileName, MultipartFile imageFile)
