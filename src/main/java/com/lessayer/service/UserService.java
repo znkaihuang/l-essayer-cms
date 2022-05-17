@@ -68,5 +68,13 @@ public class UserService {
 	public Optional<User> findUserById(Integer staffId) {
 		return userRepo.findById(staffId);
 	}
+
+	public void deleteUserById(Integer userId) {
+		Optional<User> deleteUserOptional = userRepo.findById(userId);
+		
+		if (deleteUserOptional.isPresent()) {
+			userRepo.delete(deleteUserOptional.get());
+		}
+	}
 	
 }

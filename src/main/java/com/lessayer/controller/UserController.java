@@ -6,9 +6,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -130,7 +132,7 @@ public class UserController {
 	@GetMapping("/user/staffs/viewStaff/{pageNum}/{userId}/{showId}")
 	public String viewStaff(@PathVariable("pageNum") Integer pageNum,
 		@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
-		RedirectAttributes redirectAttributes, Model model) {
+		RedirectAttributes redirectAttributes) {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
@@ -141,6 +143,41 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("modalTitle", "User " + userOptional.get().getId());
 			redirectAttributes.addFlashAttribute("showId", showId);
 		}
+		return "redirect:/user/staffs/" + pageNum;
+	}
+	
+	@GetMapping("/user/staffs/requestRemoveStaff/{pageNum}/{userId}/{showId}")
+	public String requestRemoveStaff(@PathVariable("pageNum") Integer pageNum,
+		@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
+		RedirectAttributes redirectAttributes) {
+		Optional<User> userOptional = userService.findUserById(userId);
+		
+		if (userOptional.isEmpty()) {
+			redirectAttributes.addFlashAttribute("modalTitle", "Error");
+			redirectAttributes.addFlashAttribute("modalBody", "Cannot find User with ID " + userId);
+		}
+		else {
+			redirectAttributes.addFlashAttribute("modalTitle", "Warning");
+			redirectAttributes.addFlashAttribute("modalBody", "Are you sure to delete the user with ID " + userId + "?");
+			redirectAttributes.addFlashAttribute("userId", userId);
+			redirectAttributes.addFlashAttribute("showId", showId);
+		}
+		return "redirect:/user/staffs/" + pageNum;
+	}
+	
+	@GetMapping("/user/staffs/removeStaff/{pageNum}/{userId}/{showId}")
+	public String removeStaff(@PathVariable("pageNum") Integer pageNum,
+			@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
+			RedirectAttributes redirectAttributes) {
+		userService.deleteUserById(userId);
+		
+		if (showId == 0 && pageNum > 0) {
+			pageNum--;
+		}
+		
+		redirectAttributes.addFlashAttribute("modalTitle", "Success");
+		redirectAttributes.addFlashAttribute("modalBody", "Successfully delete user with ID " + userId);
+		
 		return "redirect:/user/staffs/" + pageNum;
 	}
 	

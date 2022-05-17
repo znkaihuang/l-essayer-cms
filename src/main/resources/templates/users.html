@@ -49,8 +49,9 @@
 								<a th:href="@{/user/staffs/viewStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}" 
 									class="fa-solid fa-file fa-2x mx-2 color-primary link-detail"></a>
 								<a th:href="@{/user/staffs/editStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}" 
-									class="fa-solid fa-pen-to-square fa-2x mx-2 color-primary"></a>
-								<a href="" class="fa-solid fa-trash-can fa-2x mx-2 color-primary"></a>
+									class="fa-solid fa-pen-to-square fa-2x mx-2 color-primary link-edit"></a>
+								<a th:href="@{/user/staffs/requestRemoveStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}"
+									class="fa-solid fa-trash-can fa-2x mx-2 color-primary link-delete"></a>
 							</td>
 						</tr>			
 					</th:block>
@@ -86,12 +87,21 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h3 class="modal-title text-success" id="exampleModalLabel">[[${modalTitle}]]</h3>
+					<h3 class="modal-title" id="messageModalTitle">[[${modalTitle}]]</h3>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body">[[${modalBody}]]</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+					<th:block th:if="${modalTitle} != 'Warning'">
+						<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="closeButton">Close</button>
+					</th:block>
+					<th:block th:if="${modalTitle} == 'Warning'">
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="yesButton">
+							<a th:href="@{/user/staffs/removeStaff/} + ${currentPage} + '/' + ${userId} + '/' + ${showId}"
+								class="text-white text-decoration-none">Yes</a>
+						</button>
+						<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="noButton">No</button>
+					</th:block>
 				</div>
 			</div>
 		</div>
@@ -101,7 +111,7 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h3 class="modal-title text-success" id="exampleModalLabel">[[${modalTitle}]]</h3>
+					<h3 class="modal-title text-success" id="informationModalTitle">[[${modalTitle}]]</h3>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 				<div class="modal-body" th:if="${showId != null}">
