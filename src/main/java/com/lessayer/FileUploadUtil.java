@@ -36,6 +36,10 @@ public class FileUploadUtil {
 	public static void cleanDir(String dir) {
 		Path dirPath = Paths.get(dir);
 		
+		if (!Files.exists(dirPath)) {
+			return;
+		}
+		
 		try {
 			Files.list(dirPath).forEach(file -> {
 				if (!Files.isDirectory(file)) {

@@ -92,10 +92,17 @@ public class UserController {
 			else {
 				user.setEnabled(false);
 			}
-			String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-			user.setPhotos(fileName);
-			User savedUser = userService.saveUser(user);
-			uploadPhoto(savedUser.getId(), fileName, imageFile);
+			
+			User savedUser;
+			if (!imageFile.isEmpty()) {
+				String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename()); 
+				user.setPhotos(fileName);
+				savedUser = userService.saveUser(user);
+				uploadPhoto(savedUser.getId(), fileName, imageFile);
+			}
+			else {
+				savedUser = userService.saveUser(user);
+			}
 			redirectAttributes.addFlashAttribute("modalTitle", "Success");
 			redirectAttributes.addFlashAttribute("modalBody", "Create User with ID " + savedUser.getId());
 		}
@@ -208,7 +215,9 @@ public class UserController {
 	public String removeStaff(@PathVariable("pageNum") Integer pageNum,
 			@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
 			RedirectAttributes redirectAttributes, String keyword) {
+		
 		userService.deleteUserById(userId);
+		FileUploadUtil.remove("user-photos/" + userId);
 		
 		if (showId == 0 && pageNum > 0) {
 			pageNum--;

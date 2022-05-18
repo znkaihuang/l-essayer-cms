@@ -13,7 +13,7 @@ public abstract class AbstractFileExporter<E> {
 	public abstract void export(List<E> contentList, HttpServletResponse response) throws IOException;
 	
 	public void setResponseHeader(HttpServletResponse response, String contentType,
-			String extension, String prefix) throws IOException {
+		String extension, String prefix) throws IOException {
 		DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 		String timestamp = dateFormatter.format(new Date());
 		String fileName = prefix + timestamp + extension;
