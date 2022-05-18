@@ -2,6 +2,7 @@ package com.lessayer.exporter;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -31,7 +32,7 @@ class UserPdfExporter<E> extends AbstractFileExporter<E> {
 	@Override
 	public void export(List<E> contentList, HttpServletResponse response) throws IOException {
 		
-		setResponseHeader(response, "application/pdf", ".pdf", "users_");
+		setResponseHeader(response, "application/pdf", ".pdf", "staffs_");
 		
 		Document document = new Document(PageSize.A4);
 		PdfWriter.getInstance(document, response.getOutputStream());
@@ -46,12 +47,9 @@ class UserPdfExporter<E> extends AbstractFileExporter<E> {
 		paragraph.setAlignment(Paragraph.ALIGN_CENTER);
 		document.add(paragraph);
 		
-		PdfPTable table = new PdfPTable(7);
-		table.setWidthPercentage(100f);
-		table.setSpacingBefore(10);
-		table.setWidths(new float[] {1.0f, 3.0f, 2.0f, 2.0f, 2.5f, 1.7f, 2.0f});
-		
-		writeTableHeader(table);
+		List<String> headerList = new ArrayList<>();
+		PdfPTable table = configTableSettings(headerList);
+		writeTableHeader(table, headerList);
 		writeTableData(table, contentList);
 		
 		document.add(table);
@@ -60,6 +58,23 @@ class UserPdfExporter<E> extends AbstractFileExporter<E> {
 		
 	}
 	
+	private PdfPTable configTableSettings(List<String> headerList) {
+		headerList.add("ID");
+		headerList.add("E-mail");
+		headerList.add("First Name");
+		headerList.add("Last Name");
+		headerList.add("Rolse");
+		headerList.add("Enabled");
+		headerList.add("Registration");		
+		
+		PdfPTable table = new PdfPTable(headerList.size());
+		table.setWidthPercentage(100f);
+		table.setSpacingBefore(10);
+		table.setWidths(new float[] {1.0f, 3.0f, 2.0f, 2.0f, 2.5f, 1.7f, 2.0f});
+		
+		return table;
+	}
+
 	private void writeTableData(PdfPTable table, List<E> contentList) {
 		
 		if (contentList.get(0) instanceof User) {
@@ -76,7 +91,7 @@ class UserPdfExporter<E> extends AbstractFileExporter<E> {
 		}
 	}
 
-	private void writeTableHeader(PdfPTable table) {
+	private void writeTableHeader(PdfPTable table, List<String> headerList) {
 		PdfPCell cell = new PdfPCell();
 		cell.setBackgroundColor(Color.getHSBColor(0.33f, 1.0f, 0.7f));
 		cell.setPadding(5);
@@ -84,26 +99,10 @@ class UserPdfExporter<E> extends AbstractFileExporter<E> {
 		Font font = FontFactory.getFont(FontFactory.HELVETICA);
 		font.setColor(Color.white);
 		
-		cell.setPhrase(new Phrase("ID", font));
-		table.addCell(cell);
-		
-		cell.setPhrase(new Phrase("E-mail", font));
-		table.addCell(cell);
-
-		cell.setPhrase(new Phrase("First Name", font));
-		table.addCell(cell);
-
-		cell.setPhrase(new Phrase("Last Name", font));
-		table.addCell(cell);
-
-		cell.setPhrase(new Phrase("Rolse", font));
-		table.addCell(cell);
-
-		cell.setPhrase(new Phrase("Enabled", font));
-		table.addCell(cell);
-		
-		cell.setPhrase(new Phrase("Registration Date", font));
-		table.addCell(cell);
+		headerList.forEach(header -> {
+			cell.setPhrase(new Phrase(header, font));
+			table.addCell(cell);
+		});
 	}
 	
 }
