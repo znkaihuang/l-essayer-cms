@@ -57,7 +57,7 @@ public class UserService {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
 		}
 		else {
-			// Set the original password back
+			// Set the original password and registration date back
 			User userInDB = userRepo.findById(user.getId()).get();
 			if (user.getPassword().compareTo("") != 0) {
 				user.setPassword(passwordEncoder.encode(user.getPassword()));

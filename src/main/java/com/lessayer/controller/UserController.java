@@ -64,7 +64,7 @@ public class UserController {
 		model.addAttribute("prevPage", prevPage);
 		model.addAttribute("nextPage", nextPage);
 		model.addAttribute("keyword", keyword);
-		return "users";
+		return "/user/users";
 	}
 	
 	@GetMapping("/user/staffs/createStaff")
@@ -77,57 +77,32 @@ public class UserController {
 		model.addAttribute("user", user);
 		model.addAttribute("pageTitle", "Create New Staff");
 		model.addAttribute("returnPage", 0);
-		return "user_form";
+		return "/user/user_form";
 	}
 	
 	@PostMapping("/user/staffs/save/{pageNum}")
 	public String saveStaff(@PathVariable("pageNum") Integer pageNum,
 			User user, String enabled, String disabled, RedirectAttributes redirectAttributes,
 			@RequestParam("imageFile") MultipartFile imageFile, String keyword) throws IOException {
-		// Create new staff
-		if (user.getId() == null) {
-			if (enabled.equals("true")) {
-				user.setEnabled(true);
-			}
-			else {
-				user.setEnabled(false);
-			}
-			
-			User savedUser;
-			if (!imageFile.isEmpty()) {
-				String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename()); 
-				user.setPhotos(fileName);
-				savedUser = userService.saveUser(user);
-				uploadPhoto(savedUser.getId(), fileName, imageFile);
-			}
-			else {
-				savedUser = userService.saveUser(user);
-			}
-			redirectAttributes.addFlashAttribute("modalTitle", "Success");
-			redirectAttributes.addFlashAttribute("modalBody", "Create User with ID " + savedUser.getId());
-		}
-		// Update existed staff
-		else {
-			if (!imageFile.isEmpty()) {
-				String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-				user.setPhotos(fileName);
-				uploadPhoto(user.getId(), fileName, imageFile);
-			}
-			userService.saveUser(user);
-			redirectAttributes.addFlashAttribute("modalTitle", "Success");
-			redirectAttributes.addFlashAttribute("modalBody", "Update User with ID " + user.getId());
-		}
+		setUserEnableStatus(enabled, user);
 		
-		if (keyword == null) {
-			return "redirect:/user/staffs/" + pageNum;
+		User savedUser;
+		if (!imageFile.isEmpty()) {
+			String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename()); 
+			user.setPhotos(fileName);
+			savedUser = userService.saveUser(user);
+			uploadPhoto(savedUser.getId(), fileName, imageFile);
 		}
 		else {
-			redirectAttributes.addFlashAttribute("keyword", keyword);
-			return "redirect:/user/staffs/" + pageNum + "?keyword=" + keyword;
+			savedUser = userService.saveUser(user);
 		}
 		
+		String modalBody = (user.getId() == null) ? "Create User with ID " + savedUser.getId() : "Update User with ID " + user.getId();
+		setModalMessage(redirectAttributes, "Success", modalBody);
+		
+		return formatRedirectURL("redirect:/user/staffs/" + pageNum, keyword);
 	}
-	
+
 	@ResponseBody
 	@GetMapping("/user/staffs/createStaff/checkEmailUnique")
 	public Boolean checkEmailUnique() {
@@ -141,8 +116,7 @@ public class UserController {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
-			redirectAttributes.addFlashAttribute("modalTitle", "Error");
-			redirectAttributes.addFlashAttribute("modalBody", "Cannot find User with ID " + userId);
+			setModalMessage(redirectAttributes, "Error", "Cannot find User with ID " + userId);
 			return "redirect:/user/staffs";
 		}
 		else {
@@ -152,12 +126,11 @@ public class UserController {
 			model.addAttribute("roleList", roleList);
 			model.addAttribute("pageTitle", "Edit Staff ID " + userId);
 			model.addAttribute("returnPage", pageNum);
-			
 			if (keyword != null) {
 				model.addAttribute("keyword", keyword);
 			}
 			
-			return "user_form";
+			return "/user/user_form";
 		}
 	}
 	
@@ -168,21 +141,14 @@ public class UserController {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
-			redirectAttributes.addFlashAttribute("modalTitle", "Error");
-			redirectAttributes.addFlashAttribute("modalBody", "Cannot find User with ID " + userId);
+			setModalMessage(redirectAttributes, "Error", "Cannot find User with ID " + userId);
 		}
 		else {
-			redirectAttributes.addFlashAttribute("modalTitle", "User " + userOptional.get().getId());
+			setModalMessage(redirectAttributes, "User " + userOptional.get().getId(), "");
 			redirectAttributes.addFlashAttribute("showId", showId);
 		}
 		
-		if (keyword == null) {
-			return "redirect:/user/staffs/" + pageNum;
-		}
-		else {
-			redirectAttributes.addFlashAttribute("keyword", keyword);
-			return "redirect:/user/staffs/" + pageNum.toString() + "?keyword=" + keyword;
-		}
+		return formatRedirectURL("redirect:/user/staffs/" + pageNum, keyword);
 	}
 	
 	@GetMapping("/user/staffs/requestRemoveStaff/{pageNum}/{userId}/{showId}")
@@ -192,23 +158,15 @@ public class UserController {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
-			redirectAttributes.addFlashAttribute("modalTitle", "Error");
-			redirectAttributes.addFlashAttribute("modalBody", "Cannot find User with ID " + userId);
+			setModalMessage(redirectAttributes, "Error", "Cannot find User with ID " + userId);
 		}
 		else {
-			redirectAttributes.addFlashAttribute("modalTitle", "Warning");
-			redirectAttributes.addFlashAttribute("modalBody", "Are you sure to delete the user with ID " + userId + "?");
+			setModalMessage(redirectAttributes, "Warning", "Are you sure to delete the user with ID " + userId + "?");
 			redirectAttributes.addFlashAttribute("userId", userId);
 			redirectAttributes.addFlashAttribute("showId", showId);
 		}
 		
-		if (keyword == null) {
-			return "redirect:/user/staffs/" + pageNum;
-		}
-		else {
-			redirectAttributes.addFlashAttribute("keyword", keyword);
-			return "redirect:/user/staffs/" + pageNum + "?keyword=" + keyword;
-		}
+		return formatRedirectURL("redirect:/user/staffs/" + pageNum, keyword);
 	}
 	
 	@GetMapping("/user/staffs/removeStaff/{pageNum}/{userId}/{showId}")
@@ -222,17 +180,9 @@ public class UserController {
 		if (showId == 0 && pageNum > 0) {
 			pageNum--;
 		}
+		setModalMessage(redirectAttributes, "Success", "Successfully delete user with ID " + userId);
 		
-		redirectAttributes.addFlashAttribute("modalTitle", "Success");
-		redirectAttributes.addFlashAttribute("modalBody", "Successfully delete user with ID " + userId);
-		
-		if (keyword == null) {
-			return "redirect:/user/staffs/" + pageNum;
-		}
-		else {
-			redirectAttributes.addFlashAttribute("keyword", keyword);
-			return "redirect:/user/staffs/" + pageNum + "?keyword=" + keyword;
-		}
+		return formatRedirectURL("redirect:/user/staffs/" + pageNum, keyword);
 	}
 	
 	@GetMapping("/user/staffs/exportCsv")
@@ -256,4 +206,21 @@ public class UserController {
 		FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
 	}
 	
+	private void setUserEnableStatus(String enabled, User user) {
+		if (enabled.equals("true")) {
+			user.setEnabled(true);
+		}
+		else {
+			user.setEnabled(false);
+		}
+	}
+	
+	private String formatRedirectURL(String redirectURL, String keyword) {
+		return (keyword == null) ? redirectURL : redirectURL + "?keyword=" + keyword;
+	}
+	
+	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
+		redirectAttributes.addFlashAttribute("modalTitle", modalTitle);
+		redirectAttributes.addFlashAttribute("modalBody", modalBody);
+	}
 }
