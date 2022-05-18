@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.lessayer.AbstractFileExporter;
 import com.lessayer.FileUploadUtil;
 import com.lessayer.entity.Role;
 import com.lessayer.entity.User;
+import com.lessayer.exporter.UserCsvExporterDelegate;
+import com.lessayer.exporter.UserPdfExporterDelegate;
 import com.lessayer.service.RoleService;
 import com.lessayer.service.UserService;
 
@@ -36,7 +39,6 @@ public class UserController {
 	
 	@GetMapping("/user/staffs")
 	public String showStaffPage(Model model, String keyword) {
-		System.out.println(keyword);
 		return showStaffPageByPage(0, model, keyword);
 	}
 	
@@ -222,6 +224,20 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("keyword", keyword);
 			return "redirect:/user/staffs/" + pageNum + "?keyword=" + keyword;
 		}
+	}
+	
+	@GetMapping("/user/staffs/exportCsv")
+	public void exportToCsv(HttpServletResponse response) throws IOException {
+		List<User> staffList = userService.listAllStaffs();
+		AbstractFileExporter<User> csvExporter = UserCsvExporterDelegate.getCsvExporter();
+		csvExporter.export(staffList, response);
+	}
+	
+	@GetMapping("/user/staffs/exportPdf")
+	public void exportToPdf(HttpServletResponse response) throws IOException {
+		List<User> staffList = userService.listAllStaffs();
+		AbstractFileExporter<User> pdfExporter = UserPdfExporterDelegate.getPdfExporter();
+		pdfExporter.export(staffList, response);
 	}
 	
 	private void uploadPhoto(Integer userId, String fileName, MultipartFile imageFile)
