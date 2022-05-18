@@ -33,13 +33,7 @@ public class FileUploadUtil {
 		
 	}
 	
-	public static void cleanDir(String dir) {
-		Path dirPath = Paths.get(dir);
-		
-		if (!Files.exists(dirPath)) {
-			return;
-		}
-		
+	public static void cleanDir(Path dirPath) {
 		try {
 			Files.list(dirPath).forEach(file -> {
 				if (!Files.isDirectory(file)) {
@@ -57,10 +51,15 @@ public class FileUploadUtil {
 	}
 	
 	public static void remove(String dir) {
-		cleanDir(dir);
+		Path dirPath = Paths.get(dir);
+		if (!Files.exists(dirPath)) {
+			return;
+		}
+		
+		cleanDir(dirPath);
 		
 		try {
-			Files.delete(Paths.get(dir));
+			Files.delete(dirPath);
 		}
 		catch (Exception e) {
 			logger.error("Could not remove directory: " + dir);

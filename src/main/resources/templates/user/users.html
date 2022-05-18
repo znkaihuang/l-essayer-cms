@@ -6,25 +6,7 @@
 	<div th:replace="fragments :: top_header_bar" />
     <div th:replace="fragments :: nav_bar" />
     <div class="container-fluid">
-    	<div class="manage-form m-2 py-2 row">
-    		<div class="col-2">
-	    		<a th:href="@{/user/staffs/createStaff}" data-bs-toggle="tooltip" title="Create new staff"><i class="fa-solid fa-user-plus fa-2x mx-2 color-primary"></i></a>
-	    		<a th:href="@{/user/staffs/exportCsv}" data-bs-toggle="tooltip" title="Export to csv"><i class="fa-solid fa-file-csv fa-2x mx-2 color-primary"></i></a>
-	    		<a th:href="@{/user/staffs/exportPdf}" data-bs-toggle="tooltip" title="Export to pdf"><i class="fa-solid fa-file-pdf fa-2x mx-2 color-primary"></i></a>
-    		</div>
-    		<div class="col-6">
-	    		<form class="row g-3" th:action="@{/user/staffs}">
-					<div class="col-auto">
-				    	<label for="keyword" class="visually-hidden">Keyword</label>
-				    	<input type="search" class="form-control" id="keyword" placeholder="Keyword" name="keyword" th:value="${keyword}">
-				  	</div>
-				  	<div class="col-auto">
-				  		<button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
-				  		<a class="btn btn-primary" th:href="@{/user/staffs}"><i class="fa-solid fa-eraser"></i></a>
-				  	</div>
-				</form>
-    		</div>
-    	</div>
+    	<div th:replace="fragments :: tool_bar('/user/staffs', 'staff')" />
     	<div class="m-2 py-2">
 			<table class="table">
 				<thead class="table-dark">
@@ -62,81 +44,11 @@
 			</table>
 		</div>
     </div>
-
-	<nav th:if="${totalPages > 1}">
-		<ul class="pagination justify-content-center pagination-lg">
-			<li class="page-item">
-				<a class="page-link" th:href="@{/user/staffs/0} + ${keyword != null ? '?keyword=' + keyword : ''}"><span>&laquo;</span></a>
-			</li>
-			<li class="page-item" th:if="${prevPage} != ${currentPage}">
-				<a class="page-link" th:href="@{/user/staffs/} + ${prevPage} + ${keyword != null ? '?keyword=' + keyword : ''}">[[${prevPage+1}]]</a>
-			</li>
-			<li class="page-item">
-				<a class="page-link" th:href="@{/user/staffs/} + ${currentPage} + ${keyword != null ? '?keyword=' + keyword : ''}">[[${currentPage+1}]]</a>
-			</li>
-			<li class="page-item" th:if="${nextPage} != ${currentPage}">
-				<a class="page-link" th:href="@{/user/staffs/} + ${nextPage} + ${keyword != null ? '?keyword=' + keyword : ''}">[[${nextPage+1}]]</a>
-			</li>
-			<li class="page-item">
-				<a class="page-link" th:href="@{/user/staffs/} + ${totalPages - 1} + ${keyword != null ? '?keyword=' + keyword : ''}"><span>&raquo;</span></a>
-			</li>
-		</ul>
-		<div class="text-center">
-			<span>Total [[${totalPages}]] Pages</span>
-		</div>
-	</nav>
-
-	<div class="modal fade" id="messageModal">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h3 class="modal-title" id="messageModalTitle">[[${modalTitle}]]</h3>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-				</div>
-				<div class="modal-body">[[${modalBody}]]</div>
-				<div class="modal-footer">
-					<th:block th:if="${modalTitle} != 'Warning'">
-						<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="closeButton">Close</button>
-					</th:block>
-					<th:block th:if="${modalTitle} == 'Warning'">
-						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="yesButton">
-							<a th:href="@{/user/staffs/removeStaff/} + ${currentPage} + '/' + ${userId} + '/' + ${showId} 
-								+ ${keyword != null ? '?keyword=' + keyword : ''}"
-								class="text-white text-decoration-none">Yes</a>
-						</button>
-						<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="noButton">No</button>
-					</th:block>
-				</div>
-			</div>
-		</div>
-	</div>
 	
-	<div class="modal fade" id="userInformationModal">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h3 class="modal-title text-success" id="informationModalTitle">[[${modalTitle}]]</h3>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-				</div>
-				<div class="modal-body" th:if="${showId != null}">
-					<div class="d-flex flex-row">
-						<img th:src="${staffList[showId].photosImagePath}" alt="avatar" width="300px">
-						<div class="p-4 user-details">
-								<p>Full name: [[${staffList[showId].fullName}]]</p>
-								<p>Email: [[${staffList[showId].email}]]</p>
-								<p>Roles: [[${staffList[showId].roles}]]</p>
-								<p>Enable status: [[${staffList[showId].enabled}]]</p>
-								<p>Registration date: [[${staffList[showId].registrationDate}]]</p>
-						</div>
-					</div>
-					
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
+	<div th:replace="fragments :: pagination('/user/staffs')" />
+	
+	<div th:replace="modal_fragments :: messageModal(${yesButtonURL})" />
+	<div th:replace="modal_fragments :: userInformationModal" />
 	
 	<div th:replace="fragments :: site_footer" />
 	<div th:replace="fragments :: common_js" />

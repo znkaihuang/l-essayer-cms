@@ -1,0 +1,53 @@
+<div th:fragment="messageModal(yesButtonURL)" th:remove="tag">
+	<div class="modal fade" id="messageModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title" id="messageModalTitle">[[${modalTitle}]]</h3>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">[[${modalBody}]]</div>
+				<div class="modal-footer">
+					<th:block th:if="${modalTitle} != 'Warning'">
+						<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="closeButton">Close</button>
+					</th:block>
+					<th:block th:if="${modalTitle} == 'Warning'">
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="yesButton">
+							<a th:href="@{${yesButtonURL}}" class="text-white text-decoration-none">Yes</a>
+						</button>
+						<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="noButton">No</button>
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div th:fragment="userInformationModal" th:remove="tag">
+	<div class="modal fade" id="userInformationModal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title text-success" id="informationModalTitle">[[${modalTitle}]]</h3>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body" th:if="${showId != null}">
+					<div class="d-flex flex-row">
+						<img th:src="${staffList[showId].photosImagePath}" alt="avatar" width="300px">
+						<div class="p-4 user-details">
+								<p>Full name: [[${staffList[showId].fullName}]]</p>
+								<p>Email: [[${staffList[showId].email}]]</p>
+								<p>Roles: [[${staffList[showId].roles}]]</p>
+								<p>Enable status: [[${staffList[showId].enabled}]]</p>
+								<p>Registration date: [[${staffList[showId].registrationDate}]]</p>
+						</div>
+					</div>
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -115,5 +115,52 @@
 		<script type="text/javascript" th:src="@{/js/common.js}"></script>	
 	</div>
 	
+	<div th:fragment="tool_bar(baseURL, createTypeName)" th:remove="tag">
+    	<div class="manage-form m-2 py-2 row">
+    		<div class="col-2">
+	    		<a th:href="${baseURL} + '/create'" data-bs-toggle="tooltip" th:title="'Create new ' + ${createTypeName}"><i class="fa-solid fa-user-plus fa-2x mx-2 color-primary"></i></a>
+	    		<a th:href="${baseURL} + '/exportCsv'" data-bs-toggle="tooltip" title="Export to csv"><i class="fa-solid fa-file-csv fa-2x mx-2 color-primary"></i></a>
+	    		<a th:href="${baseURL} + '/exportPdf'" data-bs-toggle="tooltip" title="Export to pdf"><i class="fa-solid fa-file-pdf fa-2x mx-2 color-primary"></i></a>
+    		</div>
+    		<div class="col-6">
+	    		<form class="row g-3" th:action="${baseURL}">
+					<div class="col-auto">
+				    	<label for="keyword" class="visually-hidden">Keyword</label>
+				    	<input type="search" class="form-control" id="keyword" placeholder="Keyword" name="keyword" th:value="${keyword}">
+				  	</div>
+				  	<div class="col-auto">
+				  		<button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
+				  		<a class="btn btn-primary" th:href="${baseURL}"><i class="fa-solid fa-eraser"></i></a>
+				  	</div>
+				</form>
+    		</div>
+    	</div>
+	</div>
+	
+	<div th:fragment="pagination(baseURL)" th:remove="tag">
+		<nav th:if="${totalPages > 1}">
+			<ul class="pagination justify-content-center pagination-lg">
+				<li class="page-item">
+					<a class="page-link" th:href="${baseURL} + '/0' + ${keyword != null ? '?keyword=' + keyword : ''}"><span>&laquo;</span></a>
+				</li>
+				<li class="page-item" th:if="${prevPage} != ${currentPage}">
+					<a class="page-link" th:href="${baseURL} + '/' + ${prevPage} + ${keyword != null ? '?keyword=' + keyword : ''}">[[${prevPage+1}]]</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" th:href="${baseURL} + '/' + ${currentPage} + ${keyword != null ? '?keyword=' + keyword : ''}">[[${currentPage+1}]]</a>
+				</li>
+				<li class="page-item" th:if="${nextPage} != ${currentPage}">
+					<a class="page-link" th:href="${baseURL} + '/' + ${nextPage} + ${keyword != null ? '?keyword=' + keyword : ''}">[[${nextPage+1}]]</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" th:href="${baseURL} + '/' + ${totalPages - 1} + ${keyword != null ? '?keyword=' + keyword : ''}"><span>&raquo;</span></a>
+				</li>
+			</ul>
+			<div class="text-center">
+				<span>Total [[${totalPages}]] Pages</span>
+			</div>
+		</nav>
+	</div>
+	
 </body>
 </html>

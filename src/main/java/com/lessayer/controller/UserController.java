@@ -67,7 +67,7 @@ public class UserController {
 		return "/user/users";
 	}
 	
-	@GetMapping("/user/staffs/createStaff")
+	@GetMapping("/user/staffs/create")
 	public String showCreateStaffPage(Model model) {
 		List<Role> roleList = roleService.findStaffs();
 		User user = new User();
@@ -164,6 +164,8 @@ public class UserController {
 			setModalMessage(redirectAttributes, "Warning", "Are you sure to delete the user with ID " + userId + "?");
 			redirectAttributes.addFlashAttribute("userId", userId);
 			redirectAttributes.addFlashAttribute("showId", showId);
+			redirectAttributes.addFlashAttribute("yesButtonURL", 
+					formatRedirectURL("/user/staffs/removeStaff/" + pageNum + "/" + userId + "/" + showId, keyword));
 		}
 		
 		return formatRedirectURL("redirect:/user/staffs/" + pageNum, keyword);
@@ -202,7 +204,7 @@ public class UserController {
 	private void uploadPhoto(Integer userId, String fileName, MultipartFile imageFile)
 		throws IOException {
 		String uploadDir = "user-photos/" + userId;
-		FileUploadUtil.cleanDir(uploadDir);
+		FileUploadUtil.remove(uploadDir);
 		FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
 	}
 	
