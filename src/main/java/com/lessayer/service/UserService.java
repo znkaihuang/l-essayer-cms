@@ -32,16 +32,34 @@ public class UserService {
 		return userRepo.findAllStaffs();
 	}
 	
+	public List<User> listAllSubscribers() {
+		return userRepo.findAllSubscribers();
+	}
+	
 	public Page<User> listStaffsByPage(Integer pageNum) {
 		Pageable pageable = PageRequest.of(pageNum, USERS_PER_PAGE);
-		Page<User> page = userRepo.findAll(pageable);
+		Page<User> page = userRepo.findAllStaffs(pageable);
 		
 		return page;
 	}
 	
 	public Page<User> listStaffsWithKeywordByPage(Integer pageNum, String keyword) {
 		Pageable pageable = PageRequest.of(pageNum, USERS_PER_PAGE);
-		Page<User> page = userRepo.findUsersWithKeyword(keyword, pageable);
+		Page<User> page = userRepo.findStaffsWithKeyword(keyword, pageable);
+		
+		return page;
+	}
+	
+	public Page<User> listSubScribersByPage(Integer pageNum) {
+		Pageable pageable = PageRequest.of(pageNum, USERS_PER_PAGE);
+		Page<User> page = userRepo.findAllSubscribers(pageable);
+		
+		return page;
+	}
+
+	public Page<User> listSubScribersWithKeywordByPage(Integer pageNum, String keyword) {
+		Pageable pageable = PageRequest.of(pageNum, USERS_PER_PAGE);
+		Page<User> page = userRepo.findSubscribersWithKeyword(keyword, pageable);
 		
 		return page;
 	}

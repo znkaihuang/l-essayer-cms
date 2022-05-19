@@ -37,7 +37,7 @@ function checkUniqueEmail() {
 						let modalTitle = "Error";
 						showModal(modalTitle);
 						document.getElementById('messageModalTitle').innerText = modalTitle;
-						document.getElementById('messageModalBody').innerText = 'The email ' + email + 'has already existed!';
+						document.getElementById('messageModalBody').innerText = 'The email ' + email + ' has already existed!';
 		
 					}
 				});

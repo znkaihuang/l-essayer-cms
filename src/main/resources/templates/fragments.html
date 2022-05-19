@@ -115,10 +115,10 @@
 		<script type="text/javascript" th:src="@{/js/common.js}"></script>	
 	</div>
 	
-	<div th:fragment="tool_bar(baseURL, createTypeName)" th:remove="tag">
+	<div th:fragment="tool_bar(baseURL)" th:remove="tag">
     	<div class="manage-form m-2 py-2 row">
     		<div class="col-2">
-	    		<a th:href="${baseURL} + '/create'" data-bs-toggle="tooltip" th:title="'Create new ' + ${createTypeName}"><i class="fa-solid fa-user-plus fa-2x mx-2 color-primary"></i></a>
+	    		<a th:href="${baseURL} + '/create'" data-bs-toggle="tooltip" title="Create new user"><i class="fa-solid fa-user-plus fa-2x mx-2 color-primary"></i></a>
 	    		<a th:href="${baseURL} + '/exportCsv'" data-bs-toggle="tooltip" title="Export to csv"><i class="fa-solid fa-file-csv fa-2x mx-2 color-primary"></i></a>
 	    		<a th:href="${baseURL} + '/exportPdf'" data-bs-toggle="tooltip" title="Export to pdf"><i class="fa-solid fa-file-pdf fa-2x mx-2 color-primary"></i></a>
     		</div>

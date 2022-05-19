@@ -6,7 +6,7 @@
 	<div th:replace="fragments :: top_header_bar" />
     <div th:replace="fragments :: nav_bar" />
     <div class="container-fluid">
-    	<div th:replace="fragments :: tool_bar('/user/staffs', 'staff')" />
+    	<div th:replace="fragments :: tool_bar(${baseURL})" />
     	<div class="m-2 py-2">
 			<table class="table">
 				<thead class="table-dark">
@@ -20,21 +20,21 @@
 					</tr>
 				</thead>
 				<tbody>
-					<th:block th:each="staff, iterStat : ${staffList}">
+					<th:block th:each="user, iterStat : ${userList}">
 						<tr class="align-middle">
-							<td>[[${staff.id}]]</td>
-							<td><img th:src="${staff.photosImagePath}" alt="avatar" width="60%"></td>
-							<td>[[${staff.email}]]</td>
-							<td>[[${staff.fullName}]]</td>
-							<td>[[${staff.registrationDate}]]</td>
+							<td>[[${user.id}]]</td>
+							<td><img th:src="${user.photosImagePath}" alt="avatar" width="60%"></td>
+							<td>[[${user.email}]]</td>
+							<td>[[${user.fullName}]]</td>
+							<td>[[${user.registrationDate}]]</td>
 							<td>
-								<a th:href="@{/user/staffs/viewStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}
+								<a th:href="${baseURL} + '/view/' + ${currentPage} + '/' + ${user.id} + '/' + ${iterStat.index}
 									+ ${keyword != null ? '?keyword=' + keyword : ''}" 
 									class="fa-solid fa-file fa-2x mx-2 color-primary link-detail"></a>
-								<a th:href="@{/user/staffs/editStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}
+								<a th:href="${baseURL} + '/edit/' + ${currentPage} + '/' + ${user.id} + '/' + ${iterStat.index}
 									+ ${keyword != null ? '?keyword=' + keyword : ''}" 
 									class="fa-solid fa-pen-to-square fa-2x mx-2 color-primary link-edit"></a>
-								<a th:href="@{/user/staffs/requestRemoveStaff/} + ${currentPage} + '/' + ${staff.id} + '/' + ${iterStat.index}
+								<a th:href="${baseURL} + '/requestRemove/' + ${currentPage} + '/' + ${user.id} + '/' + ${iterStat.index}
 									+ ${keyword != null ? '?keyword=' + keyword : ''}"
 									class="fa-solid fa-trash-can fa-2x mx-2 color-primary link-delete"></a>
 							</td>
@@ -45,7 +45,7 @@
 		</div>
     </div>
 	
-	<div th:replace="fragments :: pagination('/user/staffs')" />
+	<div th:replace="fragments :: pagination(${baseURL})" />
 	
 	<div th:replace="modal_fragments :: messageModal(${yesButtonURL})" />
 	<div th:replace="modal_fragments :: userInformationModal" />

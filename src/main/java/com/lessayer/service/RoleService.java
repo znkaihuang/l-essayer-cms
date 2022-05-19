@@ -23,6 +23,15 @@ public class RoleService {
 		return staffList;
 	}
 	
+	public List<Role> findSubscribers() {
+		// TODO Auto-generated method stub
+		List<Role> staffList = ((List<Role>) roleRepo.findAll()).stream()
+				.filter(role -> role.getName().equals("Subscribers") == true)
+				.collect(Collectors.toList());
+
+		return staffList;
+	}
+	
 	public List<Role> findRoles() {
 		return (List<Role>) roleRepo.findAll();
 	}

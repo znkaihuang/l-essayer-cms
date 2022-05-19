@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -37,51 +36,62 @@ public class UserController {
 	@Autowired
 	private RoleService roleService;
 	
-	@GetMapping("/user/staffs")
-	public String showStaffPage(Model model, String keyword) {
-		return showStaffPageByPage(0, model, keyword);
+	@GetMapping("/user/{userType}")
+	public String showStaffPage(@PathVariable("userType") String userType, Model model, String keyword) {
+		return showUserPageByPage(userType, 0, model, keyword);
 	}
 	
-	@GetMapping("/user/staffs/{pageNum}")
-	public String showStaffPageByPage(@PathVariable("pageNum") Integer currentPage, Model model,
+	@GetMapping("/user/{userType}/{pageNum}")
+	public String showUserPageByPage(@PathVariable("userType") String userType,
+			@PathVariable("pageNum") Integer currentPage, Model model,
 		String keyword) {
 		Page<User> page;
 		
-		if (keyword == null) {
-			page = userService.listStaffsByPage(currentPage);
-		}
-		else {
-			page = userService.listStaffsWithKeywordByPage(currentPage, keyword);
-		}
+		page = listUserPage(userType, currentPage, keyword);
 		
 		Integer totalPages = page.getTotalPages();
 		Integer prevPage = (currentPage - 1 >= 0) ? currentPage - 1 : 0;
 		Integer nextPage = (currentPage + 1 < totalPages) ? currentPage + 1 : totalPages - 1;
 		
-		model.addAttribute("staffList", page.getContent());
+		model.addAttribute("userList", page.getContent());
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("prevPage", prevPage);
 		model.addAttribute("nextPage", nextPage);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("baseURL", "/user/" + userType);
+		model.addAttribute("userType", userType);
 		return "/user/users";
 	}
-	
-	@GetMapping("/user/staffs/create")
-	public String showCreateStaffPage(Model model) {
-		List<Role> roleList = roleService.findStaffs();
+
+	@GetMapping("/user/{userType}/create")
+	public String showCreateStaffPage(@PathVariable("userType") String userType, Model model) {
+		String pageTitle;
+		List<Role> roleList;
+		
+		if (userType.equals("staffs")) {
+			roleList = roleService.findStaffs();
+			pageTitle = "Create New Staff";
+		}
+		else {
+			roleList = roleService.findSubscribers();
+			pageTitle = "Create New Subscriber";
+		}
+		
 		User user = new User();
 		user.setPhotos("/images/user-solid.svg");
 		
 		model.addAttribute("roleList", roleList);
 		model.addAttribute("user", user);
-		model.addAttribute("pageTitle", "Create New Staff");
+		model.addAttribute("pageTitle", pageTitle);
 		model.addAttribute("returnPage", 0);
+		model.addAttribute("baseURL", "/user/" + userType);
+		model.addAttribute("userType", userType);
 		return "/user/user_form";
 	}
 	
-	@PostMapping("/user/staffs/save/{pageNum}")
-	public String saveStaff(@PathVariable("pageNum") Integer pageNum,
+	@PostMapping("/user/{userType}/save/{pageNum}")
+	public String saveStaff(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
 			User user, String enabled, String disabled, RedirectAttributes redirectAttributes,
 			@RequestParam("imageFile") MultipartFile imageFile, String keyword) throws IOException {
 		setUserEnableStatus(enabled, user);
@@ -100,36 +110,48 @@ public class UserController {
 		String modalBody = (user.getId() == null) ? "Create User with ID " + savedUser.getId() : "Update User with ID " + user.getId();
 		setModalMessage(redirectAttributes, "Success", modalBody);
 		
-		return formatRedirectURL("redirect:/user/staffs/" + pageNum, keyword);
+		return formatRedirectURL("redirect:/user/" + userType + "/" + pageNum, keyword);
 	}
 	
-	@GetMapping("/user/staffs/editStaff/{pageNum}/{userId}/{showId}")
-	public String editStaff(@PathVariable("pageNum") Integer pageNum, 
+	@GetMapping("/user/{userType}/edit/{pageNum}/{userId}/{showId}")
+	public String editStaff(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum, 
 		@PathVariable("userId") Integer userId, Model model, RedirectAttributes redirectAttributes,
 		String keyword) {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
 			setModalMessage(redirectAttributes, "Error", "Cannot find User with ID " + userId);
-			return "redirect:/user/staffs";
+			return "redirect:/user/" + userType;
 		}
 		else {
-			List<Role> roleList = roleService.findStaffs();
+			String pageTitle;
+			List<Role> roleList;
+			
+			if (userType.equals("staffs")) {
+				roleList = roleService.findStaffs();
+				pageTitle = "Edit Staff ID " + userId;
+			}
+			else {
+				roleList = roleService.findSubscribers();
+				pageTitle = "Edit Subscriber ID " + userId;
+			}
 			
 			model.addAttribute("user", userOptional.get());
 			model.addAttribute("roleList", roleList);
-			model.addAttribute("pageTitle", "Edit Staff ID " + userId);
+			model.addAttribute("pageTitle", pageTitle);
 			model.addAttribute("returnPage", pageNum);
 			if (keyword != null) {
 				model.addAttribute("keyword", keyword);
 			}
+			model.addAttribute("baseURL", "/user/" + userType);
+			model.addAttribute("userType", userType);
 			
 			return "/user/user_form";
 		}
 	}
 	
-	@GetMapping("/user/staffs/viewStaff/{pageNum}/{userId}/{showId}")
-	public String viewStaff(@PathVariable("pageNum") Integer pageNum,
+	@GetMapping("/user/{userType}/view/{pageNum}/{userId}/{showId}")
+	public String viewStaff(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
 		@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
 		RedirectAttributes redirectAttributes, String keyword) {
 		Optional<User> userOptional = userService.findUserById(userId);
@@ -142,11 +164,11 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("showId", showId);
 		}
 		
-		return formatRedirectURL("redirect:/user/staffs/" + pageNum, keyword);
+		return formatRedirectURL("redirect:/user/" + userType + "/" + pageNum, keyword);
 	}
 	
-	@GetMapping("/user/staffs/requestRemoveStaff/{pageNum}/{userId}/{showId}")
-	public String requestRemoveStaff(@PathVariable("pageNum") Integer pageNum,
+	@GetMapping("/user/{userType}/requestRemove/{pageNum}/{userId}/{showId}")
+	public String requestRemoveStaff(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
 		@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
 		RedirectAttributes redirectAttributes, String keyword) {
 		Optional<User> userOptional = userService.findUserById(userId);
@@ -159,14 +181,14 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("userId", userId);
 			redirectAttributes.addFlashAttribute("showId", showId);
 			redirectAttributes.addFlashAttribute("yesButtonURL", 
-					formatRedirectURL("/user/staffs/removeStaff/" + pageNum + "/" + userId + "/" + showId, keyword));
+					formatRedirectURL("/user/" + userType + "/remove/" + pageNum + "/" + userId + "/" + showId, keyword));
 		}
 		
-		return formatRedirectURL("redirect:/user/staffs/" + pageNum, keyword);
+		return formatRedirectURL("redirect:/user/" + userType + "/" + pageNum, keyword);
 	}
 	
-	@GetMapping("/user/staffs/removeStaff/{pageNum}/{userId}/{showId}")
-	public String removeStaff(@PathVariable("pageNum") Integer pageNum,
+	@GetMapping("/user/{userType}/remove/{pageNum}/{userId}/{showId}")
+	public String removeStaff(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
 			@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
 			RedirectAttributes redirectAttributes, String keyword) {
 		
@@ -178,21 +200,35 @@ public class UserController {
 		}
 		setModalMessage(redirectAttributes, "Success", "Successfully delete user with ID " + userId);
 		
-		return formatRedirectURL("redirect:/user/staffs/" + pageNum, keyword);
+		return formatRedirectURL("redirect:/user/" + userType + "/" + pageNum, keyword);
 	}
 	
-	@GetMapping("/user/staffs/exportCsv")
-	public void exportToCsv(HttpServletResponse response) throws IOException {
-		List<User> staffList = userService.listAllStaffs();
+	@GetMapping("/user/{userType}/exportCsv")
+	public void exportToCsv(@PathVariable("userType") String userType, HttpServletResponse response) 
+		throws IOException {
+		List<User> userList;
+		if (userType.equals("staffs")) {
+			userList = userService.listAllStaffs();
+		}
+		else {
+			userList = userService.listAllSubscribers();
+		}
 		AbstractFileExporter<User> csvExporter = UserCsvExporterDelegate.getCsvExporter();
-		csvExporter.export(staffList, response);
+		csvExporter.export(userList, response);
 	}
 	
-	@GetMapping("/user/staffs/exportPdf")
-	public void exportToPdf(HttpServletResponse response) throws IOException {
-		List<User> staffList = userService.listAllStaffs();
+	@GetMapping("/user/{userType}/exportPdf")
+	public void exportToPdf(@PathVariable("userType") String userType, HttpServletResponse response)
+		throws IOException {
+		List<User> userList;
+		if (userType.equals("staffs")) {
+			userList = userService.listAllStaffs();
+		}
+		else {
+			userList = userService.listAllSubscribers();
+		}
 		AbstractFileExporter<User> pdfExporter = UserPdfExporterDelegate.getPdfExporter();
-		pdfExporter.export(staffList, response);
+		pdfExporter.export(userList, response);
 	}
 	
 	private void uploadPhoto(Integer userId, String fileName, MultipartFile imageFile)
@@ -218,5 +254,20 @@ public class UserController {
 	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
 		redirectAttributes.addFlashAttribute("modalTitle", modalTitle);
 		redirectAttributes.addFlashAttribute("modalBody", modalBody);
+	}
+	
+	private Page<User> listUserPage(String userType, Integer currentPage, String keyword) {
+		if (userType.equals("staffs") && keyword == null) {
+			return userService.listStaffsByPage(currentPage);
+		}
+		else if (userType.equals("staffs") && keyword != null) {
+			return userService.listStaffsWithKeywordByPage(currentPage, keyword);
+		}
+		else if (userType.equals("subscribers") && keyword == null) {
+			return userService.listSubScribersByPage(currentPage);
+		}
+		else {
+			return userService.listSubScribersWithKeywordByPage(currentPage, keyword);
+		}
 	}
 }

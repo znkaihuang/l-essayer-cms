@@ -33,13 +33,13 @@
 				</div>
 				<div class="modal-body" th:if="${showId != null}">
 					<div class="d-flex flex-row">
-						<img th:src="${staffList[showId].photosImagePath}" alt="avatar" width="300px">
+						<img th:src="${userList[showId].photosImagePath}" alt="avatar" width="300px">
 						<div class="p-4 user-details">
-								<p>Full name: [[${staffList[showId].fullName}]]</p>
-								<p>Email: [[${staffList[showId].email}]]</p>
-								<p>Roles: [[${staffList[showId].roles}]]</p>
-								<p>Enable status: [[${staffList[showId].enabled}]]</p>
-								<p>Registration date: [[${staffList[showId].registrationDate}]]</p>
+								<p>Full name: [[${userList[showId].fullName}]]</p>
+								<p>Email: [[${userList[showId].email}]]</p>
+								<p>Roles: [[${userList[showId].roles}]]</p>
+								<p>Enable status: [[${userList[showId].enabled}]]</p>
+								<p>Registration date: [[${userList[showId].registrationDate}]]</p>
 						</div>
 					</div>
 					

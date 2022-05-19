@@ -102,7 +102,7 @@ public class UserRepositoryTests {
 		int pageSize = 5;
 		String keyword = "gmail";
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-		Page<User> page = userRepo.findUsersWithKeyword(keyword, pageable);
+		Page<User> page = userRepo.findStaffsWithKeyword(keyword, pageable);
 		List<User> userList = page.getContent();
 		
 		userList.forEach(System.out::println);

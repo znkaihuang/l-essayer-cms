@@ -20,7 +20,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Integer
 	public List<User> findAllSubscribers();
 	
 	@Query("SELECT DISTINCT u FROM User u JOIN u.roles r WHERE r.name != 'Subscribers'")
-	public Page<User> findAlStaffs(Pageable pageable);
+	public Page<User> findAllStaffs(Pageable pageable);
 	
 	@Query("SELECT DISTINCT u FROM User u JOIN u.roles r WHERE r.name = 'Subscribers'")
 	public Page<User> findAllSubscribers(Pageable pageable);
@@ -31,12 +31,18 @@ public interface UserRepository extends PagingAndSortingRepository<User, Integer
 	@Query("SELECT u FROM User u")
 	public Page<User> findAllUsers(Pageable pageable);
 	
-	@Query("SELECT u FROM User u WHERE CONCAT(u.id, ' ', u.email, ' ', u.firstName, ' ', u.lastName, ' ', u.registrationDate) "
-			+ "LIKE %?1%")
-	public Page<User> findUsersWithKeyword(String keyword, Pageable pageable);
+	@Query("SELECT DISTINCT u FROM User u JOIN u.roles r "
+			+ "WHERE CONCAT(u.id, ' ', u.email, ' ', u.firstName, ' ', u.lastName, ' ', u.registrationDate) LIKE %?1% "
+			+ "AND r.name != 'Subscribers'")
+	public Page<User> findStaffsWithKeyword(String keyword, Pageable pageable);
+	
+	@Query("SELECT DISTINCT u FROM User u JOIN u.roles r "
+			+ "WHERE CONCAT(u.id, ' ', u.email, ' ', u.firstName, ' ', u.lastName, ' ', u.registrationDate) LIKE %?1% "
+			+ "AND r.name = 'Subscribers'")
+	public Page<User> findSubscribersWithKeyword(String keyword, Pageable pageable); 
 	
 	@Query("UPDATE User u SET u.enabled = ?2 WHERE u.id = ?1")
 	@Modifying
-	public void updateEnabledStatus(Integer id, boolean enabled); 
+	public void updateEnabledStatus(Integer id, boolean enabled);
 	
 }
