@@ -11,7 +11,7 @@
 	    </div>
 	    <div class="form border border-success border-3 rounded">
 		    <form class="row g-3 p-5 justify-content-center" th:action="@{/user/staffs/save/} + ${returnPage} + ${keyword != null ?'?keyword=' + keyword : ''}"
-		    	method="post" th:object=${user} enctype="multipart/form-data">
+		    	method="post" th:object=${user} enctype="multipart/form-data" id="userForm">
 		    	<input type="hidden" th:field="*{id}">
 		    	<input type="hidden" th:field="*{registrationDate}">
 		    	<div class="col-md-5">
@@ -72,7 +72,14 @@
 	    </div>
     </div>
     <div th:replace="fragments :: site_footer" />
-    <script type="text/javascript" th:src="@{/js/common_form.js}" />
-	<div th:replace="fragments :: common_js" />
+    <div th:replace="fragments :: common_js" />
+	<div th:replace="modal_fragments :: messageModal('')" />
+    
+	<script>
+		let checkUniqueEmailURL = '[[@{/user/staffs/createStaff/checkEmailUnique}]]';
+		let userId = '[[${user.id}]]';
+		let userEmail = '[[${user.email}]]';
+    </script>
+	<script type="text/javascript" th:src="@{/js/common_form.js}"></script>
 </body>
 </html>

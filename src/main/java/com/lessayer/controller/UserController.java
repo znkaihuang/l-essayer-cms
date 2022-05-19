@@ -102,12 +102,6 @@ public class UserController {
 		
 		return formatRedirectURL("redirect:/user/staffs/" + pageNum, keyword);
 	}
-
-	@ResponseBody
-	@GetMapping("/user/staffs/createStaff/checkEmailUnique")
-	public Boolean checkEmailUnique() {
-		return true;
-	}
 	
 	@GetMapping("/user/staffs/editStaff/{pageNum}/{userId}/{showId}")
 	public String editStaff(@PathVariable("pageNum") Integer pageNum, 

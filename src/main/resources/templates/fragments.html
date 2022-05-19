@@ -31,7 +31,7 @@
 	            </div>
 	            <div class="col-lg-5 text-end">
 					<form th:action="@{/logout}" method="post">
-						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" id="csrf">
 						<input type="submit" value="Logout" class="btn btn-success px-4 px-lg-5">
 					</form>
 	            </div>
