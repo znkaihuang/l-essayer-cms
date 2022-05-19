@@ -2,7 +2,7 @@
  * 
  */
 
-function selectModal() {
+function selectModal(modalTitle) {
 	if (modalTitle !== 'Success' && modalTitle !== 'Warning' && modalTitle !== 'Error') {
 		return 'userInformationModal';
 	}
@@ -11,13 +11,13 @@ function selectModal() {
 	}
 }
 
-function showModal() {
-	var myModal = new bootstrap.Modal(document.getElementById(selectModal()));
-	appendMessageModalTitleClass();
+function showModal(modalTitle) {
+	var myModal = new bootstrap.Modal(document.getElementById(selectModal(modalTitle)));
+	appendMessageModalTitleClass(modalTitle);
 	myModal.show();
 }
 
-function appendMessageModalTitleClass() {
+function appendMessageModalTitleClass(modalTitle) {
 	let modalTitleObject = document.getElementById('messageModalTitle');
 	if (modalTitle === 'Success') {
 		modalTitleObject.classList.add('text-success');

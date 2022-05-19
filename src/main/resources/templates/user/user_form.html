@@ -74,12 +74,14 @@
     <div th:replace="fragments :: site_footer" />
     <div th:replace="fragments :: common_js" />
 	<div th:replace="modal_fragments :: messageModal('')" />
-    
+    <script type="text/javascript" th:src="@{/js/common_form.js}"></script>
 	<script>
 		let checkUniqueEmailURL = '[[@{/user/staffs/createStaff/checkEmailUnique}]]';
 		let userId = '[[${user.id}]]';
 		let userEmail = '[[${user.email}]]';
+		displayImageFile();
+		checkUniqueEmail();
     </script>
-	<script type="text/javascript" th:src="@{/js/common_form.js}"></script>
+	
 </body>
 </html>
