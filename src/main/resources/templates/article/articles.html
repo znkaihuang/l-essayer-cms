@@ -7,8 +7,25 @@
     <div th:replace="fragments :: nav_bar" />
     <div class="container-fluid">
     	<div th:replace="fragments :: tool_bar(${baseURL})" />
-    	
-    </div>
+		<div class="row m-4 p-4">
+			<th:block th:each="article : ${articleList}">
+				<div class="col-4 my-2">
+					<div class="card w-100">
+						<div class="card-body"  style="height: 280px;">
+							<div style="height: 180px;">
+								<h5 class="card-title">[[${article.title}]]</h5>
+								<h6 class="card-subtitle mb-2 text-muted">[[${article.dateString}]], <span class="fst-italic">[[${article.author}]]</span></h6>
+								<p class="card-text article-summary">[[${article.summary}]]</p>
+							</div>
+							<th:block th:each="tag : ${article.tags}">
+								<a href="#"><span class="badge rounded-pill bg-success fs-6 my-1">[[${tag.tag}]]</span></a>
+							</th:block>
+						</div>
+					</div>
+				</div>
+			</th:block>
+		</div>
+	</div>
 	
 	<div th:replace="fragments :: pagination(${baseURL})" />
 	
@@ -18,7 +35,14 @@
 	<div th:replace="fragments :: site_footer" />
 	<div th:replace="fragments :: common_js" />
 	<script type="text/javascript">
-
+		var length = 80;
+		let summaryList = document.getElementsByClassName('article-summary');
+		for (summary of summaryList) {
+			console.log(summary.innerText.length);
+			if (summary.innerText.length > length) {
+				summary.innerText = summary.innerText.substring(0, length - 1 ) + '...';
+			}
+		}
 	</script>
 	
 </body>
