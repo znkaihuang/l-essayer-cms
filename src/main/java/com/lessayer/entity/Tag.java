@@ -16,7 +16,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Tag {
+public class Tag implements Comparable<Tag> {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +27,11 @@ public class Tag {
 	
 	public Tag(String tag) {
 		this.tag = tag;
+	}
+
+	@Override
+	public int compareTo(Tag anotherTag) {
+		return tag.compareTo(anotherTag.getTag());
 	}
 	
 }

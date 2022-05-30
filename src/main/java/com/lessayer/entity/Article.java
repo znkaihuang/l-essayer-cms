@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -109,4 +110,9 @@ public class Article {
 		return dateFormat.format(date).toString();
 	}
 	
+	@Transient
+	public Set<Tag> getSortedTags() {
+		TreeSet<Tag> sortedTags = new TreeSet<>(tags);
+		return sortedTags;
+	}
 }
