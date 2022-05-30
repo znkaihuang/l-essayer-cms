@@ -3,8 +3,6 @@ package com.lessayer.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
