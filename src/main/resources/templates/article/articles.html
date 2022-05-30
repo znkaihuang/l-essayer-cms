@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Users - L\'essayer Backend Console')">
+
+<body>
+	<div th:replace="fragments :: top_header_bar" />
+    <div th:replace="fragments :: nav_bar" />
+    <div class="container-fluid">
+    	<div th:replace="fragments :: tool_bar(${baseURL})" />
+    	
+    </div>
+	
+	<div th:replace="fragments :: pagination(${baseURL})" />
+	
+	<div th:replace="modal_fragments :: messageModal(${yesButtonURL})" />
+	<div th:replace="modal_fragments :: userInformationModal" />
+	
+	<div th:replace="fragments :: site_footer" />
+	<div th:replace="fragments :: common_js" />
+	<script type="text/javascript">
+
+	</script>
+	
+</body>
+</html>

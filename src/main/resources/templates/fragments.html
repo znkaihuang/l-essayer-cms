@@ -60,10 +60,15 @@
 	                        <a th:href="@{/user/subscribers}" class="dropdown-item">Subscribers</a>
 	                    </div>
 	                </div>
-	                <a href="service.html" class="nav-item nav-link">Content</a>
-	                <a href="project.html" class="nav-item nav-link">Feedback</a>
-	                <a href="contact.html" class="nav-item nav-link">Statistic</a>
-	                <a href="contact.html" class="nav-item nav-link">Setting</a>
+	               	<div class="nav-item dropdown">
+	                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Content</a>
+	                    <div class="dropdown-menu bg-light m-0">
+	                        <a th:href="@{/article/articles}" class="dropdown-item">Articles</a>
+	                    </div>
+	                </div>
+	                <a href="#" class="nav-item nav-link">Feedback</a>
+	                <a href="#" class="nav-item nav-link">Statistic</a>
+	                <a href="#" class="nav-item nav-link">Setting</a>
 	    		</div>
 	    	</div>
 	    </nav>
