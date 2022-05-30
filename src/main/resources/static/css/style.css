@@ -32,6 +32,7 @@
 }
 
 /*** Card ***/
+.card .card-header,
 .card .badge {
 	background-color: #32C36C;
 	border-color: #32C36C;
