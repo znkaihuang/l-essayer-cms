@@ -1,5 +1,7 @@
 package com.lessayer.entity;
 
+import java.beans.Transient;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -98,6 +100,13 @@ public class Article {
 	
 	public void removeKeyword(Tag tag) {
 		this.tags.remove(tag);
+	}
+	
+	public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	@Transient
+	public String getDateString() {
+		return dateFormat.format(date).toString();
 	}
 	
 }
