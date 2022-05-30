@@ -263,6 +263,15 @@ public class ArticleRepositoryTests {
 		assertThat(articlePage2.getContent().size()).isEqualTo(0);
 	}
 	
+	@Test
+	public void updateTagTest() {
+		String newTag = "Health";
+		tagRepository.updateTag(2, newTag);
+		Tag tagInDB = tagRepository.findById(2).get();
+		
+		assertThat(tagInDB.getTag()).isEqualTo(newTag);
+	}
+	
 	private void printArticleList(List<Article> articleList) {
 		articleList.forEach(article -> {
 			System.out.println("ID: " + article.getId() + " Title: " + article.getTitle());
