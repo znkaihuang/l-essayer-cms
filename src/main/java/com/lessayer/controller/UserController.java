@@ -37,7 +37,7 @@ public class UserController {
 	private RoleService roleService;
 	
 	@GetMapping("/user/{userType}")
-	public String showStaffPage(@PathVariable("userType") String userType, Model model, String keyword) {
+	public String showUserPage(@PathVariable("userType") String userType, Model model, String keyword) {
 		return showUserPageByPage(userType, 0, model, keyword);
 	}
 	
@@ -65,7 +65,7 @@ public class UserController {
 	}
 
 	@GetMapping("/user/{userType}/create")
-	public String showCreateStaffPage(@PathVariable("userType") String userType, Model model) {
+	public String showCreateUserPage(@PathVariable("userType") String userType, Model model) {
 		String pageTitle;
 		List<Role> roleList;
 		
@@ -91,7 +91,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/user/{userType}/save/{pageNum}")
-	public String saveStaff(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
+	public String saveUser(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
 			User user, String enabled, String disabled, RedirectAttributes redirectAttributes,
 			@RequestParam("imageFile") MultipartFile imageFile, String keyword) throws IOException {
 		setUserEnableStatus(enabled, user);
@@ -114,7 +114,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{userType}/edit/{pageNum}/{userId}/{showId}")
-	public String editStaff(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum, 
+	public String editUser(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum, 
 		@PathVariable("userId") Integer userId, Model model, RedirectAttributes redirectAttributes,
 		String keyword) {
 		Optional<User> userOptional = userService.findUserById(userId);
@@ -151,7 +151,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{userType}/view/{pageNum}/{userId}/{showId}")
-	public String viewStaff(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
+	public String viewUser(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
 		@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
 		RedirectAttributes redirectAttributes, String keyword) {
 		Optional<User> userOptional = userService.findUserById(userId);
@@ -168,7 +168,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{userType}/requestRemove/{pageNum}/{userId}/{showId}")
-	public String requestRemoveStaff(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
+	public String requestRemoveUser(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
 		@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
 		RedirectAttributes redirectAttributes, String keyword) {
 		Optional<User> userOptional = userService.findUserById(userId);
@@ -188,7 +188,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/user/{userType}/remove/{pageNum}/{userId}/{showId}")
-	public String removeStaff(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
+	public String removeUser(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
 			@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
 			RedirectAttributes redirectAttributes, String keyword) {
 		
