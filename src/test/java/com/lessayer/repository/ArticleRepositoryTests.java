@@ -256,7 +256,7 @@ public class ArticleRepositoryTests {
 		printArticleList(articlePage1.getContent());
 		printArticleList(articleList2);
 		printArticleList(articlePage2.getContent());
-		
+
 		assertThat(articleList1.size()).isGreaterThan(0);
 		assertThat(articlePage1.getContent().size()).isGreaterThan(0);
 		assertThat(articleList2.size()).isEqualTo(0);
@@ -270,6 +270,47 @@ public class ArticleRepositoryTests {
 		Tag tagInDB = tagRepository.findById(2).get();
 		
 		assertThat(tagInDB.getTag()).isEqualTo(newTag);
+	}
+	
+	@Test
+	public void updateArticleTitleTest() {
+		String title = "介紹單元測試";
+		articleRepository.updateArticleTitle(2, title);
+		Article articleInDB = articleRepository.findById(2).get();
+		
+		assertThat(articleInDB.getTitle()).isEqualTo(title);
+	}
+	
+	@Test
+	public void updateArticleAuthorTest() {
+		String author = "author4";
+		articleRepository.updateArticleAuthor(5, author);
+		Article articleInDB = articleRepository.findById(5).get();
+		
+		assertThat(articleInDB.getAuthor()).isEqualTo(author);
+	}
+	
+	@Test
+	public void updateArticleDateTest() throws ParseException {
+		Date date = dateFormat.parse("2022-05-25");
+		articleRepository.updateArticleDate(3, date);
+		Article articleInDB = articleRepository.findById(3).get();
+		
+		assertThat(articleInDB.getDate()).isInSameDayAs(date);
+	}
+	
+	@Test
+	public void updateArticleTagsTest() throws ParseException {
+		Tag tag = new Tag("Mines et de l'Energie");
+		tagRepository.save(tag);
+		
+		Article article = articleRepository.findById(3).get();
+		article.getTags().add(tag);
+		articleRepository.save(article);
+		
+		Article articleInDB = articleRepository.findById(3).get();
+		
+		assertThat(articleInDB.getTags()).contains(tag);
 	}
 	
 	private void printArticleList(List<Article> articleList) {

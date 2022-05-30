@@ -2,13 +2,16 @@ package com.lessayer.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.lessayer.entity.Article;
+import com.lessayer.entity.Tag;
 
 public interface ArticleRepository extends PagingAndSortingRepository<Article, Integer> {
 	
@@ -53,4 +56,17 @@ public interface ArticleRepository extends PagingAndSortingRepository<Article, I
 	
 	@Query("SELECT DISTINCT a FROM Article a JOIN a.tags t WHERE CONCAT(a.title, ' ', a.author, ' ', a.summary, ' ', t.tag) Like %?1%")
 	public Page<Article> findArticlesWithKeyword(String keyword, Pageable page);
+	
+	@Modifying
+	@Query("UPDATE Article a SET a.title = ?2 WHERE a.id = ?1")
+	public void updateArticleTitle(Integer id, String title);
+	
+	@Modifying
+	@Query("UPDATE Article a SET a.author = ?2 WHERE a.id = ?1")
+	public void updateArticleAuthor(Integer id, String author);
+	
+	@Modifying
+	@Query("UPDATE Article a SET a.date = ?2 WHERE a.id = ?1")
+	public void updateArticleDate(Integer id, Date date);
+	
 }
