@@ -1,5 +1,7 @@
 package com.lessayer.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -8,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.lessayer.entity.Article;
+import com.lessayer.entity.Role;
+import com.lessayer.entity.User;
 import com.lessayer.service.ArticleService;
 
 @Controller
@@ -41,6 +45,26 @@ public class ArticleController {
 		model.addAttribute("baseURL", "/article/articles");
 		
 		return "/article/articles";
+	}
+	
+	@GetMapping("/article/articles/create")
+	public String showCreateArticlePage(Model model) {
+		String pageTitle;
+		
+		Article article = new Article();
+		
+		if (article.getId() == null) {
+			pageTitle = "Create New Article";
+		}
+		else {
+			pageTitle = "Edit Article ID " + article.getId();
+		}
+		
+		model.addAttribute("article", article);
+		model.addAttribute("pageTitle", pageTitle);
+		model.addAttribute("returnPage", 0);
+		model.addAttribute("baseURL", "/article/articles");
+		return "/article/article_form";
 	}
 	
 	private Page<Article> listArticlePage(Integer currentPage, String keyword) {
