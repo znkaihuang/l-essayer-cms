@@ -61,6 +61,7 @@ public class UserController {
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("baseURL", "/user/" + userType);
 		model.addAttribute("userType", userType);
+		
 		return "/user/users";
 	}
 
