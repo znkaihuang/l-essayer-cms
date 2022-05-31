@@ -26,27 +26,27 @@
 						aria-controls="nav-tag" aria-selected="false">Tag</button>
 				</div>
 			</nav>
-		    <form class="row px-4 py-2 justify-content-center" action="#"
+		    <form class="row px-4 py-2 justify-content-center" th:action="${baseURL} + '/save/' + ${returnPage} + ${keyword != null ?'?keyword=' + keyword : ''}"
 		    	method="post" th:object=${article} enctype="multipart/form-data" id="articleForm">
 		    	<input type="hidden" th:field="*{id}">
 		    	<div class="tab-content" id="nav-tabContent">
 					<div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
 						<div class="col-12">
 				    		<label for="title" class="form-label">Title</label>
-				    		<input type="text" class="form-control" id="title" th:field="*{title}" minlength="10" maxlength="100" required="required">
+				    		<input type="text" class="form-control" id="title" th:field="*{title}" minlength="10" maxlength="100">
 				    		<label for="title" class="form-label">(Note: The length of title should be between 10~100 characters.)</label>
 				    	</div>
 				    	<div class="col-8">
-				    		<label for="title" class="form-label">Author</label>
-				    		<input type="text" class="form-control" id="title" th:field="*{author}" minlength="2" maxlength="50" required="required">
+				    		<label for="author" class="form-label">Author</label>
+				    		<input type="text" class="form-control" id="author" th:field="*{author}" minlength="2" maxlength="50">
 				    	</div>
 				    	<div class="col-4">
 				    		<label for="published-date" class="form-label">Published date</label>
-				    		<input type="date" class="form-control w-50" id="published-date" th:field="*{date}" required="required">
+				    		<input type="date" class="form-control w-50" id="published-date" th:field="*{date}">
 				    	</div>
 				    	<div class="col-12">
 				    		<label for="summary" class="form-label">Summary</label>
-				    		<textarea rows="5" class="form-control" id="summary" th:field="*{summary}" minlength="10" maxlength="500" required="required"></textarea>
+				    		<textarea rows="5" class="form-control" id="summary" th:field="*{summary}" minlength="10" maxlength="500"></textarea>
 				    		<label for="summary" class="form-label">(Note: The length of summary should be between 10~500 characters.)</label>
 				    	</div>
 					</div>
@@ -56,7 +56,7 @@
 							<a href="https://www.markdownguide.org/basic-syntax/">Markdown Basic Syntax </a> 
 							if you need any help.
 						</label>
-						<textarea rows="10" class="form-control" id="content" th:field="*{content}" minlength="50" maxlength="10000" required="required"></textarea>
+						<textarea rows="10" class="form-control" id="content" th:field="*{content}" minlength="50" maxlength="10000"></textarea>
 						<label for="content" class="form-label">(Note: The length of summary should be between 50~10000 characters.)</label>
 					</div>
 					<div class="tab-pane fade" id="nav-attach" role="tabpanel" aria-labelledby="nav-attach-tab">
@@ -111,7 +111,7 @@
 	<div th:replace="modal_fragments :: messageModal('')" />
     <script type="text/javascript" th:src="@{/js/common_form.js}"></script>
 	<script>
-
+		validateArticleFormInputs();
     </script>
 	
 </body>

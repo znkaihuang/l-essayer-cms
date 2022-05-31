@@ -44,3 +44,49 @@ function checkUniqueEmail() {
 			}
 	});
 }
+
+function validateArticleFormInputs () {
+	const articleForm = document.getElementById('articleForm');
+	articleForm.addEventListener('submit', function(event) {
+		event.preventDefault();
+		
+		let warningMessage = 'Please fill in the following field(s):';
+		let blankFieldCount = 0;
+		let title = document.getElementById('title');
+		let author = document.getElementById('author');
+		let date = document.getElementById('published-date');
+		let summary = document.getElementById('summary');
+		let content = document.getElementById('content');
+		
+		if (title.value === '' || title.value == null) {
+			warningMessage += '\n  - title';
+			blankFieldCount++;
+		}
+		if (author.value === '' || author.value == null) {
+			warningMessage += '\n  - author';
+			blankFieldCount++;
+		}
+		if (date.value === '' || date.value == null) {
+			warningMessage += '\n  - date';
+			blankFieldCount++;
+		}
+		if (summary.value === '' || summary.value == null) {
+			warningMessage += '\n  - summary';
+			blankFieldCount++;
+		}
+		if (content.value === '' || content.value == null) {
+			warningMessage += '\n  - content';
+			blankFieldCount++;
+		}
+				
+		if (blankFieldCount == 0) {
+			articleForm.submit();
+		}
+		else {
+			showModal('Warning');
+			document.getElementById('messageModalTitle').innerText = 'Warning';
+			document.getElementById('messageModalBody').innerText = warningMessage;
+		}
+	});
+	
+}

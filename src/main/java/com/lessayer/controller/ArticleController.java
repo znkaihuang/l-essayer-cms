@@ -1,14 +1,22 @@
 package com.lessayer.controller;
 
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lessayer.entity.Article;
+import com.lessayer.entity.User;
 import com.lessayer.service.ArticleService;
 
 @Controller
@@ -62,6 +70,19 @@ public class ArticleController {
 		model.addAttribute("returnPage", 0);
 		model.addAttribute("baseURL", "/article/articles");
 		return "/article/article_form";
+	}
+	
+	@PostMapping("/article/articles/save/{pageNum}")
+	public String saveArticle(@PathVariable("pageNum") Integer pageNum, Article article, RedirectAttributes redirectAttributes,
+		String keyword) throws IOException {
+		
+		System.out.println(article);
+		
+		return formatRedirectURL("redirect:/article/articles/" + pageNum, keyword);
+	}
+	
+	private String formatRedirectURL(String redirectURL, String keyword) {
+		return (keyword == null) ? redirectURL : redirectURL + "?keyword=" + keyword;
 	}
 	
 	private Page<Article> listArticlePage(Integer currentPage, String keyword) {
