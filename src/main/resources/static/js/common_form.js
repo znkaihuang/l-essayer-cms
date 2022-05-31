@@ -90,3 +90,37 @@ function validateArticleFormInputs () {
 	});
 	
 }
+
+function createTagInTagsSection(tag) {
+	if (canAddTag(addedTagsDiv, tag.value)) {
+		tagElement = createSpanEleForTag(tag.value, addedTagsDiv);
+		addedTagsDiv.appendChild(tagElement);
+	}
+	tag.value = '';
+}
+
+function createSpanEleForTag(tagName, addedSection) {
+	tagElement = document.createElement('span');
+	tagElement.innerText = tagName;
+	tagElement.classList.add('badge');
+	tagElement.classList.add('rounded-pill');
+	tagElement.classList.add('fs-6');
+	tagElement.classList.add('my-1');
+	tagElement.classList.add('mx-1');
+	tagElement.onclick = function() {
+		addedSection.removeChild(this);
+	}
+	return tagElement;
+}
+
+function canAddTag(addedSection, tagName) {
+	if (addedSection.childElementCount >= 6)
+		return false;
+	
+	for (child of addedSection.children) {
+		if (child.innerText === tagName)
+			return false;
+	}
+	
+	return true;
+}

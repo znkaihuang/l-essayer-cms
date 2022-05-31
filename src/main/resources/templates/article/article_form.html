@@ -81,20 +81,31 @@
 								Choose at most five tags for your article.
 							</label>
 						</div>
-						<div class="col-8">
-							<label class="form-label" for="tag-select">Select tag</label> 
-							<select class="form-select w-50" id="tag-select">
-								<option value="1">Tag 1</option>
-								<option value="2">Tag 2</option>
-							</select>
+						<div class="col-8 py-1">
+							<label class="form-label" for="tag-select">Select tag</label>
+							<div class="d-flex gap-2 select-wrapper">
+								<select class="form-select w-50" id="tag-select" name="tag-select" size="3">
+									<th:block th:each="tag : ${tagList}">
+										<option th:value="${tag.tag}">[[${tag.tag}]]</option>
+									</th:block>
+								</select>
+								<button type="button" class="btn btn-success align-self-end" id="tag-select-btn">Select</button>
+							</div>
 						</div>
-						<div class="col-8">
+						<div class="col-8 py-1">
 							<label class="form-label" for="tag-create">Create tag</label> 
-							<input type="text" class="form-control w-50" id="tag-create" minlength="2" maxlength="30">
+							<div class="d-flex gap-2">
+								<input type="text" class="form-control w-50" id="tag-create" minlength="2" maxlength="30">
+								<button type="button" class="btn btn-success" id="tag-create-btn">Create</button>
+							</div>
 							<label class="form-label">(Note: The length of tag name should be between 2~30 characters.)</label>
+							
 						</div>
-						<div class="col-12" id="selected-tags-section">
-						
+						<div class="col-12" id="added-tags-section" style="height: 100px;">
+							<h6>Added Tags (toggle to delete):</h6>
+				  			<th:block th:each="tag : ${article.tags}">
+								<span class="badge rounded-pill fs-6 my-1" th:id="${tag.id}">[[${tag.tag}]]</span>
+				  			</th:block>
 						</div>
 					</div>
 				</div>
@@ -112,6 +123,18 @@
     <script type="text/javascript" th:src="@{/js/common_form.js}"></script>
 	<script>
 		validateArticleFormInputs();
+		let addedTagsDiv = document.getElementById('added-tags-section');
+		let selectTagBtn = document.getElementById('tag-select-btn');
+		let selectTag = document.getElementById('tag-select');
+		let createTagBtn = document.getElementById('tag-create-btn');
+		let createTag = document.getElementById('tag-create')
+		selectTagBtn.onclick = function() {
+			createTagInTagsSection(selectTag);
+		};
+
+		createTagBtn.onclick = function() {
+			createTagInTagsSection(createTag);
+		};
     </script>
 	
 </body>

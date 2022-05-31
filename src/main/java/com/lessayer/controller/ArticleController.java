@@ -2,28 +2,31 @@ package com.lessayer.controller;
 
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lessayer.entity.Article;
-import com.lessayer.entity.User;
+import com.lessayer.entity.Tag;
 import com.lessayer.service.ArticleService;
+import com.lessayer.service.TagService;
 
 @Controller
 public class ArticleController {
 	
 	@Autowired
 	private ArticleService articleService;
+	
+	@Autowired
+	private TagService tagService;
 	
 	@GetMapping("/article/articles")
 	public String showArticlePage(Model model, String keyword) {
@@ -55,6 +58,7 @@ public class ArticleController {
 	@GetMapping("/article/articles/create")
 	public String showCreateArticlePage(Model model) {
 		String pageTitle;
+		List<Tag> tagList = tagService.retrieveAllTags();
 		
 		Article article = new Article();
 		
@@ -66,6 +70,7 @@ public class ArticleController {
 		}
 		
 		model.addAttribute("article", article);
+		model.addAttribute("tagList", tagList);
 		model.addAttribute("pageTitle", pageTitle);
 		model.addAttribute("returnPage", 0);
 		model.addAttribute("baseURL", "/article/articles");
@@ -73,10 +78,11 @@ public class ArticleController {
 	}
 	
 	@PostMapping("/article/articles/save/{pageNum}")
-	public String saveArticle(@PathVariable("pageNum") Integer pageNum, Article article, RedirectAttributes redirectAttributes,
-		String keyword) throws IOException {
+	public String saveArticle(@PathVariable("pageNum") Integer pageNum, Article article, 
+		RedirectAttributes redirectAttributes, String keyword, MultipartFile imageFile1,
+		MultipartFile imageFile2, MultipartFile imageFile3) throws IOException {
 		
-		System.out.println(article);
+		System.out.println(article.getContent());
 		
 		return formatRedirectURL("redirect:/article/articles/" + pageNum, keyword);
 	}

@@ -33,9 +33,15 @@
 
 /*** Card ***/
 .card .card-header,
-.card .badge {
+.card .badge,
+span.badge {
 	background-color: rgb(25, 135, 84);
 	border-color: gb(25, 135, 84);
+}
+
+/*** Select ***/
+.select-wrapper {
+	height: 75px;
 }
 
 /*** Button ***/
