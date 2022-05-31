@@ -103,8 +103,9 @@
 						</div>
 						<div class="col-12" id="added-tags-section" style="height: 100px;">
 							<h6>Added Tags (toggle to delete):</h6>
-				  			<th:block th:each="tag : ${article.tags}">
+				  			<th:block th:each="tag : ${article.tags}" name="addedTags">
 								<span class="badge rounded-pill fs-6 my-1" th:id="${tag.id}">[[${tag.tag}]]</span>
+								<input type="hidden" name="tag" th:value="${tag.tag}">
 				  			</th:block>
 						</div>
 					</div>

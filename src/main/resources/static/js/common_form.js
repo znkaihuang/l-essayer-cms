@@ -93,13 +93,15 @@ function validateArticleFormInputs () {
 
 function createTagInTagsSection(tag) {
 	if (canAddTag(addedTagsDiv, tag.value)) {
-		tagElement = createSpanEleForTag(tag.value, addedTagsDiv);
+		hiddenEle = createHiddenInputEleForTag(tag.value);
+		tagElement = createSpanEleForTag(tag.value, addedTagsDiv, hiddenEle);
 		addedTagsDiv.appendChild(tagElement);
+		addedTagsDiv.appendChild(hiddenEle);
 	}
 	tag.value = '';
 }
 
-function createSpanEleForTag(tagName, addedSection) {
+function createSpanEleForTag(tagName, addedSection, hiddenEle) {
 	tagElement = document.createElement('span');
 	tagElement.innerText = tagName;
 	tagElement.classList.add('badge');
@@ -109,12 +111,21 @@ function createSpanEleForTag(tagName, addedSection) {
 	tagElement.classList.add('mx-1');
 	tagElement.onclick = function() {
 		addedSection.removeChild(this);
+		addedSection.removeChild(hiddenEle);
 	}
 	return tagElement;
 }
 
+function createHiddenInputEleForTag(tagName) {
+	tagElement = document.createElement('input');
+	tagElement.type = 'hidden';
+	tagElement.name = 'tag';
+	tagElement.value = tagName;
+	return tagElement;
+}
+
 function canAddTag(addedSection, tagName) {
-	if (addedSection.childElementCount >= 6)
+	if (addedSection.childElementCount >= 11)
 		return false;
 	
 	for (child of addedSection.children) {

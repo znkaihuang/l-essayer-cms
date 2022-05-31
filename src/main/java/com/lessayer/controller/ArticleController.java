@@ -80,9 +80,11 @@ public class ArticleController {
 	@PostMapping("/article/articles/save/{pageNum}")
 	public String saveArticle(@PathVariable("pageNum") Integer pageNum, Article article, 
 		RedirectAttributes redirectAttributes, String keyword, MultipartFile imageFile1,
-		MultipartFile imageFile2, MultipartFile imageFile3) throws IOException {
+		MultipartFile imageFile2, MultipartFile imageFile3, String tag) throws IOException {
 		
+		System.out.println(article);
 		System.out.println(article.getContent());
+		System.out.println(tag);
 		
 		return formatRedirectURL("redirect:/article/articles/" + pageNum, keyword);
 	}
