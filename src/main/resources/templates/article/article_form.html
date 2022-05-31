@@ -9,12 +9,96 @@
     	<div class="form-header">
     		<h2 class="text-center text-light bg-success py-2">[[${pageTitle}]]</h2>
 	    </div>
-	    <div class="form border border-success border-3 rounded">
-		    <form class="row g-3 p-5 justify-content-center" action="#"
+		<div class="form border border-success border-3 rounded">
+			<nav>
+				<div class="nav nav-tabs" id="nav-tab" role="tablist">
+					<button class="nav-link active" id="nav-home-tab"
+						data-bs-toggle="tab" data-bs-target="#nav-profile" type="button"
+						role="tab" aria-controls="nav-profile" aria-selected="true">Profile</button>
+					<button class="nav-link" id="nav-content-tab" data-bs-toggle="tab"
+						data-bs-target="#nav-content" type="button" role="tab"
+						aria-controls="nav-content" aria-selected="false">Content</button>
+					<button class="nav-link" id="nav-attach-tab" data-bs-toggle="tab"
+						data-bs-target="#nav-attach" type="button" role="tab"
+						aria-controls="nav-attatch" aria-selected="false">Attachment</button>
+					<button class="nav-link" id="nav-tag-tab" data-bs-toggle="tab"
+						data-bs-target="#nav-tag" type="button" role="tab"
+						aria-controls="nav-tag" aria-selected="false">Tag</button>
+				</div>
+			</nav>
+		    <form class="row px-4 py-2 justify-content-center" action="#"
 		    	method="post" th:object=${article} enctype="multipart/form-data" id="articleForm">
 		    	<input type="hidden" th:field="*{id}">
-		    	
-			  	<div class="d-flex gap-2 col-10 justify-content-center">
+		    	<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+						<div class="col-12">
+				    		<label for="title" class="form-label">Title</label>
+				    		<input type="text" class="form-control" id="title" th:field="*{title}" minlength="10" maxlength="100" required="required">
+				    		<label for="title" class="form-label">(Note: The length of title should be between 10~100 characters.)</label>
+				    	</div>
+				    	<div class="col-8">
+				    		<label for="title" class="form-label">Author</label>
+				    		<input type="text" class="form-control" id="title" th:field="*{author}" minlength="2" maxlength="50" required="required">
+				    	</div>
+				    	<div class="col-4">
+				    		<label for="published-date" class="form-label">Published date</label>
+				    		<input type="date" class="form-control w-50" id="published-date" th:field="*{date}" required="required">
+				    	</div>
+				    	<div class="col-12">
+				    		<label for="summary" class="form-label">Summary</label>
+				    		<textarea rows="5" class="form-control" id="summary" th:field="*{summary}" minlength="10" maxlength="500" required="required"></textarea>
+				    		<label for="summary" class="form-label">(Note: The length of summary should be between 10~500 characters.)</label>
+				    	</div>
+					</div>
+					<div class="tab-pane fade" id="nav-content" role="tabpanel" aria-labelledby="nav-content-tab">
+						<label for="content" class="form-label"> 
+							Prepare your writing following the Markdown format. Click the link 
+							<a href="https://www.markdownguide.org/basic-syntax/">Markdown Basic Syntax </a> 
+							if you need any help.
+						</label>
+						<textarea rows="10" class="form-control" id="content" th:field="*{content}" minlength="50" maxlength="10000" required="required"></textarea>
+						<label for="content" class="form-label">(Note: The length of summary should be between 50~10000 characters.)</label>
+					</div>
+					<div class="tab-pane fade" id="nav-attach" role="tabpanel" aria-labelledby="nav-attach-tab">
+						<label class="form-label"> 
+							If you require any image in your writing, remember to submit your image file(s) here.
+						</label>
+						<div class="input-group my-2">
+							<input type="file" class="form-control" id="imageFile1" accept="image/**" name="imageFile1">
+						</div>
+						<div class="input-group my-4">
+							<input type="file" class="form-control" id="imageFile2" accept="image/**" name="imageFile2">
+						</div>
+						<div class="input-group my-4">
+							<input type="file" class="form-control" id="imageFile3" accept="image/**" name="imageFile3">
+						</div>
+						<label class="form-label">(Note: At most three images are allowed per article.)</label>
+					</div>
+					<div class="tab-pane fade" id="nav-tag" role="tabpanel" aria-labelledby="nav-tag-tab">
+						<div class="col-12">
+							<label class="form-label"> 
+								Pick some tags for your writing. Create one if there does not exist any suitable tag for your writing. <br>
+								Choose at most five tags for your article.
+							</label>
+						</div>
+						<div class="col-8">
+							<label class="form-label" for="tag-select">Select tag</label> 
+							<select class="form-select w-50" id="tag-select">
+								<option value="1">Tag 1</option>
+								<option value="2">Tag 2</option>
+							</select>
+						</div>
+						<div class="col-8">
+							<label class="form-label" for="tag-create">Create tag</label> 
+							<input type="text" class="form-control w-50" id="tag-create" minlength="2" maxlength="30">
+							<label class="form-label">(Note: The length of tag name should be between 2~30 characters.)</label>
+						</div>
+						<div class="col-12" id="selected-tags-section">
+						
+						</div>
+					</div>
+				</div>
+			  	<div class="d-flex gap-2 py-2 col-10 justify-content-center">
 			    	<input type="submit" class="btn btn-success" value="Create">
 			    	<a th:href="${baseURL} + '/' + ${returnPage} + ${keyword != null ?'?keyword=' + keyword : ''}">
 			    		<button type="button" class="btn btn-success">Cancel</button></a>
