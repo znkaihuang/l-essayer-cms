@@ -43,7 +43,6 @@
 		var length = 80;
 		let summaryList = document.getElementsByClassName('article-summary');
 		for (summary of summaryList) {
-			console.log(summary.innerText.length);
 			if (summary.innerText.length > length) {
 				summary.innerText = summary.innerText.substring(0, length - 1 ) + '...';
 			}
