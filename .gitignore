@@ -62,3 +62,6 @@ hs_err_pid*
 
 # User photos
 /user-photos/
+
+# Article images
+/article-image-files/
