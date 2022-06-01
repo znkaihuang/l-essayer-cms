@@ -35,15 +35,13 @@ class UserCsvExporter<E> extends AbstractFileExporter<E> {
 		
 		csvWriter.writeHeader(csvHeader);
 		
-		for (E staff : contentList) {
-			if (staff instanceof User) {
-				csvWriter.write((User) staff, fieldMapping);
+		for (E user : contentList) {
+			if (user instanceof User) {
+				csvWriter.write((User) user, fieldMapping);
 			}
 		}
 		
 		csvWriter.close();
-		
-		
 	}
 
 }
