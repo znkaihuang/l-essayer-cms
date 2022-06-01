@@ -1,5 +1,7 @@
 package com.lessayer.entity;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,6 +34,23 @@ public class Tag implements Comparable<Tag> {
 	@Override
 	public int compareTo(Tag anotherTag) {
 		return tag.compareTo(anotherTag.getTag());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(tag);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tag other = (Tag) obj;
+		return Objects.equals(tag, other.tag);
 	}
 	
 }
