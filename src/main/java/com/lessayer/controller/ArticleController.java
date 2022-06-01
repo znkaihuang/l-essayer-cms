@@ -2,7 +2,12 @@ package com.lessayer.controller;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.lessayer.FileUploadUtil;
 import com.lessayer.entity.Article;
 import com.lessayer.entity.Tag;
 import com.lessayer.service.ArticleService;
@@ -26,7 +32,7 @@ public class ArticleController {
 	private ArticleService articleService;
 	
 	@Autowired
-	private TagService tagService;
+	private TagService tagService; 
 	
 	@GetMapping("/article/articles")
 	public String showArticlePage(Model model, String keyword) {
@@ -79,16 +85,35 @@ public class ArticleController {
 	
 	@PostMapping("/article/articles/save/{pageNum}")
 	public String saveArticle(@PathVariable("pageNum") Integer pageNum, Article article, 
-		RedirectAttributes redirectAttributes, String keyword, MultipartFile imageFile1,
-		MultipartFile imageFile2, MultipartFile imageFile3, String tag) throws IOException {
+		RedirectAttributes redirectAttributes, String keyword, MultipartFile[] imageFile,
+		String tag) throws IOException {
 		
-		System.out.println(article);
-		System.out.println(article.getContent());
-		System.out.println(tag);
+		updateTags(article, parseTagString(tag));
+		Article articleInDB = articleService.saveArticle(article);
+
+		System.out.println(imageFile.length);
+		
 		
 		return formatRedirectURL("redirect:/article/articles/" + pageNum, keyword);
 	}
 	
+	private void updateTags(Article article, List<Tag> updatedTags) {
+		List<Tag> tagCacheList = tagService.retrieveAllTags();
+		Set<Tag> newTags = new TreeSet<>();
+		updatedTags.forEach(updatedTag -> {
+			if (tagCacheList.contains(updatedTag)) {
+				Integer index = tagCacheList.indexOf(updatedTag);
+				newTags.add(tagCacheList.get(index));
+			}
+			else {
+				Tag tagInDB = tagService.createTag(updatedTag);
+				tagCacheList.add(tagInDB);
+				newTags.add(tagInDB);
+			}
+		});
+		article.setTags(newTags);
+	}
+
 	private String formatRedirectURL(String redirectURL, String keyword) {
 		return (keyword == null) ? redirectURL : redirectURL + "?keyword=" + keyword;
 	}
@@ -101,5 +126,26 @@ public class ArticleController {
 			return articleService.listArticleWithKeywordByPage(currentPage, keyword);
 		}
 	}
+	
+	// The format of tag string is "<tag>,<tag>, ...
+	private List<Tag> parseTagString(String tagString) {
+		List<Tag> tagList = new ArrayList<>();
+		String[] tagStringArray = tagString.split(",");
+		
+		for (int count = 0; count < tagStringArray.length; count++) {
+			tagList.add(new Tag(tagStringArray[count]));
+		}
+		
+		return tagList;
+	}
+	
+	private void uploadImageFiles(Integer articleId, MultipartFile[] imageFile)
+			throws IOException {
+			String uploadDir = "article-image-files/" + articleId;
+			FileUploadUtil.remove(uploadDir);
+			for (int count = 0; count < imageFile.length; count++) {
+				FileUploadUtil.saveFile(uploadDir, imageFile[count].getOriginalFilename(), imageFile[count]);
+			}
+		}
 	
 }

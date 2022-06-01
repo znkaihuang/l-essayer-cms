@@ -31,4 +31,8 @@ public class ArticleService {
 		return page;
 	}
 
+	public Article saveArticle(Article article) {
+		return articleRepository.save(article);
+	}
+
 }
