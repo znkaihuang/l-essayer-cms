@@ -47,6 +47,9 @@
 				summary.innerText = summary.innerText.substring(0, length - 1 ) + '...';
 			}
 		}
+		const modalTitle = "[[${modalTitle}]]";
+		const modalBody = "[[${modalBody}]]";
+		if (modalTitle !== "") showModal(modalTitle);
 	</script>
 	
 </body>

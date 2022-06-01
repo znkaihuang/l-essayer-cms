@@ -64,13 +64,13 @@
 							If you require any image in your writing, remember to submit your image file(s) here.
 						</label>
 						<div class="input-group my-2">
-							<input type="file" class="form-control" id="imageFile1" accept="image/**" name="imageFile1">
+							<input type="file" class="form-control" id="imageFile1" accept="image/**" name="imageFile">
 						</div>
 						<div class="input-group my-4">
-							<input type="file" class="form-control" id="imageFile2" accept="image/**" name="imageFile2">
+							<input type="file" class="form-control" id="imageFile2" accept="image/**" name="imageFile">
 						</div>
 						<div class="input-group my-4">
-							<input type="file" class="form-control" id="imageFile3" accept="image/**" name="imageFile3">
+							<input type="file" class="form-control" id="imageFile3" accept="image/**" name="imageFile">
 						</div>
 						<label class="form-label">(Note: At most three images are allowed per article.)</label>
 					</div>
@@ -105,7 +105,7 @@
 							<h6>Added Tags (toggle to delete):</h6>
 				  			<th:block th:each="tag : ${article.tags}" name="addedTags">
 								<span class="badge rounded-pill fs-6 my-1" th:id="${tag.id}">[[${tag.tag}]]</span>
-								<input type="hidden" name="tag" th:value="${tag.tag}">
+								<input type="hidden" th:value="${tag.tag}">
 				  			</th:block>
 						</div>
 					</div>

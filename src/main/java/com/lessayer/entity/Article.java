@@ -1,8 +1,8 @@
 package com.lessayer.entity;
 
-import java.beans.Transient;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -115,4 +116,21 @@ public class Article {
 		TreeSet<Tag> sortedTags = new TreeSet<>(tags);
 		return sortedTags;
 	}
+	
+	@Transient
+	private List<String> imageFiles;
+	
+	public void addImageFiles(String imageFile) {
+		imageFiles.add(imageFile);
+	}
+	
+	public void removeAllImageFiles() {
+		imageFiles.removeAll(imageFiles);
+	}
+	
+	@Transient
+	public List<String> getImageFiles() {
+		return null;
+	}
+	
 }

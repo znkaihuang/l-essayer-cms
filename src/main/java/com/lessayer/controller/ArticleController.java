@@ -3,8 +3,6 @@ package com.lessayer.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -89,12 +87,23 @@ public class ArticleController {
 		String tag) throws IOException {
 		
 		updateTags(article, parseTagString(tag));
-		Article articleInDB = articleService.saveArticle(article);
-
-		System.out.println(imageFile.length);
+		Article savedArticle = articleService.saveArticle(article);
 		
+		System.out.println(imageFile.length);
+		if (!imageFile[0].isEmpty()) {
+			uploadImageFiles(savedArticle.getId(), imageFile);
+			articleService.setImageFiles(savedArticle, imageFile);
+		}
+		
+		String modalBody = (article.getId() == null) ? "Create Article with ID " + savedArticle.getId() : "Update Article with ID " + article.getId();
+		setModalMessage(redirectAttributes, "Success", modalBody);
 		
 		return formatRedirectURL("redirect:/article/articles/" + pageNum, keyword);
+	}
+	
+	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
+		redirectAttributes.addFlashAttribute("modalTitle", modalTitle);
+		redirectAttributes.addFlashAttribute("modalBody", modalBody);
 	}
 	
 	private void updateTags(Article article, List<Tag> updatedTags) {
@@ -139,13 +148,15 @@ public class ArticleController {
 		return tagList;
 	}
 	
-	private void uploadImageFiles(Integer articleId, MultipartFile[] imageFile)
+	private void uploadImageFiles(Integer articleId, MultipartFile[] imageFiles)
 			throws IOException {
-			String uploadDir = "article-image-files/" + articleId;
-			FileUploadUtil.remove(uploadDir);
-			for (int count = 0; count < imageFile.length; count++) {
-				FileUploadUtil.saveFile(uploadDir, imageFile[count].getOriginalFilename(), imageFile[count]);
+		String uploadDir = "article-image-files/" + articleId;
+		FileUploadUtil.remove(uploadDir);
+		for (int count = 0; count < imageFiles.length; count++) {
+			if (!imageFiles[count].isEmpty()) {
+				FileUploadUtil.saveFile(uploadDir, imageFiles[count].getOriginalFilename(), imageFiles[count]);
 			}
 		}
+	}
 	
 }
