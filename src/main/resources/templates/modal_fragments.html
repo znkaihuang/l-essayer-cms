@@ -13,7 +13,7 @@
 					</th:block>
 					<th:block th:if="${modalTitle} == 'Warning'">
 						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="yesButton">
-							<a th:href="@{${yesButtonURL}}" class="text-white text-decoration-none">Yes</a>
+							<a th:href="${yesButtonURL}" class="text-white text-decoration-none">Yes</a>
 						</button>
 						<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="noButton">No</button>
 					</th:block>

@@ -75,4 +75,13 @@ public class ArticleService {
 		return markdownHTMLConverter.convertContentToHTMLString(article.getContent());
 	}
 
+	public void deleteArticleById(Integer articleId) {
+		Optional<Article> articleOptional = articleRepository.findById(articleId);
+		
+		if (articleOptional.isPresent()) {
+			articleRepository.delete(articleOptional.get());
+		}
+		
+	}
+
 }

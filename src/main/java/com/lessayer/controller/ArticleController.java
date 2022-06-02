@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.lessayer.AbstractFileExporter;
 import com.lessayer.FileUploadUtil;
 import com.lessayer.entity.Article;
+import com.lessayer.entity.ArticleImage;
 import com.lessayer.entity.Tag;
 import com.lessayer.exporter.ArticleCsvExporterDelegate;
 import com.lessayer.exporter.ArticlePdfExporterDelegate;
@@ -75,6 +76,7 @@ public class ArticleController {
 		List<Tag> tagList = tagService.retrieveAllTags();
 		
 		Article article = new Article();
+		article.setImageFiles(new ArrayList<ArticleImage>());
 		
 		if (article.getId() == null) {
 			pageTitle = "Create New Article";
@@ -168,6 +170,40 @@ public class ArticleController {
 			
 			return "/article/article_form";
 		}
+	}
+	
+	@GetMapping("/article/articles/requestRemove/{pageNum}/{articleId}/{showId}")
+	public String requestRemoveUser(@PathVariable("pageNum") Integer pageNum,@PathVariable("articleId") Integer articleId, 
+		@PathVariable("showId") Integer showId, RedirectAttributes redirectAttributes, String keyword) throws UnsupportedEncodingException {
+		Optional<Article> articleOptional = articleService.findArticleById(articleId);
+		
+		if (articleOptional.isEmpty()) {
+			setModalMessage(redirectAttributes, "Error", "Cannot find Article with ID " + articleId);
+		}
+		else {
+			setModalMessage(redirectAttributes, "Warning", "Are you sure to delete the article with ID " + articleId + "?");
+			redirectAttributes.addFlashAttribute("articleId", articleId);
+			redirectAttributes.addFlashAttribute("showId", showId);
+			redirectAttributes.addFlashAttribute("yesButtonURL", 
+					formatRedirectURL("/article/articles/remove/" + pageNum + "/" + articleId + "/" + showId, keyword));
+		}
+		
+		return formatRedirectURL("redirect:/article/articles/" + pageNum, keyword);
+	}
+	
+	@GetMapping("/article/articles/remove/{pageNum}/{articleId}/{showId}")
+	public String removeUser(@PathVariable("pageNum") Integer pageNum, @PathVariable("articleId") Integer articleId,
+		@PathVariable("showId") Integer showId, RedirectAttributes redirectAttributes, String keyword) throws UnsupportedEncodingException {
+		
+		articleService.deleteArticleById(articleId);
+		FileUploadUtil.remove("article-image-files/" + articleId);
+		
+		if (showId == 0 && pageNum > 0) {
+			pageNum--;
+		}
+		setModalMessage(redirectAttributes, "Success", "Successfully delete article with ID " + articleId);
+		
+		return formatRedirectURL("redirect:/article/articles/" + pageNum, keyword);
 	}
 	
 	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
