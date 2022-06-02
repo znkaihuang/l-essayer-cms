@@ -99,6 +99,7 @@ public class ArticleController {
 		
 		article.setDate(dateFormat.parse(date));
 		updateTags(article, parseTagString(tag));
+
 		Article savedArticle = articleService.saveArticle(article);
 		
 		if (!imageFile[0].isEmpty()) {

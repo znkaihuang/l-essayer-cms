@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -63,6 +64,11 @@ public class ArticleImage {
 		this.height = height;
 		this.size = size;
 		this.article = article;
+	}
+	
+	@Transient
+	public String getImageFilePath() {
+		return "/article-image-files/" + article.getId() + "/" + fileName;
 	}
 	
 }
