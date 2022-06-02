@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -61,6 +63,17 @@ public class Article {
 	
 	@Column(name = "content", length = 10000, nullable = false)
 	private String content;
+	
+	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ArticleImage> imageFiles;
+	
+	public void addImageFiles(ArticleImage imageFile) {
+		imageFiles.add(imageFile);
+	}
+	
+	public void removeAllImageFiles() {
+		imageFiles.removeAll(imageFiles);
+	}
 	
 	public Article(String title, String author, Date date, String summary, String content,
 			Set<Tag> tags) {
@@ -115,22 +128,6 @@ public class Article {
 	public Set<Tag> getSortedTags() {
 		TreeSet<Tag> sortedTags = new TreeSet<>(tags);
 		return sortedTags;
-	}
-	
-	@Transient
-	private List<String> imageFiles;
-	
-	public void addImageFiles(String imageFile) {
-		imageFiles.add(imageFile);
-	}
-	
-	public void removeAllImageFiles() {
-		imageFiles.removeAll(imageFiles);
-	}
-	
-	@Transient
-	public List<String> getImageFiles() {
-		return null;
 	}
 	
 	@Transient
