@@ -74,12 +74,15 @@
 						</div>
 						<label class="form-label">(Note: At most three images are allowed per article.)</label>
 						<input type="hidden" th:field="*{imageFiles}">
-						<div th:if="${article.imageFiles.size &gt; 0}">
-							<label class="form-label"><strong>Selected image file(s)</strong></label><br>
+						<div th:if="${article.imageFiles.size &gt; 0}" id="added-files-section">
+							<label class="form-label"><strong>Selected image file(s)</strong></label>
 							<th:block th:each="imageFileName : ${article.imageFiles}">
-								<a th:href="${imageFileName.imageFilePath}" class="d-inline-block" target="_blank">
-									<span class="fa-solid fa-image fa-2x p-2"></span>[[${imageFileName.fileName}]]
-								</a><br>
+								<div class="py-1" th:id="'file' + ${imageFileName.id}">
+								<a th:href="${imageFileName.imageFilePath}" target="_blank" >
+									<span class="fa-solid fa-image fa-2x pe-2"></span><span class="mb-2">[[${imageFileName.fileName}]]</span>
+								</a>
+								<span class="fa-solid fa-xmark remove-file px-2" th:id="'removeFile' + ${imageFileName.id}"></span>
+								</div>
 							</th:block>
 						</div>
 					</div>
@@ -144,6 +147,7 @@
 			createTagInTagsSection(createTag);
 		};
 		createHiddenInputEleForExistedTags(addedTagsDiv);
+		createClickRemoveFileFunction();
 		validateArticleFormInputs();
     </script>
 	

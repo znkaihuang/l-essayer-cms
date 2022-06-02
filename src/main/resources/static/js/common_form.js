@@ -157,3 +157,19 @@ function canAddTag(addedSection, tagName) {
 	
 	return true;
 }
+
+function createClickRemoveFileFunction() {
+	let addedFileSection = document.getElementById('added-files-section');
+	let imageFileArrayEle = document.getElementById('imageFiles');
+	for (element of document.getElementsByClassName('remove-file')) {
+		element.onclick = function() {
+			removeFile = this.id.replace('removeFile', '');
+			addedFileSection.removeChild(document.getElementById('file' + removeFile));
+			imageFileArrayEle.value = imageFileArrayEle.value.replace(removeFile, '');
+			if (addedFileSection.childElementCount < 2) {
+				addedFileSection.remove();
+			}
+		}
+	}
+
+}
