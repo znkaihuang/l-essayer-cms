@@ -1,6 +1,8 @@
 package com.lessayer.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Optional;
 
@@ -154,7 +156,7 @@ public class UserController {
 	@GetMapping("/user/{userType}/view/{pageNum}/{userId}/{showId}")
 	public String viewUser(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
 		@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
-		RedirectAttributes redirectAttributes, String keyword) {
+		RedirectAttributes redirectAttributes, String keyword) throws UnsupportedEncodingException {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
@@ -171,7 +173,7 @@ public class UserController {
 	@GetMapping("/user/{userType}/requestRemove/{pageNum}/{userId}/{showId}")
 	public String requestRemoveUser(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
 		@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
-		RedirectAttributes redirectAttributes, String keyword) {
+		RedirectAttributes redirectAttributes, String keyword) throws UnsupportedEncodingException {
 		Optional<User> userOptional = userService.findUserById(userId);
 		
 		if (userOptional.isEmpty()) {
@@ -191,7 +193,7 @@ public class UserController {
 	@GetMapping("/user/{userType}/remove/{pageNum}/{userId}/{showId}")
 	public String removeUser(@PathVariable("userType") String userType, @PathVariable("pageNum") Integer pageNum,
 			@PathVariable("userId") Integer userId, @PathVariable("showId") Integer showId,
-			RedirectAttributes redirectAttributes, String keyword) {
+			RedirectAttributes redirectAttributes, String keyword) throws UnsupportedEncodingException {
 		
 		userService.deleteUserById(userId);
 		FileUploadUtil.remove("user-photos/" + userId);
@@ -248,8 +250,8 @@ public class UserController {
 		}
 	}
 	
-	private String formatRedirectURL(String redirectURL, String keyword) {
-		return (keyword == null) ? redirectURL : redirectURL + "?keyword=" + keyword;
+	private String formatRedirectURL(String redirectURL, String keyword) throws UnsupportedEncodingException {
+		return (keyword == null) ? redirectURL : redirectURL + "?keyword=" + URLEncoder.encode(keyword, "utf-8");
 	}
 	
 	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
