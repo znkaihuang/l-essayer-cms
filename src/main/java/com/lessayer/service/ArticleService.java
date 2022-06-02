@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lessayer.converter.ContentConverter;
 import com.lessayer.converter.ContentConverter.ConvertType;
 import com.lessayer.entity.Article;
+import com.lessayer.entity.ArticleImage;
+import com.lessayer.repository.ArticleImageRepository;
 import com.lessayer.repository.ArticleRepository;
 
 @Service
@@ -23,6 +25,9 @@ public class ArticleService {
 	
 	@Autowired
 	private ArticleRepository articleRepository;
+	
+	@Autowired
+	private ArticleImageRepository articleImageRepository;
 	
 	public List<Article> listAllArticles() {
 		return articleRepository.findAllArticles();
@@ -52,13 +57,14 @@ public class ArticleService {
 
 	public void setImageFiles(Article article, MultipartFile[] imageFiles) {
 		if (article.getImageFiles() == null) {
-			article.setImageFiles(new ArrayList<>());
+			article.setImageFiles(new ArrayList<ArticleImage>());
 		}
 		article.removeAllImageFiles();
 		
 		for (MultipartFile imageFile : imageFiles) {
 			if (!imageFile.isEmpty()) {
-				article.addImageFiles(imageFile.getOriginalFilename());
+				ArticleImage savedImage = articleImageRepository.save(new ArticleImage(imageFile.getOriginalFilename(), article));
+				article.addImageFiles(savedImage);
 			}
 		}
 	}

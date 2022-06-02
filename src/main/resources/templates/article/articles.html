@@ -14,7 +14,8 @@
 						<div class="card-header">
 							<a th:href="${baseURL} + '/view/' + ${currentPage} + '/' + ${article.id} + '/' + ${iterStat.index} + ${keyword != null ? '?keyword=' + keyword : ''}" 
 								class="fa-solid fa-file fa-1x mx-2 text-white link-detail" data-bs-toggle="tooltip" title="View"></a>
-							<a href="#" class="fa-solid fa-pen-to-square fa-1x mx-2 text-white link-edit" data-bs-toggle="tooltip" title="Edit"></a>
+							<a th:href="${baseURL} + '/edit/' + ${currentPage} + '/' + ${article.id} + '/' + ${iterStat.index} + ${keyword != null ? '?keyword=' + keyword : ''}" 
+								class="fa-solid fa-pen-to-square fa-1x mx-2 text-white link-edit" data-bs-toggle="tooltip" title="Edit"></a>
 							<a href="#" class="fa-solid fa-trash-can fa-1x mx-2 text-white link-delete" data-bs-toggle="tooltip" title="Delete"></a>
 						</div>
 						<div class="card-body"  style="height: 280px;">
@@ -49,7 +50,6 @@
 		}
 		const modalTitle = "[[${modalTitle}]]";
 		const modalBody = `[[${modalBody}]]`;
-		console.log(modalTitle);
 		if (modalTitle !== "") showModal(modalTitle);
 		
 	</script>

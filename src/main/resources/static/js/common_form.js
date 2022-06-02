@@ -78,6 +78,10 @@ function validateArticleFormInputs () {
 			warningMessage += '\n  - content';
 			blankFieldCount++;
 		}
+		if (addedTagsDiv.childElementCount < 2) {
+			warningMessage += '\n  - tag(s)';
+			blankFieldCount++;
+		}
 				
 		if (blankFieldCount == 0) {
 			articleForm.submit();
@@ -89,6 +93,24 @@ function validateArticleFormInputs () {
 		}
 	});
 	
+}
+
+function createHiddenInputEleForExistedTags() {
+	
+	for (element of addedTagsDiv.childNodes) {
+		if (element.nodeName === "SPAN") {
+			hiddenEle = createHiddenInputEleForTag(element.innerText);
+			addedTagsDiv.appendChild(hiddenEle);
+			addOnClickRemoveFunctionForTag(element, hiddenEle);
+		}
+	}
+}
+
+function addOnClickRemoveFunctionForTag(tag, hidden) {
+	tag.onclick = function() {
+		addedTagsDiv.removeChild(this);
+		addedTagsDiv.removeChild(hidden);
+	}
 }
 
 function createTagInTagsSection(tag) {

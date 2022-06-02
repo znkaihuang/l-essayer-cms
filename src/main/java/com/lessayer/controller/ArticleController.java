@@ -4,6 +4,8 @@ package com.lessayer.controller;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -92,12 +94,13 @@ public class ArticleController {
 	@PostMapping("/article/articles/save/{pageNum}")
 	public String saveArticle(@PathVariable("pageNum") Integer pageNum, Article article, 
 		RedirectAttributes redirectAttributes, String keyword, MultipartFile[] imageFile,
-		String tag) throws IOException {
+		String tag, String date) throws IOException, ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
+		article.setDate(dateFormat.parse(date));
 		updateTags(article, parseTagString(tag));
 		Article savedArticle = articleService.saveArticle(article);
 		
-		System.out.println(imageFile.length);
 		if (!imageFile[0].isEmpty()) {
 			uploadImageFiles(savedArticle.getId(), imageFile);
 			articleService.setImageFiles(savedArticle, imageFile);
@@ -125,8 +128,7 @@ public class ArticleController {
 	
 	@GetMapping("/article/articles/view/{pageNum}/{articleId}/{showId}")
 	public String viewArticle(@PathVariable("pageNum") Integer pageNum, @PathVariable("articleId") Integer articleId, 
-		@PathVariable("showId") Integer showId,
-		RedirectAttributes redirectAttributes, String keyword) throws UnsupportedEncodingException {
+		@PathVariable("showId") Integer showId, RedirectAttributes redirectAttributes, String keyword) throws UnsupportedEncodingException {
 		Optional<Article> articleOptional = articleService.findArticleById(articleId);
 		
 		if (articleOptional.isEmpty()) {
@@ -137,8 +139,34 @@ public class ArticleController {
 			setModalMessage(redirectAttributes, "Article " + articleId, contentHTML);
 			redirectAttributes.addFlashAttribute("showId", showId);
 		}
-		System.out.println(formatRedirectURL("redirect:/article/articles/" + pageNum, keyword));
+		
 		return formatRedirectURL("redirect:/article/articles/" + pageNum, keyword);
+	}
+	
+	@GetMapping("/article/articles/edit/{pageNum}/{articleId}/{showId}")
+	public String editUser(@PathVariable("pageNum") Integer pageNum, @PathVariable("articleId") Integer articleId, 
+		Model model, RedirectAttributes redirectAttributes, String keyword) {
+		Optional<Article> articleOptional = articleService.findArticleById(articleId);
+		
+		if (articleOptional.isEmpty()) {
+			setModalMessage(redirectAttributes, "Error", "Cannot find Article with ID " + articleId);
+			return "redirect:/article/articles";
+		}
+		else {
+			String pageTitle = "Edit Article ID " + articleId;
+			List<Tag> tagList = tagService.retrieveAllTags();
+			
+			model.addAttribute("article", articleOptional.get());
+			model.addAttribute("tagList", tagList);
+			model.addAttribute("pageTitle", pageTitle);
+			model.addAttribute("returnPage", pageNum);
+			if (keyword != null) {
+				model.addAttribute("keyword", keyword);
+			}
+			model.addAttribute("baseURL", "/article/articles");
+			
+			return "/article/article_form";
+		}
 	}
 	
 	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {

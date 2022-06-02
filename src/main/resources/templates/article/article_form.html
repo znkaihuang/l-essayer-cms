@@ -42,7 +42,7 @@
 				    	</div>
 				    	<div class="col-4">
 				    		<label for="published-date" class="form-label">Published date</label>
-				    		<input type="date" class="form-control w-50" id="published-date" th:field="*{date}">
+				    		<input type="date" class="form-control w-50" id="published-date" name="date" th:value="${article.date != null ? article.dateString : ''}">
 				    	</div>
 				    	<div class="col-12">
 				    		<label for="summary" class="form-label">Summary</label>
@@ -73,6 +73,9 @@
 							<input type="file" class="form-control" id="imageFile3" accept="image/**" name="imageFile">
 						</div>
 						<label class="form-label">(Note: At most three images are allowed per article.)</label>
+						<th:block th:each="imageFileName : ${article.imageFiles}">
+							imageFileName
+						</th:block>
 					</div>
 					<div class="tab-pane fade" id="nav-tag" role="tabpanel" aria-labelledby="nav-tag-tab">
 						<div class="col-12">
@@ -105,7 +108,6 @@
 							<h6>Added Tags (toggle to delete):</h6>
 				  			<th:block th:each="tag : ${article.tags}" name="addedTags">
 								<span class="badge rounded-pill fs-6 my-1" th:id="${tag.id}">[[${tag.tag}]]</span>
-								<input type="hidden" th:value="${tag.tag}">
 				  			</th:block>
 						</div>
 					</div>
@@ -123,12 +125,11 @@
 	<div th:replace="modal_fragments :: messageModal('')" />
     <script type="text/javascript" th:src="@{/js/common_form.js}"></script>
 	<script>
-		validateArticleFormInputs();
 		let addedTagsDiv = document.getElementById('added-tags-section');
 		let selectTagBtn = document.getElementById('tag-select-btn');
 		let selectTag = document.getElementById('tag-select');
 		let createTagBtn = document.getElementById('tag-create-btn');
-		let createTag = document.getElementById('tag-create')
+		let createTag = document.getElementById('tag-create');
 		selectTagBtn.onclick = function() {
 			createTagInTagsSection(selectTag);
 		};
@@ -136,6 +137,8 @@
 		createTagBtn.onclick = function() {
 			createTagInTagsSection(createTag);
 		};
+		createHiddenInputEleForExistedTags(addedTagsDiv);
+		validateArticleFormInputs();
     </script>
 	
 </body>
