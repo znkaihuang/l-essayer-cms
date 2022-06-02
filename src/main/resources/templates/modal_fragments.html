@@ -51,3 +51,28 @@
 		</div>
 	</div>
 </div>
+
+<div th:fragment="articleViewModal" th:remove="tag">
+	<div class="modal fade" id="articleViewModal">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title text-success ms-4" id="informationModalTitle">[[${modalTitle}]]</h3>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body" th:if="${showId != null}">
+					<h6 class="mb-2 ps-4 text-muted">[[${articleList[showId].dateString}]], <span class="fst-italic">[[${articleList[showId].author}]]</span></h6>
+					<div class="d-flex flex-row">
+						<div class="px-4 py-2 article-content" id="articleContent">
+
+						</div>
+					</div>
+					
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

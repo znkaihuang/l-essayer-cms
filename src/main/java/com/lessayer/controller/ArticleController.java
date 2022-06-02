@@ -2,8 +2,11 @@ package com.lessayer.controller;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -120,6 +123,24 @@ public class ArticleController {
 		pdfExporter.export(articleList, response);
 	}
 	
+	@GetMapping("/article/articles/view/{pageNum}/{articleId}/{showId}")
+	public String viewArticle(@PathVariable("pageNum") Integer pageNum, @PathVariable("articleId") Integer articleId, 
+		@PathVariable("showId") Integer showId,
+		RedirectAttributes redirectAttributes, String keyword) throws UnsupportedEncodingException {
+		Optional<Article> articleOptional = articleService.findArticleById(articleId);
+		
+		if (articleOptional.isEmpty()) {
+			setModalMessage(redirectAttributes, "Error", "Cannot find Article with ID " + articleId);
+		}
+		else {
+			String contentHTML = articleService.createArticleContentHTML(articleOptional.get());
+			setModalMessage(redirectAttributes, "Article " + articleId, contentHTML);
+			redirectAttributes.addFlashAttribute("showId", showId);
+		}
+		System.out.println(formatRedirectURL("redirect:/article/articles/" + pageNum, keyword));
+		return formatRedirectURL("redirect:/article/articles/" + pageNum, keyword);
+	}
+	
 	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
 		redirectAttributes.addFlashAttribute("modalTitle", modalTitle);
 		redirectAttributes.addFlashAttribute("modalBody", modalBody);
@@ -141,9 +162,9 @@ public class ArticleController {
 		});
 		article.setTags(newTags);
 	}
-
-	private String formatRedirectURL(String redirectURL, String keyword) {
-		return (keyword == null) ? redirectURL : redirectURL + "?keyword=" + keyword;
+	
+	private String formatRedirectURL(String redirectURL, String keyword) throws UnsupportedEncodingException {
+		return (keyword == null) ? redirectURL : redirectURL + "?keyword=" + URLEncoder.encode(keyword, "utf-8");
 	}
 	
 	private Page<Article> listArticlePage(Integer currentPage, String keyword) {

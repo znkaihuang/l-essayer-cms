@@ -3,17 +3,27 @@
  */
 
 function selectModal(modalTitle) {
-	if (modalTitle !== 'Success' && modalTitle !== 'Warning' && modalTitle !== 'Error') {
+	if (modalTitle === 'Success' || modalTitle === 'Warning' || modalTitle === 'Error') {
+		appendMessageModalTitleClass(modalTitle);
+		return 'messageModal';
+	}
+	else if (modalTitle.includes("User")) {
 		return 'userInformationModal';
 	}
+	else if (modalTitle.includes("Article")) {
+		var articleContent = document.getElementById('articleContent');
+		var tempEle = document.createElement('div');
+		tempEle.innerHTML = modalBody;
+		articleContent.innerHTML = tempEle.childNodes[0].nodeValue;
+		return 'articleViewModal';
+	}
 	else {
-		return 'messageModal';
+		
 	}
 }
 
 function showModal(modalTitle) {
 	var myModal = new bootstrap.Modal(document.getElementById(selectModal(modalTitle)));
-	appendMessageModalTitleClass(modalTitle);
 	myModal.show();
 }
 
