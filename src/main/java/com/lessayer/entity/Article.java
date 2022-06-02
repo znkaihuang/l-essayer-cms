@@ -133,4 +133,13 @@ public class Article {
 		return null;
 	}
 	
+	@Transient
+	public String getTagsString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		tags.forEach(tag -> stringBuilder.append(tag.getTag() + ", "));
+		stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length() - 1);
+		
+		return stringBuilder.toString();
+	}
+	
 }
