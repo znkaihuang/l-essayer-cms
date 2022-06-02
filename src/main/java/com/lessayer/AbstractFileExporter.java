@@ -19,6 +19,7 @@ public abstract class AbstractFileExporter<E> {
 		String fileName = prefix + timestamp + extension;
 		
 		response.setContentType(contentType);
+		response.setCharacterEncoding("utf-8");
 		
 		String headerKey = "Content-Disposition";
 		String headerValue = "attachment; filename=" + fileName;

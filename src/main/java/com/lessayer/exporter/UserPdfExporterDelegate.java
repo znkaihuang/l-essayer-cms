@@ -10,11 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.lessayer.AbstractFileExporter;
 import com.lessayer.entity.User;
 import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
@@ -31,8 +33,7 @@ class UserPdfExporter<E> extends AbstractFileExporter<E> {
 
 	@Override
 	public void export(List<E> contentList, HttpServletResponse response) throws IOException {
-		
-		setResponseHeader(response, "application/pdf", ".pdf", "staffs_");
+		setResponseHeader(response, "application/pdf", ".pdf", "users_");
 		
 		Document document = new Document(PageSize.A4);
 		PdfWriter.getInstance(document, response.getOutputStream());
@@ -43,7 +44,7 @@ class UserPdfExporter<E> extends AbstractFileExporter<E> {
 		font.setSize(18);
 		font.setColor(Color.getHSBColor(0.33f, 1.0f, 0.7f));
 		
-		Paragraph paragraph = new Paragraph("List of staffs", font);
+		Paragraph paragraph = new Paragraph("List of users", font);
 		paragraph.setAlignment(Paragraph.ALIGN_CENTER);
 		document.add(paragraph);
 		
@@ -75,15 +76,23 @@ class UserPdfExporter<E> extends AbstractFileExporter<E> {
 		return table;
 	}
 
-	private void writeTableData(PdfPTable table, List<E> contentList) {
-		
+	private void writeTableData(PdfPTable table, List<E> contentList) throws DocumentException, IOException {
+		BaseFont baseFont = BaseFont.createFont("src/main/resources/static/font/NotoSerifCJK-Medium.ttc,0", 
+				BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+        Font font = new Font(baseFont);
+        
 		if (contentList.get(0) instanceof User) {
 			for (E element : contentList) {
 				User user = (User) element;
+				PdfPCell firstNameCell = new PdfPCell();
+				firstNameCell.setPhrase(new Phrase(user.getFirstName(), font));
+				PdfPCell lastNameCell = new PdfPCell();
+				lastNameCell.setPhrase(new Phrase(user.getLastName(), font));
+				
 				table.addCell(String.valueOf(user.getId()));
 				table.addCell(String.valueOf(user.getEmail()));
-				table.addCell(String.valueOf(user.getFirstName()));
-				table.addCell(String.valueOf(user.getLastName()));
+				table.addCell(firstNameCell);
+				table.addCell(lastNameCell);
 				table.addCell(String.valueOf(user.getRoles().toString()));
 				table.addCell(String.valueOf(user.isEnabled()));
 				table.addCell(String.valueOf(user.getRegistrationDate()));
