@@ -13,6 +13,9 @@ import com.lessayer.entity.Article;
 
 public interface ArticleRepository extends PagingAndSortingRepository<Article, Integer> {
 	
+	@Query("SELECT a FROM Article a")
+	public List<Article> findAllArticles();
+	
 	@Query("SELECT a FROM Article a WHERE a.author = ?1")
 	public List<Article> findArticlesWithAuthor(String author);
 	

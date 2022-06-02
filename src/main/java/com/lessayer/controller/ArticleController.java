@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -17,9 +19,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.lessayer.AbstractFileExporter;
 import com.lessayer.FileUploadUtil;
 import com.lessayer.entity.Article;
 import com.lessayer.entity.Tag;
+import com.lessayer.exporter.ArticleCsvExporterDelegate;
+import com.lessayer.exporter.ArticlePdfExporterDelegate;
 import com.lessayer.service.ArticleService;
 import com.lessayer.service.TagService;
 
@@ -99,6 +104,20 @@ public class ArticleController {
 		setModalMessage(redirectAttributes, "Success", modalBody);
 		
 		return formatRedirectURL("redirect:/article/articles/" + pageNum, keyword);
+	}
+	
+	@GetMapping("/article/articles/exportCsv")
+	public void exportToCsv(HttpServletResponse response) throws IOException {
+		List<Article> articleList = articleService.listAllArticles();
+		AbstractFileExporter<Article> csvExporter = ArticleCsvExporterDelegate.getCsvExporter();
+		csvExporter.export(articleList, response);
+	}
+	
+	@GetMapping("/article/articles/exportPdf")
+	public void exportToPdf(HttpServletResponse response) throws IOException {
+		List<Article> articleList = articleService.listAllArticles();
+		AbstractFileExporter<Article> pdfExporter = ArticlePdfExporterDelegate.getPdfExporter();
+		pdfExporter.export(articleList, response);
 	}
 	
 	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
