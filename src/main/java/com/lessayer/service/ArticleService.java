@@ -22,6 +22,7 @@ import com.lessayer.repository.ArticleRepository;
 public class ArticleService {
 	
 	public static Integer ARTICLES_PER_PAGE = 6;
+	private final String imageFilePath = "http://localhost:8080/article-image-files/";
 	
 	@Autowired
 	private ArticleRepository articleRepository;
@@ -71,7 +72,10 @@ public class ArticleService {
 
 	public String createArticleContentHTML(Article article) {
 		ContentConverter markdownHTMLConverter = ContentConverter.getInstance(ConvertType.Markdown, ConvertType.HTML);
-		
+		for (ArticleImage image : article.getImageFiles()) {
+			String imageFileName = image.getFileName();
+			article.setContent(article.getContent().replaceAll(imageFileName, imageFilePath + article.getId() + "/" + imageFileName));
+		}
 		return markdownHTMLConverter.convertContentToHTMLString(article.getContent());
 	}
 
