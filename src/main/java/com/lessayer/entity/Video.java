@@ -1,8 +1,10 @@
 package com.lessayer.entity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +19,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -137,4 +140,35 @@ public class Video {
 				+ videoLength + ", tags=" + tags + "]";
 	}
 	
+	public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	@Transient
+	public String getDateString() {
+		return dateFormat.format(date).toString();
+	}
+	
+	@Transient
+	public Set<Tag> getSortedTags() {
+		TreeSet<Tag> sortedTags = new TreeSet<>(tags);
+		return sortedTags;
+	}
+	
+	@Transient
+	public String getTagsString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		tags.forEach(tag -> stringBuilder.append(tag.getTag() + ", "));
+		stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length() - 1);
+		
+		return stringBuilder.toString();
+	}
+	
+	@Transient
+	public String getCoverImagePath() {
+		return "videos/" + id + "/" + coverImage;
+	}
+	
+	@Transient
+	public String getURLPath() {
+		return "videos/" + id + "/" + url;
+	}
 }
