@@ -1,12 +1,10 @@
 package com.lessayer.controller;
 
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.lessayer.entity.Article;
 
 @Controller
 public class VideoController {
