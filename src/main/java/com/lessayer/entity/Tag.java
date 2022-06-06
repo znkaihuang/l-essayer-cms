@@ -52,5 +52,10 @@ public class Tag implements Comparable<Tag> {
 		Tag other = (Tag) obj;
 		return Objects.equals(tag, other.tag);
 	}
+
+	@Override
+	public String toString() {
+		return "Tag [tag=" + tag + "]";
+	}
 	
 }
