@@ -41,7 +41,7 @@ public class ArticleRepositoryTests {
 	@Autowired
 	private EntityManager entityManager;
 	
-	private static final String CURRENT_PATH = "src/test/java/com/lessayer/repository/";
+	private static final String CURRENT_PATH = "src/test/java/com/lessayer/repository/example/articles";
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Test
