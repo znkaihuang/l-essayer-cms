@@ -39,7 +39,7 @@ public class Lecturer {
 	@Column(name = "lecturer_desc", length = 500, nullable = false)
 	private String lecturerDescription;
 	
-	@OneToMany(mappedBy = "video", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "lecturer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Video> videos;
 	
 	public Lecturer(String firstName, String lastName) {

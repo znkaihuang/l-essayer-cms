@@ -8,8 +8,6 @@ import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -54,23 +52,22 @@ public class Video {
 	@DateTimeFormat(pattern = "yyyy-mm-dd")
 	private Date date;
 	
-	@Column(name = "desc", length = 500, nullable = false)
+	@Column(name = "description", length = 500, nullable = false)
 	private String description;
 	
 	@Column(name = "cover_image")
 	private String coverImage;
 	
-	@Column(name = "url", nullable = false)
+	@Column(name = "video_url", nullable = false)
 	private String url;
 	
 	@Column(name = "language", nullable = false)
-	@Enumerated(EnumType.STRING)
 	private Language languange;
 	
-	@Column(name = "has_subtitle", nullable = false)
+	@Column(name = "subtitle", nullable = false)
 	private boolean hasSubtitle;
 	
-	@Column(name = "video_length", nullable = false)
+	@Column(name = "length", nullable = false)
 	private Integer videoLength;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -140,6 +137,7 @@ public class Video {
 				+ videoLength + ", tags=" + tags + "]";
 	}
 	
+	@Transient
 	public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Transient
