@@ -166,7 +166,7 @@ public class Video {
 			return "videos/" + id + "/" + coverImage;
 		}
 		else {
-			return "images/video-play.png";
+			return "/images/video-play.png";
 		}
 	}
 	

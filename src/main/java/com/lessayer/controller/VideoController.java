@@ -1,5 +1,7 @@
 package com.lessayer.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,8 @@ public class VideoController {
 	
 	@Autowired
 	private VideoService videoService;
+	
+	private List<String> supportedLanguages;
 	
 	@GetMapping("/video/videos")
 	public String showVideoPage(Model model, String keyword) {
@@ -34,6 +38,7 @@ public class VideoController {
 		Integer nextPage = (currentPage + 1 < totalPages) ? currentPage + 1 : totalPages - 1;
 		
 		model.addAttribute("videoList", page.getContent());
+		model.addAttribute("supportedLanguages", getSupportedLanguages());
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("prevPage", prevPage);
@@ -51,5 +56,13 @@ public class VideoController {
 		else {
 			return videoService.listVideoWithKeywordByPage(currentPage, keyword);
 		}
+	}
+	
+	private List<String> getSupportedLanguages() {
+		if (supportedLanguages == null) {
+			supportedLanguages = videoService.getSupportedLanguages();
+		}
+		
+		return supportedLanguages;
 	}
 }
