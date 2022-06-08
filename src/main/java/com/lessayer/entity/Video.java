@@ -162,7 +162,12 @@ public class Video {
 	
 	@Transient
 	public String getCoverImagePath() {
-		return "videos/" + id + "/" + coverImage;
+		if (coverImage != null) {
+			return "videos/" + id + "/" + coverImage;
+		}
+		else {
+			return "images/video-play.png";
+		}
 	}
 	
 	@Transient
