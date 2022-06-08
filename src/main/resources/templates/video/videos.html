@@ -1,31 +1,101 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments :: page_head('Users - L\'essayer Backend Console')">
-
+<head
+	th:replace="fragments :: page_head('Users - L\'essayer Backend Console')">
 <body>
 	<div th:replace="fragments :: top_header_bar" />
-    <div th:replace="fragments :: nav_bar" />
-    <div class="container-fluid">
-    	<div th:replace="fragments :: tool_bar(${baseURL})" />
-		<div class="row mx-4 p-4">
+	<div th:replace="fragments :: nav_bar" />
+	<div class="container-fluid">
+		<div th:replace="fragments :: tool_bar(${baseURL})" />
+		<div class="row mx-4 p-2">
+			<div class="col-2 my-2" id="filter">
+				<div class="flex-shrink-0 pe-5 bg-white" style="width: 280px;">
+					<h4 class="text-muted">Filter</h4>
+					<ul class="list-unstyled">
+						<li class="mb-1">
+							<button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" 
+								data-bs-target="#language-collapse">Language</button>
+							<div class="collapse show ms-4" id="language-collapse">
+								<ul class="btn-toggle-nav list-unstyled pb-1">
+									<th:block th:each="language : ${supportedLanguages}">
+										<li>
+											<input class="form-check-input mx-1" type="checkbox" th:value="${language}" th:id="${language}" name="languageFilter">
+											<label class="form-check-label" th:for="${language}">[[${language}]]</label>
+										</li>
+									</th:block>
+								</ul>
+							</div>
+						</li>
+						<li><hr></li>
+						<li class="mb-1">
+							<button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" 
+								data-bs-target="#video-length-collapse">Video length</button>
+							<div class="collapse ms-4" id="video-length-collapse">
+								<ul class="btn-toggle-nav list-unstyled pb-1">
+									<li>
+										<input class="form-check-input mx-1" type="checkbox" value="10minutes" id="10minutes" name="lengthFilter">
+										<label class="form-check-label" for="10minutes">0-10 minutes</label>
+									</li>
+									<li>
+										<input class="form-check-input mx-1" type="checkbox" value="30minutes" id="30minutes" name="lengthFilter">
+										<label class="form-check-label" for="30minutes">11-30 minutes</label>
+									</li>
+									<li>
+										<input class="form-check-input mx-1" type="checkbox" value="60minutes" id="60minutes" name="lengthFilter">
+										<label class="form-check-label" for="60minutes">31-60 minutes</label>
+									</li>
+									<li>
+										<input class="form-check-input mx-1" type="checkbox" value="moreThanAnHour" id="moreThanAnHour" name="lengthFilter">
+										<label class="form-check-label" for="moreThanAnHour">More than 1 hour</label>
+									</li>
+								</ul>
+							</div>
+						</li>
+						<li><hr></li>
+						<li class="mb-1">
+							<button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" 
+								data-bs-target="#has-subtitle-collapse">Subtitle</button>
+							<div class="collapse ms-4" id="has-subtitle-collapse">
+								<ul class="btn-toggle-nav list-unstyled pb-1">
+									<li>
+										<input class="form-check-input mx-1" type="checkbox" value="true" id="withSubtitle" name="hasSubtitle">
+										<label class="form-check-label" for="withSubtitle">With subtitle</label>
+									</li>
+									<li>
+										<input class="form-check-input mx-1" type="checkbox" value="false" id="withoutSubtitle" name="hasSubtitle">
+										<label class="form-check-label" for="withoutSubtitle">Without subtitle</label>
+									</li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
 			<th:block th:each="video, iterStat : ${videoList}">
-				<div class="col-4 my-2">
+				<div class="col-3 my-2 mx-2">
 					<div class="card w-100">
 						<div class="card-header">
-							<a href="#" 
-								class="fa-solid fa-file fa-1x mx-2 text-white link-detail" data-bs-toggle="tooltip" title="View"></a>
-							<a href="#" 
-								class="fa-solid fa-pen-to-square fa-1x mx-2 text-white link-edit" data-bs-toggle="tooltip" title="Edit"></a>
-							<a href="#" 
-								class="fa-solid fa-trash-can fa-1x mx-2 text-white link-delete" data-bs-toggle="tooltip" title="Delete"></a>
+							<a href="#"
+								class="fa-solid fa-file fa-1x mx-2 text-white link-detail"
+								data-bs-toggle="tooltip" title="View"></a> <a href="#"
+								class="fa-solid fa-pen-to-square fa-1x mx-2 text-white link-edit"
+								data-bs-toggle="tooltip" title="Edit"></a> <a href="#"
+								class="fa-solid fa-trash-can fa-1x mx-2 text-white link-delete"
+								data-bs-toggle="tooltip" title="Delete"></a>
 						</div>
-						<div class="card-body"  style="height: 280px;">
-							<div style="height: 180px;">
+						<div class="card-body pt-0" style="height: 300px;">
+							<div class="text-center">
+								<img alt="coverImage" th:src="${video.coverImagePath}" height="200px">
+							</div>
+							<div style="max-height: 100px;">
 								<h5 class="card-title">[[${video.title}]]</h5>
-								<h6 class="card-subtitle mb-2 text-muted">[[${video.dateString}]], <span class="fst-italic">[[${video.uploader}]]</span></h6>
+								<h6 class="card-subtitle mb-2 text-muted">
+									[[${video.dateString}]], <span class="fst-italic">[[${video.lecturer.fullName}]]</span>
+								</h6>
 							</div>
 							<th:block th:each="tag : ${video.sortedTags}">
-								<a th:href="${baseURL} + '?keyword=' + ${tag.tag}"><span class="badge rounded-pill fs-6 my-1">[[${tag.tag}]]</span></a>
+								<a th:href="${baseURL} + '?keyword=' + ${tag.tag}"><span
+									class="badge rounded-pill fs-6 my-1">[[${tag.tag}]]</span></a>
 							</th:block>
 						</div>
 					</div>
@@ -33,9 +103,9 @@
 			</th:block>
 		</div>
 	</div>
-	
+
 	<div th:replace="fragments :: pagination(${baseURL})" />
-	
+
 	<div th:replace="modal_fragments :: messageModal(${yesButtonURL})" />
 	<div th:replace="fragments :: site_footer" />
 	<div th:replace="fragments :: common_js" />
@@ -43,6 +113,6 @@
 
 		
 	</script>
-	
+
 </body>
 </html>
