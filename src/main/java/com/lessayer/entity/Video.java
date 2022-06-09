@@ -62,7 +62,7 @@ public class Video {
 	private String url;
 	
 	@Column(name = "language", nullable = false)
-	private Language languange;
+	private Language language;
 	
 	@Column(name = "subtitle", nullable = false)
 	private boolean hasSubtitle;
@@ -79,7 +79,7 @@ public class Video {
 	private Set<Tag> tags;
 	
 	public Video(String title, String uploader, Lecturer lecturer, Date date, String description, String url,
-			Language languange, boolean hasSubtitle, Integer videoLength) {
+			Language language, boolean hasSubtitle, Integer videoLength) {
 		super();
 		this.title = title;
 		this.uploader = uploader;
@@ -87,7 +87,7 @@ public class Video {
 		this.date = date;
 		this.description = description;
 		this.url = url;
-		this.languange = languange;
+		this.language = language;
 		this.hasSubtitle = hasSubtitle;
 		this.videoLength = videoLength;
 	}
@@ -102,7 +102,7 @@ public class Video {
 		this.description = description;
 		this.coverImage = coverImage;
 		this.url = url;
-		this.languange = language;
+		this.language = language;
 		this.hasSubtitle = hasSubtitle;
 		this.videoLength = videoLength;
 		this.tags = tags;
@@ -110,7 +110,7 @@ public class Video {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(date, description, lecturer, title, url, languange, videoLength);
+		return Objects.hash(date, description, lecturer, title, url, language, videoLength);
 	}
 
 	@Override
@@ -126,14 +126,14 @@ public class Video {
 				&& Objects.equals(lecturer, other.lecturer)
 				&& Objects.equals(title, other.title)
 				&& Objects.equals(url, other.url)
-				&& Objects.equals(languange, other.languange)
+				&& Objects.equals(language, other.language)
 				&& Objects.equals(videoLength, other.videoLength);
 	}
 
 	@Override
 	public String toString() {
 		return "Video [id=" + id + ", title=" + title + ", uploader=" + uploader + ", lecturer=" + lecturer + ", date="
-				+ date + ", url=" + url + ", languange=" + languange + ", hasSubtitle=" + hasSubtitle + ", videoLength="
+				+ date + ", url=" + url + ", language=" + language + ", hasSubtitle=" + hasSubtitle + ", videoLength="
 				+ videoLength + ", tags=" + tags + "]";
 	}
 	
