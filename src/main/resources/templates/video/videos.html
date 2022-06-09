@@ -37,36 +37,38 @@
 					</form>
 				</div>
 			</div>
-			<th:block th:each="video, iterStat : ${videoList}">
-				<div class="col-3 my-2 mx-2">
-					<div class="card w-100">
-						<div class="card-header">
-							<a href="#"
-								class="fa-solid fa-file fa-1x mx-2 text-white link-detail"
-								data-bs-toggle="tooltip" title="View"></a> <a href="#"
-								class="fa-solid fa-pen-to-square fa-1x mx-2 text-white link-edit"
-								data-bs-toggle="tooltip" title="Edit"></a> <a href="#"
-								class="fa-solid fa-trash-can fa-1x mx-2 text-white link-delete"
-								data-bs-toggle="tooltip" title="Delete"></a>
-						</div>
-						<div class="card-body pt-0" style="height: 300px;">
-							<div class="text-center">
-								<img alt="coverImage" th:src="${video.coverImagePath}" height="200px">
+			<div class="col-10 my-2 row">
+				<th:block th:each="video, iterStat : ${videoList}">
+					<div class="col-3 my-4 mx-5">
+						<div class="card w-100">
+							<div class="card-header">
+								<a href="#"
+									class="fa-solid fa-file fa-1x mx-2 text-white link-detail"
+									data-bs-toggle="tooltip" title="View"></a> <a href="#"
+									class="fa-solid fa-pen-to-square fa-1x mx-2 text-white link-edit"
+									data-bs-toggle="tooltip" title="Edit"></a> <a href="#"
+									class="fa-solid fa-trash-can fa-1x mx-2 text-white link-delete"
+									data-bs-toggle="tooltip" title="Delete"></a>
 							</div>
-							<div style="max-height: 100px;">
-								<h5 class="card-title">[[${video.title}]]</h5>
-								<h6 class="card-subtitle mb-2 text-muted">
-									[[${video.dateString}]], <span class="fst-italic">[[${video.lecturer.fullName}]]</span>
-								</h6>
+							<div class="card-body pt-0" style="height: 300px;">
+								<div class="text-center">
+									<img alt="coverImage" th:src="${video.coverImagePath}" height="200px">
+								</div>
+								<div style="max-height: 100px;">
+									<h5 class="card-title">[[${video.title}]]</h5>
+									<h6 class="card-subtitle mb-2 text-muted">
+										[[${video.dateString}]], <span class="fst-italic">[[${video.lecturer.fullName}]]</span>
+									</h6>
+								</div>
+								<th:block th:each="tag : ${video.sortedTags}">
+									<a th:href="${baseURL} + '?keyword=' + ${tag.tag}"><span
+										class="badge rounded-pill fs-6 my-1">[[${tag.tag}]]</span></a>
+								</th:block>
 							</div>
-							<th:block th:each="tag : ${video.sortedTags}">
-								<a th:href="${baseURL} + '?keyword=' + ${tag.tag}"><span
-									class="badge rounded-pill fs-6 my-1">[[${tag.tag}]]</span></a>
-							</th:block>
 						</div>
 					</div>
-				</div>
-			</th:block>
+				</th:block>
+			</div>
 		</div>
 	</div>
 
