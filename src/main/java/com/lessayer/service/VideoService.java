@@ -1,6 +1,5 @@
 package com.lessayer.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.lessayer.entity.Language;
 import com.lessayer.entity.Video;
 import com.lessayer.repository.VideoRepository;
 
@@ -37,17 +35,6 @@ public class VideoService {
 		Page<Video> page = videoRepository.findVideosWithKeyword(keyword, pageable);
 		
 		return page;
-	}
-
-	public List<String> getSupportedLanguages() {
-		List<String> languageStringList = new ArrayList<>();
-		Language[] languageArray = Language.values();
-		
-		for (Language language : languageArray) {
-			languageStringList.add(language.getLanguageName());
-		}
-		
-		return languageStringList;
 	}
 
 }
