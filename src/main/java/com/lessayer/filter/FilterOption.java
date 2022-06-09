@@ -10,17 +10,21 @@ import lombok.Setter;
 public abstract class FilterOption {
 	
 	protected String fieldName;
+	protected String field;
 	protected boolean selected;
 	protected boolean hasChildren;
 	protected Integer level;
-	protected FilterOption parentOption;
-	protected List<FilterOption> childrenOptions;
+	protected Integer order;
+	public FilterOption parentOption;
+	public List<FilterOption> childrenOptions;
 	
-	public FilterOption(FilterOption parent, String fieldName) {
+	public FilterOption(FilterOption parent, String fieldName, String field, Integer order) {
 		this.parentOption = parent;
 		this.fieldName = fieldName;
+		this.field = field;
 		this.selected = false;
 		this.level = 0;
+		this.order = order;
 	}
 	
 	public abstract void addChildOption(FilterOption child);

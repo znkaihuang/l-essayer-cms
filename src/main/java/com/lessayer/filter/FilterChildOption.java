@@ -2,8 +2,8 @@ package com.lessayer.filter;
 
 public class FilterChildOption extends FilterOption {
 
-	public FilterChildOption(FilterOption parent, String fieldName) {
-		super(parent, fieldName);
+	public FilterChildOption(FilterOption parent, String fieldName, Integer order) {
+		super(parent, fieldName.replace(" ", ""), fieldName, order);
 		this.level = parent.level + 1;
 		this.hasChildren = false;
 	}
