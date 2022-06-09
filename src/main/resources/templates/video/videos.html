@@ -8,67 +8,33 @@
 	<div class="container-fluid">
 		<div th:replace="fragments :: tool_bar(${baseURL})" />
 		<div class="row mx-4 p-2">
-			<div class="col-2 my-2" id="filter">
+			<div class="col-2 my-2">
 				<div class="flex-shrink-0 pe-5 bg-white" style="width: 280px;">
-					<h4 class="text-muted">Filter</h4>
-					<ul class="list-unstyled">
-						<li class="mb-1">
-							<button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" 
-								data-bs-target="#language-collapse">Language</button>
-							<div class="collapse show ms-4" id="language-collapse">
-								<ul class="btn-toggle-nav list-unstyled pb-1">
-									<th:block th:each="language : ${supportedLanguages}">
-										<li>
-											<input class="form-check-input mx-1" type="checkbox" th:value="${language}" th:id="${language}" name="languageFilter">
-											<label class="form-check-label" th:for="${language}">[[${language}]]</label>
-										</li>
-									</th:block>
-								</ul>
-							</div>
-						</li>
-						<li><hr></li>
-						<li class="mb-1">
-							<button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" 
-								data-bs-target="#video-length-collapse">Video length</button>
-							<div class="collapse ms-4" id="video-length-collapse">
-								<ul class="btn-toggle-nav list-unstyled pb-1">
-									<li>
-										<input class="form-check-input mx-1" type="checkbox" value="10minutes" id="10minutes" name="lengthFilter">
-										<label class="form-check-label" for="10minutes">0-10 minutes</label>
-									</li>
-									<li>
-										<input class="form-check-input mx-1" type="checkbox" value="30minutes" id="30minutes" name="lengthFilter">
-										<label class="form-check-label" for="30minutes">11-30 minutes</label>
-									</li>
-									<li>
-										<input class="form-check-input mx-1" type="checkbox" value="60minutes" id="60minutes" name="lengthFilter">
-										<label class="form-check-label" for="60minutes">31-60 minutes</label>
-									</li>
-									<li>
-										<input class="form-check-input mx-1" type="checkbox" value="moreThanAnHour" id="moreThanAnHour" name="lengthFilter">
-										<label class="form-check-label" for="moreThanAnHour">More than 1 hour</label>
-									</li>
-								</ul>
-							</div>
-						</li>
-						<li><hr></li>
-						<li class="mb-1">
-							<button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" 
-								data-bs-target="#has-subtitle-collapse">Subtitle</button>
-							<div class="collapse ms-4" id="has-subtitle-collapse">
-								<ul class="btn-toggle-nav list-unstyled pb-1">
-									<li>
-										<input class="form-check-input mx-1" type="checkbox" value="true" id="withSubtitle" name="hasSubtitle">
-										<label class="form-check-label" for="withSubtitle">With subtitle</label>
-									</li>
-									<li>
-										<input class="form-check-input mx-1" type="checkbox" value="false" id="withoutSubtitle" name="hasSubtitle">
-										<label class="form-check-label" for="withoutSubtitle">Without subtitle</label>
-									</li>
-								</ul>
-							</div>
-						</li>
-					</ul>
+					<form th:action="${baseURL} + '/' + ${currentPage}" id="filter">
+						<input th:if="${keyword != null}" type="hidden" name="keyword" th:value="${keyword}">
+						<h4 class="text-muted">Filter</h4>
+						<ul class="list-unstyled">
+							<th:block th:each="filterSection : ${filter.childrenOptions}">
+								<li class="mb-1">
+									<button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" 
+										th:data-bs-target="'#'+${filterSection.fieldName}">[[${filterSection.field}]]</button>
+									<div class="collapse ms-4" th:id="${filterSection.fieldName}" th:classappend="${filterSection.selected} ? 'show' : ''">
+										<ul class="btn-toggle-nav list-unstyled pb-1">
+											<th:block th:each="filterOption : ${filterSection.childrenOptions}">
+												<li>
+													<input class="form-check-input mx-1 filter-option" type="checkbox" name="filterSelect"
+														th:value="${filterSection.order} + '-' + ${filterOption.order}" 
+														th:id="${filterOption.fieldName}" th:checked="${filterOption.selected}">
+													<label class="form-check-label" th:for="${language}">[[${filterOption.field}]]</label>
+												</li>
+											</th:block>
+										</ul>
+									</div>
+								</li>
+								<li><hr></li>
+							</th:block>
+						</ul>
+					</form>
 				</div>
 			</div>
 			<th:block th:each="video, iterStat : ${videoList}">
@@ -110,8 +76,18 @@
 	<div th:replace="fragments :: site_footer" />
 	<div th:replace="fragments :: common_js" />
 	<script type="text/javascript">
-
-		
+		let filterOptions = document.getElementsByClassName('filter-option');
+		for (option of filterOptions) {
+			option.onclick = function() {
+				document.getElementById('filter').submit();
+			}
+		}
+		let collapsedButtons = document.getElementsByClassName('collapsed');
+		for (button of collapsedButtons) {
+			button.onclick = function(event) {
+				event.preventDefault();
+			}
+		}
 	</script>
 
 </body>
