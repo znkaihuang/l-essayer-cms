@@ -22,24 +22,24 @@ public class FilterOptionTests {
 	}
 	
 	private FilterOption createFilterOptions() {
-		FilterOption filter = new FilterSection(null, "Top");
+		FilterOption filter = new FilterSection(null, "Top", 0);
 		
-		FilterOption section1 = new FilterSection(filter, "Section 1");
-		FilterOption section2 = new FilterSection(filter, "Section 2");
-		FilterOption section3 = new FilterSection(filter, "Section 3");
+		FilterOption section1 = new FilterSection(filter, "Section 1", 0);
+		FilterOption section2 = new FilterSection(filter, "Section 2", 1);
+		FilterOption section3 = new FilterSection(filter, "Section 3", 2);
 		
-		FilterOption filterOPtion1_1 = new FilterChildOption(section1, "Option 1-1");
-		FilterOption filterOPtion1_2 = new FilterChildOption(section1, "Option 1-2");
-		FilterOption filterOPtion1_3 = new FilterChildOption(section1, "Option 1-3");
+		FilterOption filterOPtion1_1 = new FilterChildOption(section1, "Option 1-1", 0);
+		FilterOption filterOPtion1_2 = new FilterChildOption(section1, "Option 1-2", 1);
+		FilterOption filterOPtion1_3 = new FilterChildOption(section1, "Option 1-3", 2);
 
-		FilterOption filterOPtion2_1 = new FilterChildOption(section2, "Option 2-1");
-		FilterOption filterOPtion2_2 = new FilterChildOption(section2, "Option 2-2");
-		FilterOption filterOPtion2_3 = new FilterChildOption(section2, "Option 2-3");
-		FilterOption filterOPtion2_4 = new FilterChildOption(section2, "Option 2-4");
+		FilterOption filterOPtion2_1 = new FilterChildOption(section2, "Option 2-1", 0);
+		FilterOption filterOPtion2_2 = new FilterChildOption(section2, "Option 2-2", 1);
+		FilterOption filterOPtion2_3 = new FilterChildOption(section2, "Option 2-3", 2);
+		FilterOption filterOPtion2_4 = new FilterChildOption(section2, "Option 2-4", 3);
 		
 
-		FilterOption filterOPtion3_1 = new FilterChildOption(section3, "Option 3-1");
-		FilterOption filterOPtion3_2 = new FilterChildOption(section3, "Option 3-2");
+		FilterOption filterOPtion3_1 = new FilterChildOption(section3, "Option 3-1", 0);
+		FilterOption filterOPtion3_2 = new FilterChildOption(section3, "Option 3-2", 1);
 		
 		filter.addChildOption(section1);
 		filter.addChildOption(section2);
