@@ -1,6 +1,8 @@
 package com.lessayer.filter;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +15,9 @@ public class FilterHelper {
 	@Getter
 	@Setter
 	private String prevFilterSelect;
+	
+	@Getter
+	private List<FilterQueryObject> filterQueryList = new ArrayList<>();
 	
 	public FilterHelper(FilterOption filter) {
 		this.filter = filter;
@@ -51,6 +56,8 @@ public class FilterHelper {
 		String[] prevSelectResult = prevFilterSelect.split(",");
 		String[] selectResult = filterOptionSelectString.split(",");
 		
+		filterQueryList.removeAll(filterQueryList);
+		
 		for (String orderString : prevSelectResult) {
 			String[] orders = orderString.split("-");
 			filter.getChildrenOptions().get(Integer.valueOf(orders[0])).getChildrenOptions().get(Integer.valueOf(orders[1])).setSelected(false);
@@ -58,7 +65,23 @@ public class FilterHelper {
 		
 		for (String orderString : selectResult) {
 			String[] orders = orderString.split("-");
-			filter.getChildrenOptions().get(Integer.valueOf(orders[0])).getChildrenOptions().get(Integer.valueOf(orders[1])).setSelected(true);
+			FilterOption section = filter.getChildrenOptions().get(Integer.valueOf(orders[0]));
+			FilterOption option = section.getChildrenOptions().get(Integer.valueOf(orders[1]));
+			option.setSelected(true);
+			
+			if (filterQueryList.isEmpty()) {
+				FilterQueryObject filterQueryObject = new FilterQueryObject(section.getFieldName());
+				filterQueryObject.addQueryOption(option.getFieldName());
+				filterQueryList.add(filterQueryObject);
+			}
+			else if(filterQueryList.get(filterQueryList.size() - 1).getSectionName().equals(section.getFieldName())) {
+				filterQueryList.get(filterQueryList.size() - 1).addQueryOption(option.getFieldName());
+			}
+			else {
+				FilterQueryObject filterQueryObject = new FilterQueryObject(section.getFieldName());
+				filterQueryObject.addQueryOption(option.getFieldName());
+				filterQueryList.add(filterQueryObject);
+			}
 		}
 	}
 	

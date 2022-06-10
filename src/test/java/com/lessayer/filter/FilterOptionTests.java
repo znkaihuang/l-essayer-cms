@@ -1,6 +1,8 @@
 package com.lessayer.filter;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +21,44 @@ public class FilterOptionTests {
 		filter.getChildrenOptions().get(0).getChildrenOptions().get(2).setSelected(true);
 		filter.getChildrenOptions().get(2).getChildrenOptions().get(0).setSelected(true);
 		printFilterOptions(filter);
+	}
+	
+	@Test
+	public void createFilterQueryObjectTest() {
+		FilterOption filter = createFilterOptions();
+		filter.getChildrenOptions().get(0).getChildrenOptions().get(1).setSelected(true);
+		filter.getChildrenOptions().get(0).getChildrenOptions().get(2).setSelected(true);
+		filter.getChildrenOptions().get(2).getChildrenOptions().get(0).setSelected(true);
+		
+		List<FilterQueryObject> filterQueryObjects = new ArrayList<>();
+		
+		FilterQueryObject queryObject1 = new FilterQueryObject(filter.getChildrenOptions().get(0).getFieldName());
+		queryObject1.addQueryOption(filter.getChildrenOptions().get(0).getChildrenOptions().get(1).getFieldName());
+		queryObject1.addQueryOption(filter.getChildrenOptions().get(0).getChildrenOptions().get(2).getFieldName());
+		
+		FilterQueryObject queryObject2 = new FilterQueryObject(filter.getChildrenOptions().get(2).getFieldName());
+		queryObject2.addQueryOption(filter.getChildrenOptions().get(2).getChildrenOptions().get(0).getFieldName());
+		
+		filterQueryObjects.add(queryObject1);
+		filterQueryObjects.add(queryObject2);
+		
+		printFilterQueryList(filterQueryObjects);
+	}
+	
+	@Test
+	public void filterHelperReturnQueryObjectTest() {
+		String[] sections = {"Language", "Video Length", "Subtitle"};
+		String[] options = {
+				"English", "French", "Chinese",
+				"0-10 minutes", "11-30 minutes", "31-60 minutes", "More than 1 hour",
+				"With subtitle", "Without subtitle"
+		};
+		Integer[] optionNumPerSection = {3, 4, 2};
+		FilterHelper filterHelper = new FilterHelper(sections, options, optionNumPerSection);
+		filterHelper.setPrevFilterSelect("0-0");
+		filterHelper.updateFilter("0-2,0-1,2-0");
+		
+		printFilterQueryList(filterHelper.getFilterQueryList());
 	}
 	
 	private FilterOption createFilterOptions() {
@@ -82,6 +122,15 @@ public class FilterOptionTests {
 				}
 			}
 		}
-		
+	}
+	
+	private void printFilterQueryList(List<FilterQueryObject> queryList) {
+		for (FilterQueryObject queryObject : queryList) {
+			System.out.println("[" + queryObject.getSectionName() + "]");
+			for (String queryOption : queryObject.getQueryOptions()) {
+				System.out.print(queryOption + " ");
+			}
+			System.out.println();
+		}
 	}
 }
