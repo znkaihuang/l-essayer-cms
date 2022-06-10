@@ -136,12 +136,27 @@ public class VideoRepositoryTests {
 	}
 	
 	@Test
-	public void findVideosWitherFilterQueryTest() {
+	public void findVideosWithFilterQueryTest() {
 		List<FilterQueryObject> filterQueryList = getFilterQueryList("0-0,0-2,2-0,2-1");
 		printFilterQueryList(filterQueryList);
 		
 		VideoService service = new VideoService(videoRepository);
-		Page<Video> page = service.listVideosWithFilter(0, filterQueryList);
+		Page<Video> page = service.listVideosAndFilterByPage(0, filterQueryList);
+		
+		printVideoList(page.getContent());
+		System.out.println(page.getTotalElements());
+		System.out.println(page.getTotalPages());
+	}
+	
+	@Test
+	public void findVideosWithKeywordAndFilterQueryTest() {
+		List<FilterQueryObject> filterQueryList = getFilterQueryList("0-0,0-2,2-0,2-1");
+		printFilterQueryList(filterQueryList);
+		
+		String keyword = "06-09";
+		
+		VideoService service = new VideoService(videoRepository);
+		Page<Video> page = service.listVideosWithKeywordAndFilterByPage(0, keyword, filterQueryList);
 		
 		printVideoList(page.getContent());
 		System.out.println(page.getTotalElements());

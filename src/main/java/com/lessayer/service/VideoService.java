@@ -45,7 +45,18 @@ public class VideoService {
 		return page;
 	}
 	
-	public Page<Video> listVideosWithFilter(Integer currentPage, List<FilterQueryObject> filterQueryList) {
+	public Page<Video> listVideosAndFilterByPage(Integer currentPage, List<FilterQueryObject> filterQueryList) {
+		return listVideosWithKeywordAndFilterByPage(currentPage, null, filterQueryList);
+	}
+	
+//	sections = {"Language", "Video Length", "Subtitle"};
+//	options = {
+//			"English", "French", "Chinese",
+//			"0-10 minutes", "11-30 minutes", "31-60 minutes", "More than 1 hour",
+//			"With subtitle", "Without subtitle"
+//	};
+	public Page<Video> listVideosWithKeywordAndFilterByPage(Integer currentPage, String keyword, 
+		List<FilterQueryObject> filterQueryList) {
 		Pageable pageable = PageRequest.of(currentPage, VIDEOS_PER_PAGE);
 		
 		List<List<Video>> videoListArray = new ArrayList<>();
@@ -55,39 +66,39 @@ public class VideoService {
 				if (filterQuery.getSectionName().equals("Language")) {
 					switch (query) {
 						case "English":
-							videoList.addAll(videoRepository.findVideosWithLanguage(Language.EN));
+							videoList.addAll(findVideosWithLanguage(keyword, Language.EN));
 							break;
 						case "French":
-							videoList.addAll(videoRepository.findVideosWithLanguage(Language.FR));
+							videoList.addAll(findVideosWithLanguage(keyword, Language.FR));
 							break;
 						case "Chinese":
-							videoList.addAll(videoRepository.findVideosWithLanguage(Language.ZH_TW));
+							videoList.addAll(findVideosWithLanguage(keyword, Language.ZH_TW));
 							break;
 					}
 				}
 				else if (filterQuery.getSectionName().equals("VideoLength")) {
 					switch (query) {
 						case "0-10minutes":
-							videoList.addAll(videoRepository.findVideosBetweenLength(0 * 60, 10 * 60));
+							videoList.addAll(findVideosWithVideoLength(keyword, 0 * 60, 10 * 60));
 							break;
 						case "11-30minutes":
-							videoList.addAll(videoRepository.findVideosBetweenLength(11 * 60, 30 * 60));
+							videoList.addAll(findVideosWithVideoLength(keyword, 11 * 60, 30 * 60));
 							break;
 						case "31-60minutes":
-							videoList.addAll(videoRepository.findVideosBetweenLength(31 * 60, 60 * 60));
+							videoList.addAll(findVideosWithVideoLength(keyword, 31 * 60, 60 * 60));
 							break;
 						case "Morethan1hour":
-							videoList.addAll(videoRepository.findVideosLargerThanLength(61 * 60));
+							videoList.addAll(findVideosWithVideoLength(keyword, 61 * 60));
 							break;
 					}
 				}
 				else {
 					switch (query) {
 					case "Withsubtitle":
-						videoList.addAll(videoRepository.findVideosBySubtitle(true));
+						videoList.addAll(findVideosBySubtitle(keyword, true));
 						break;
 					case "Withoutsubtitle":
-						videoList.addAll(videoRepository.findVideosBySubtitle(false));
+						videoList.addAll(findVideosBySubtitle(keyword, false));
 						break;
 					}
 				}
@@ -108,4 +119,41 @@ public class VideoService {
 		
 		return returnPage;
 	}
+	
+	private List<Video> findVideosWithLanguage(String keyword, Language language) {
+		if (keyword == null) {
+			return videoRepository.findVideosWithLanguage(language);
+		}
+		else {
+			return videoRepository.findVideosWithKeywordAndLanguage(keyword, language);
+		}
+	}
+	
+	private List<Video> findVideosWithVideoLength(String keyword, Integer lowerBound) {
+		if (keyword == null) {
+			return videoRepository.findVideosLargerThanLength(lowerBound);
+		}
+		else {
+			return videoRepository.findVideosWithKeywordAndLargerThanLength(keyword, lowerBound);
+		}
+	}
+	
+	private List<Video> findVideosWithVideoLength(String keyword, Integer lowerBound, Integer upperBound) {
+		if (keyword == null) {
+			return videoRepository.findVideosBetweenLength(lowerBound, upperBound);
+		}
+		else {
+			return videoRepository.findVideosWithKeywordAndBetweenLength(keyword, lowerBound, upperBound);
+		}
+	}
+	
+	private List<Video> findVideosBySubtitle(String keyword, boolean hasSubtitle) {
+		if (keyword == null) {
+			return videoRepository.findVideosBySubtitle(hasSubtitle);
+		}
+		else {
+			return videoRepository.findVideosWithKeywordAndSubtitle(keyword, hasSubtitle);
+		}
+	}
+	
 }
