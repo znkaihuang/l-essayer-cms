@@ -26,5 +26,8 @@ public interface VideoRepository extends PagingAndSortingRepository<Video, Integ
 	public List<Video> findVideosBySubtitle(boolean hasSubtitle);
 	
 	@Query("SELECT v FROM Video v WHERE v.videoLength >= ?1 AND v.videoLength <= ?2")
-	public List<Video> findVideosBetweenLength(Integer lowerBound, Integer upperBound);	
+	public List<Video> findVideosBetweenLength(Integer lowerBound, Integer upperBound);
+	
+	@Query("SELECT v FROM Video v WHERE v.videoLength >= ?1")
+	public List<Video> findVideosLargerThanLength(Integer lowerBound);
 }

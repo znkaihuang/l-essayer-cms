@@ -63,10 +63,10 @@ public class VideoController {
 	
 	private Page<Video> listVideoPage(Integer currentPage, String keyword) {
 		if (keyword == null) {
-			return videoService.listVideoByPage(currentPage);
+			return videoService.listVideosByPage(currentPage);
 		}
 		else {
-			return videoService.listVideoWithKeywordByPage(currentPage, keyword);
+			return videoService.listVideosWithKeywordByPage(currentPage, keyword);
 		}
 	}
 	

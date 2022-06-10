@@ -13,11 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.Rollback;
 
 import com.lessayer.entity.Language;
 import com.lessayer.entity.Lecturer;
 import com.lessayer.entity.Video;
+import com.lessayer.filter.FilterHelper;
+import com.lessayer.filter.FilterQueryObject;
+import com.lessayer.service.VideoService;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -129,6 +133,44 @@ public class VideoRepositoryTests {
 		List<Video> videoList = videoRepository.findVideosBetweenLength(300, 500);
 		printVideoList(videoList);
 		assertThat(videoList.size()).isGreaterThan(0);
+	}
+	
+	@Test
+	public void findVideosWitherFilterQueryTest() {
+		List<FilterQueryObject> filterQueryList = getFilterQueryList("0-0,0-2,2-0,2-1");
+		printFilterQueryList(filterQueryList);
+		
+		VideoService service = new VideoService(videoRepository);
+		Page<Video> page = service.listVideosWithFilter(0, filterQueryList);
+		
+		printVideoList(page.getContent());
+		System.out.println(page.getTotalElements());
+		System.out.println(page.getTotalPages());
+	}
+	
+	private List<FilterQueryObject> getFilterQueryList(String filterString) {
+		String[] sections = {"Language", "Video Length", "Subtitle"};
+		String[] options = {
+				"English", "French", "Chinese",
+				"0-10 minutes", "11-30 minutes", "31-60 minutes", "More than 1 hour",
+				"With subtitle", "Without subtitle"
+		};
+		Integer[] optionNumPerSection = {3, 4, 2};
+		FilterHelper filterHelper = new FilterHelper(sections, options, optionNumPerSection);
+		filterHelper.setPrevFilterSelect("0-0");
+		filterHelper.updateFilter(filterString);
+		
+		return filterHelper.getFilterQueryList();
+	}
+	
+	private void printFilterQueryList(List<FilterQueryObject> queryList) {
+		for (FilterQueryObject queryObject : queryList) {
+			System.out.println("[" + queryObject.getSectionName() + "]");
+			for (String queryOption : queryObject.getQueryOptions()) {
+				System.out.print(queryOption + " ");
+			}
+			System.out.println();
+		}
 	}
 	
 	private void printVideoList(List<Video> videoList) {
