@@ -43,7 +43,7 @@ public class VideoController {
 			filterHelper.clearFilter();
 		}
 		
-		page = listVideoPage(currentPage, keyword);
+		page = listVideoPage(currentPage, keyword, filterSelect);
 		
 		Integer totalPages = page.getTotalPages();
 		Integer prevPage = (currentPage - 1 >= 0) ? currentPage - 1 : 0;
@@ -57,16 +57,43 @@ public class VideoController {
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("baseURL", "/video/videos");
 		model.addAttribute("filter", filterHelper.getFilter());
+		model.addAttribute("suffixURL", returnKeywordAndFilterSelectSuffixURL(keyword, filterSelect));
 		
 		return "/video/videos";
 	}
 	
-	private Page<Video> listVideoPage(Integer currentPage, String keyword) {
-		if (keyword == null) {
-			return videoService.listVideosByPage(currentPage);
+	private String returnKeywordAndFilterSelectSuffixURL (String keyword, String filterSelect) {
+		if (filterSelect != null) {
+			String filterSelectSuffix = filterSelect.replace(",", "&filterSelect=");
+			if (keyword == null) {
+				return "?filterSelect=" + filterSelectSuffix;
+			}
+			else {
+				return "?keyword=" + keyword + "&filterSelect=" + filterSelectSuffix;
+			}
 		}
 		else {
+			if (keyword == null) {
+				return "";
+			}
+			else {
+				return "?keyword=" + keyword;
+			}
+		}
+	}
+	
+	private Page<Video> listVideoPage(Integer currentPage, String keyword, String filterSelect) {
+		if (keyword == null && filterSelect == null) {
+			return videoService.listVideosByPage(currentPage);
+		}
+		else if(keyword != null && filterSelect == null) {
 			return videoService.listVideosWithKeywordByPage(currentPage, keyword);
+		}
+		else if(keyword == null && filterSelect != null) {
+			return videoService.listVideosWithFilterByPage(currentPage, filterHelper.getFilterQueryList());
+		}
+		else {
+			return videoService.listVideosWithKeywordAndFilterByPage(currentPage, keyword, filterHelper.getFilterQueryList());
 		}
 	}
 	

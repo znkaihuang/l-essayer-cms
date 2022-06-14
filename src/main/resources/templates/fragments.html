@@ -173,5 +173,30 @@
 		</nav>
 	</div>
 	
+	<div th:fragment="paginationWithFilter(baseURL, suffixURL)" th:remove="tag">
+		<nav th:if="${totalPages > 1}">
+			<ul class="pagination justify-content-center pagination-lg">
+				<li class="page-item">
+					<a class="page-link" th:href="${baseURL} + '/0' + ${suffixURL}"><span>&laquo;</span></a>
+				</li>
+				<li class="page-item" th:if="${prevPage} != ${currentPage}">
+					<a class="page-link" th:href="${baseURL} + '/' + ${prevPage} + ${suffixURL}">[[${prevPage+1}]]</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" th:href="${baseURL} + '/' + ${currentPage} + ${suffixURL}">[[${currentPage+1}]]</a>
+				</li>
+				<li class="page-item" th:if="${nextPage} != ${currentPage}">
+					<a class="page-link" th:href="${baseURL} + '/' + ${nextPage} + ${suffixURL}">[[${nextPage+1}]]</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" th:href="${baseURL} + '/' + ${totalPages - 1} + ${suffixURL}"><span>&raquo;</span></a>
+				</li>
+			</ul>
+			<div class="text-center">
+				<span>Total [[${totalPages}]] Pages</span>
+			</div>
+		</nav>
+	</div>
+	
 </body>
 </html>
