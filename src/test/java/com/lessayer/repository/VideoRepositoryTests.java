@@ -141,7 +141,7 @@ public class VideoRepositoryTests {
 		printFilterQueryList(filterQueryList);
 		
 		VideoService service = new VideoService(videoRepository);
-		Page<Video> page = service.listVideosAndFilterByPage(0, filterQueryList);
+		Page<Video> page = service.listVideosWithFilterByPage(0, filterQueryList);
 		
 		printVideoList(page.getContent());
 		System.out.println(page.getTotalElements());

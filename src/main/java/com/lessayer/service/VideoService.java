@@ -45,7 +45,7 @@ public class VideoService {
 		return page;
 	}
 	
-	public Page<Video> listVideosAndFilterByPage(Integer currentPage, List<FilterQueryObject> filterQueryList) {
+	public Page<Video> listVideosWithFilterByPage(Integer currentPage, List<FilterQueryObject> filterQueryList) {
 		return listVideosWithKeywordAndFilterByPage(currentPage, null, filterQueryList);
 	}
 	
@@ -79,13 +79,13 @@ public class VideoService {
 				else if (filterQuery.getSectionName().equals("VideoLength")) {
 					switch (query) {
 						case "0-10minutes":
-							videoList.addAll(findVideosWithVideoLength(keyword, 0 * 60, 10 * 60));
+							videoList.addAll(findVideosWithVideoLength(keyword, 0 * 60, 11 * 60 - 1));
 							break;
 						case "11-30minutes":
-							videoList.addAll(findVideosWithVideoLength(keyword, 11 * 60, 30 * 60));
+							videoList.addAll(findVideosWithVideoLength(keyword, 11 * 60, 31 * 60 - 1));
 							break;
 						case "31-60minutes":
-							videoList.addAll(findVideosWithVideoLength(keyword, 31 * 60, 60 * 60));
+							videoList.addAll(findVideosWithVideoLength(keyword, 31 * 60, 61 * 60 - 1));
 							break;
 						case "Morethan1hour":
 							videoList.addAll(findVideosWithVideoLength(keyword, 61 * 60));
@@ -113,9 +113,9 @@ public class VideoService {
 				finalContent = finalContent.stream().filter(video -> filterList.contains(video)).toList();
 			}
 		}
-		
-		Integer lastIndex = (finalContent.size() >= VIDEOS_PER_PAGE) ? VIDEOS_PER_PAGE : finalContent.size();
-		Page<Video> returnPage = new PageImpl<Video>(finalContent.subList(0, lastIndex), pageable, finalContent.size());
+		Integer fistIndex = (currentPage > 0) ? currentPage * VIDEOS_PER_PAGE : 0;
+		Integer lastIndex = ((currentPage + 1) * VIDEOS_PER_PAGE > finalContent.size()) ? finalContent.size() : (currentPage + 1) * VIDEOS_PER_PAGE;
+		Page<Video> returnPage = new PageImpl<Video>(finalContent.subList(fistIndex, lastIndex), pageable, finalContent.size());
 		
 		return returnPage;
 	}
