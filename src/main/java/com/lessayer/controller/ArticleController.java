@@ -66,6 +66,7 @@ public class ArticleController {
 		model.addAttribute("nextPage", nextPage);
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("baseURL", "/article/articles");
+		model.addAttribute("suffixURL", returnKeywordSuffixURL(keyword));
 		
 		return "/article/articles";
 	}
@@ -204,6 +205,15 @@ public class ArticleController {
 		setModalMessage(redirectAttributes, "Success", "Successfully delete article with ID " + articleId);
 		
 		return formatRedirectURL("redirect:/article/articles/" + pageNum, keyword);
+	}
+	
+	private String returnKeywordSuffixURL(String keyword) {
+		if (keyword == null) {
+				return "";
+		}
+		else {
+				return "?keyword=" + keyword;
+		}
 	}
 	
 	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {

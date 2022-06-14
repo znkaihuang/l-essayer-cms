@@ -62,6 +62,7 @@ public class UserController {
 		model.addAttribute("nextPage", nextPage);
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("baseURL", "/user/" + userType);
+		model.addAttribute("suffixURL", returnKeywordSuffixURL(keyword));
 		model.addAttribute("userType", userType);
 		
 		return "/user/users";
@@ -232,6 +233,15 @@ public class UserController {
 		}
 		AbstractFileExporter<User> pdfExporter = UserPdfExporterDelegate.getPdfExporter();
 		pdfExporter.export(userList, response);
+	}
+	
+	private String returnKeywordSuffixURL(String keyword) {
+		if (keyword == null) {
+				return "";
+		}
+		else {
+				return "?keyword=" + keyword;
+		}
 	}
 	
 	private void uploadPhoto(Integer userId, String fileName, MultipartFile imageFile)

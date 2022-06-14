@@ -35,7 +35,7 @@
 		</div>
 	</div>
 	
-	<div th:replace="fragments :: pagination(${baseURL})" />
+	<div th:replace="fragments :: pagination(${baseURL}, ${suffixURL})" />
 	
 	<div th:replace="modal_fragments :: messageModal(${yesButtonURL})" />
 	<div th:replace="modal_fragments :: articleViewModal" />

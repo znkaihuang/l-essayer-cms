@@ -72,7 +72,7 @@
 		</div>
 	</div>
 
-	<div th:replace="fragments :: paginationWithFilter(${baseURL}, ${suffixURL})" />
+	<div th:replace="fragments :: pagination(${baseURL}, ${suffixURL})" />
 
 	<div th:replace="modal_fragments :: messageModal(${yesButtonURL})" />
 	<div th:replace="fragments :: site_footer" />
