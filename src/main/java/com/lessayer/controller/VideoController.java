@@ -1,15 +1,29 @@
 package com.lessayer.controller;
 
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.lessayer.entity.Language;
+import com.lessayer.entity.Tag;
 import com.lessayer.entity.Video;
 import com.lessayer.filter.FilterHelper;
+import com.lessayer.service.TagService;
 import com.lessayer.service.VideoService;
 
 
@@ -18,6 +32,9 @@ public class VideoController {
 	
 	@Autowired
 	private VideoService videoService;
+	
+	@Autowired
+	private TagService tagService;
 	
 	private FilterHelper filterHelper;
 	
@@ -60,6 +77,83 @@ public class VideoController {
 		model.addAttribute("suffixURL", returnKeywordAndFilterSelectSuffixURL(keyword, filterSelect));
 		
 		return "/video/videos";
+	}
+	
+	@GetMapping("/video/videos/create")
+	public String showCreateVideoPage(Model model) {
+		String pageTitle;
+		List<Tag> tagList = tagService.retrieveAllTags();
+		
+		Video video = new Video();
+		
+		if (video.getId() == null) {
+			pageTitle = "Upload New Video";
+		}
+		else {
+			pageTitle = "Edit Video ID " + video.getId();
+		}
+		
+		model.addAttribute("video", video);
+		model.addAttribute("tagList", tagList);
+		model.addAttribute("pageTitle", pageTitle);
+		model.addAttribute("returnPage", 0);
+		model.addAttribute("baseURL", "/video/videos");
+		model.addAttribute("suffixURL", returnKeywordAndFilterSelectSuffixURL(null, null));
+		model.addAttribute("supportedLanguages", Language.values());
+		
+		return "/video/video_form";
+	}
+	
+	@PostMapping("/video/videos/save/{pageNum}")
+	public String saveArticle(@PathVariable("pageNum") Integer pageNum, Video video, 
+		RedirectAttributes redirectAttributes, String keyword, MultipartFile[] uploadedFiles,
+		String tag, String date) throws IOException, ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		video.setDate(dateFormat.parse(date));
+		updateTags(video, parseTagString(tag));
+
+//		Video savedVideo = videoService.saveVideo(article);
+//		
+//		if (!imageFile[0].isEmpty()) {
+//			uploadImageFiles(savedArticle.getId(), imageFile);
+//			articleService.setImageFiles(savedArticle, imageFile);
+//		}
+//		
+//		String modalBody = (article.getId() == null) ? "Create Article with ID " + savedArticle.getId() : "Update Article with ID " + article.getId();
+//		setModalMessage(redirectAttributes, "Success", modalBody);
+		
+//		return formatRedirectURL("redirect:/video/videos/" + pageNum, keyword);
+		return null;
+	}
+	
+	private void updateTags(Video video, List<Tag> updatedTags) {
+		List<Tag> tagCacheList = tagService.retrieveAllTags();
+		Set<Tag> newTags = new TreeSet<>();
+		updatedTags.forEach(updatedTag -> {
+			if (tagCacheList.contains(updatedTag)) {
+				Integer index = tagCacheList.indexOf(updatedTag);
+				newTags.add(tagCacheList.get(index));
+			}
+			else {
+				Tag tagInDB = tagService.createTag(updatedTag);
+				tagCacheList.add(tagInDB);
+				newTags.add(tagInDB);
+			}
+		});
+		video.setTags(newTags);
+	}
+	
+	// The format of tag string is "<tag>,<tag>, ...
+	private List<Tag> parseTagString(String tagString) {
+		List<Tag> tagList = new ArrayList<>();
+		String[] tagStringArray = tagString.split(",");
+		
+		for (int count = 0; count < tagStringArray.length; count++) {
+			tagList.add(new Tag(tagStringArray[count]));
+		}
+		
+		return tagList;
 	}
 	
 	private String returnKeywordAndFilterSelectSuffixURL (String keyword, String filterSelect) {
