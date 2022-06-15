@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments :: page_head('Video Form - L\'essayer Backend Console')">
+<body>
+	<div th:replace="fragments :: top_header_bar" />
+    <div th:replace="fragments :: nav_bar" />
+    
+    <div>
+    	<div class="form-header">
+    		<h2 class="text-center text-light bg-success py-2">[[${pageTitle}]]</h2>
+	    </div>
+		<div class="form border border-success border-3 rounded">
+			<nav>
+				<div class="nav nav-tabs" id="nav-tab" role="tablist">
+					<button class="nav-link active" id="nav-home-tab"
+						data-bs-toggle="tab" data-bs-target="#nav-profile" type="button"
+						role="tab" aria-controls="nav-profile" aria-selected="true">Profile</button>
+					<button class="nav-link" id="nav-content-tab" data-bs-toggle="tab"
+						data-bs-target="#nav-content" type="button" role="tab"
+						aria-controls="nav-content" aria-selected="false">Content</button>
+					<button class="nav-link" id="nav-tag-tab" data-bs-toggle="tab"
+						data-bs-target="#nav-tag" type="button" role="tab"
+						aria-controls="nav-tag" aria-selected="false">Tag</button>
+				</div>
+			</nav>
+		    <form class="px-4 py-2 justify-content-center" th:action="${baseURL} + '/save/' + ${returnPage} + ${suffixURL}"
+		    	method="post" th:object=${video} enctype="multipart/form-data" id="videoForm">
+		    	<input type="hidden" th:field="*{id}">
+		    	<div class="tab-content" id="nav-tabContent">
+					<div class="row tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+						<div class="col-12 pb-1">
+				    		<label for="title" class="form-label">Title</label>
+				    		<input type="text" class="form-control" id="title" th:field="*{title}" minlength="10" maxlength="100">
+				    		<label for="title" class="form-label">(Note: The length of title should be between 10~100 characters.)</label>
+				    	</div>
+						<div class="col-6 pb-1">
+							<label for="lecturer" class="form-label">Lecturer</label>
+							<input type="text" class="form-control" id="lecturer" minlength="10" maxlength="100" th:field="*{lecturer}">
+						</div>
+						<div class="col-6 pb-1 row">
+							<div class="col-6">
+								<label for="date" class="form-label">Upload date</label>
+								<input type="date" class="form-control" id="date" th:field="*{date}">
+							</div>
+							<div class="col-6 pb-1">
+								<label for="uploader" class="form-label">Uploader</label>
+								<input type="text" class="form-control" id="uploader" th:field="*{uploader}" minlength="10" maxlength="50">
+							</div>
+						</div>
+						<div class="col-12 pb-1">
+							<label class="form-label d-flex">Language</label>
+							<th:block th:each="language : ${supportedLanguages}">
+								<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="checkbox" th:id="${language.languageName}" th:field="*{language}" th:text="${language.languageName}" th:value="${language.languageName}">
+								</div>
+							</th:block>
+						</div>
+						<div class="col-12 pb-1">
+							<label class="form-label d-flex">Subtitle</label>
+							<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="checkbox" id="withSubtitle" th:field="*{hasSubtitle}" value="true">
+								  <label for="withSubtitle" class="form-check-label">With subtitle</label>
+							</div>
+							<div class="form-check form-check-inline">
+								  <input class="form-check-input" type="checkbox" id="withoutSubtitle" th:field="*{hasSubtitle}" value="false">
+								  <label for="withoutSubtitle" class="form-check-label">Without subtitle</label>
+							</div>
+						</div>
+						<div class="col-12 pb-1">
+							<label for="description" class="form-label">Description</label>
+				    		<textarea rows="5" class="form-control" id="description" th:field="*{description}" minlength="10" maxlength="500"></textarea>
+				    		<label for="description" class="form-label">(Note: The length of description should be between 10~500 characters.)</label>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="nav-content" role="tabpanel" aria-labelledby="nav-content-tab">
+						<div class="row">
+							<div class="col-10 my-2">
+								<label for="url" class="form-label">Uploaded video</label>
+								<input type="file" class="form-control" id="url" accept="video/**" name="url">
+							</div>
+							<div class="col-2 my-2">
+								<label for="length" class="form-label">Video length</label>
+								<input type="text" class="form-control" id="length" disabled="disabled" th:field="*{videoLength}">
+							</div>
+							<div class="col-12 my-2">
+								<label for="coverImage" class="form-label">Cover image</label>
+								<input type="file" class="form-control" id="coverImage" accept="image/**" name="coverImage">
+							</div>
+							<div th:if="${video.url != null}" id="added-video-section">
+								<label class="form-label"><strong>Uploaded video</strong></label>
+								<div class="py-1" th:id="'file' + ${video.url}">
+									<a th:href="${video.url}" target="_blank" >
+										<span class="fa-solid fa-image fa-2x pe-2"></span><span class="mb-2">[[${video.url}]]</span>
+									</a>
+									<span class="fa-solid fa-xmark remove-file px-2" th:id="'removeFile' + ${video.id}"></span>
+								</div>
+							</div>
+							<div th:if="${video.coverImage != null}" id="added-video-section">
+								<label class="form-label"><strong>Uploaded cover image</strong></label>
+								<div class="py-1" th:id="'file' + ${video.coverImage}">
+									<a th:href="${video.getCoverImage}" target="_blank" >
+										<span class="fa-solid fa-image fa-2x pe-2"></span><span class="mb-2">[[${video.coverImage}]]</span>
+									</a>
+									<span class="fa-solid fa-xmark remove-file px-2" th:id="'removeFile' + ${video.id}"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="nav-tag" role="tabpanel" aria-labelledby="nav-tag-tab">
+						<div class="col-12">
+							<label class="form-label"> 
+								Pick some tags for your video. Create one if there does not exist any suitable tag. <br>
+								Choose at most five tags for your video.
+							</label>
+						</div>
+						<div class="col-8 py-1">
+							<label class="form-label" for="tag-select">Select tag</label>
+							<div class="d-flex gap-2 select-wrapper">
+								<select class="form-select w-50" id="tag-select" name="tag-select" size="3">
+									<th:block th:each="tag : ${tagList}">
+										<option th:value="${tag.tag}">[[${tag.tag}]]</option>
+									</th:block>
+								</select>
+								<button type="button" class="btn btn-success align-self-end" id="tag-select-btn">Select</button>
+							</div>
+						</div>
+						<div class="col-8 py-1">
+							<label class="form-label" for="tag-create">Create tag</label> 
+							<div class="d-flex gap-2">
+								<input type="text" class="form-control w-50" id="tag-create" minlength="2" maxlength="30">
+								<button type="button" class="btn btn-success" id="tag-create-btn">Create</button>
+							</div>
+							<label class="form-label">(Note: The length of tag name should be between 2~30 characters.)</label>
+							
+						</div>
+						<div class="col-12" id="added-tags-section" style="height: 100px;">
+							<h6>Added Tags (toggle to delete):</h6>
+				  			<th:block th:each="tag : ${video.tags}" name="addedTags">
+								<span class="badge rounded-pill fs-6 my-1" th:id="${tag.id}">[[${tag.tag}]]</span>
+				  			</th:block>
+						</div>
+					</div>
+				</div>
+			  	<div class="d-flex gap-2 py-2 col-12 justify-content-center">
+			    	<input type="submit" class="btn btn-success" value="Create">
+			    	<a th:href="${baseURL} + '/' + ${returnPage} + ${suffixURL}">
+			    		<button type="button" class="btn btn-success">Cancel</button></a>
+			  	</div>
+			</form>
+	    </div>
+    </div>
+    <div th:replace="fragments :: site_footer" />
+    <div th:replace="fragments :: common_js" />
+	<div th:replace="modal_fragments :: messageModal('')" />
+    <script type="text/javascript" th:src="@{/js/common_form.js}"></script>
+	<script>
+		let addedTagsDiv = document.getElementById('added-tags-section');
+		let selectTagBtn = document.getElementById('tag-select-btn');
+		let selectTag = document.getElementById('tag-select');
+		let createTagBtn = document.getElementById('tag-create-btn');
+		let createTag = document.getElementById('tag-create');
+		selectTagBtn.onclick = function() {
+			createTagInTagsSection(selectTag);
+		};
+	
+		createTagBtn.onclick = function() {
+			createTagInTagsSection(createTag);
+		};
+		createHiddenInputEleForExistedTags(addedTagsDiv);
+		createClickRemoveFileFunction();
+    </script>
+	
+</body>
+</html>
