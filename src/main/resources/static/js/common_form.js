@@ -95,7 +95,7 @@ function validateArticleFormInputs () {
 	
 }
 
-function createHiddenInputEleForExistedTags() {
+function createHiddenInputEleForExistedTags(addedTagsDiv) {
 	
 	for (element of addedTagsDiv.childNodes) {
 		if (element.nodeName === "SPAN") {
@@ -172,4 +172,80 @@ function createClickRemoveFileFunction() {
 		}
 	}
 
+}
+
+function validateVideoFormInputs () {
+	const videoForm = document.getElementById('videoForm');
+	videoForm.addEventListener('submit', function(event) {
+		event.preventDefault();
+		
+		let warningMessage = 'Please fill in the following field(s):';
+		let blankFieldCount = 0;
+		let title = document.getElementById('title');
+		let lecturer = document.getElementById('lecturer');
+		let date = document.getElementById('uploaded-date');
+		let uploader = document.getElementById('uploader');
+		let languages = document.getElementsByName('language');
+		let hasSubtitle = document.getElementsByName('hasSubtitle');
+		let description = document.getElementById('description');
+		let url = document.getElementById('url');
+		
+		if (title.value === '' || title.value == null) {
+			warningMessage += '\n  - title';
+			blankFieldCount++;
+		}
+		if (lecturer.value === '' || lecturer.value == null) {
+			warningMessage += '\n  - lecturer';
+			blankFieldCount++;
+		}
+		if (date.value === '' || date.value == null) {
+			warningMessage += '\n  - uploaded date';
+			blankFieldCount++;
+		}
+		if (uploader.value === '' || uploader.value == null) {
+			warningMessage += '\n  - uploader';
+			blankFieldCount++;
+		}
+		if (description.value === '' || description.value == null) {
+			warningMessage += '\n  - description';
+			blankFieldCount++;
+		}
+		if (!validateRadios(languages)) {
+			warningMessage += '\n  - language';
+			blankFieldCount++;
+		}
+		if (!validateRadios(hasSubtitle)) {
+			warningMessage += '\n  - subtitle';
+			blankFieldCount++;
+		}
+		if (url.value === '' || url.value == null) {
+			warningMessage += '\n  - uploaded video';
+			blankFieldCount++;
+		}
+		if (addedTagsDiv.childElementCount < 2) {
+			warningMessage += '\n  - tag(s)';
+			blankFieldCount++;
+		}
+		
+		if (blankFieldCount == 0) {
+			videoForm.submit();
+		}
+		else {
+			showModal('Warning');
+			document.getElementById('messageModalTitle').innerText = 'Warning';
+			document.getElementById('messageModalBody').innerText = warningMessage;
+		}
+	});
+	
+}
+
+function validateRadios(radioElements) {
+	let flag = false;
+	for (radio of radioElements) {
+		if (radio.checked) {
+			flag = true;
+		}
+	}
+	
+	return flag;
 }

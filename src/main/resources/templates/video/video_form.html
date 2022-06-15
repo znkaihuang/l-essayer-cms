@@ -40,7 +40,7 @@
 						<div class="col-6 pb-1 row">
 							<div class="col-6">
 								<label for="date" class="form-label">Upload date</label>
-								<input type="date" class="form-control" id="date" th:field="*{date}">
+								<input type="date" class="form-control" id="uploaded-date" th:field="*{date}">
 							</div>
 							<div class="col-6 pb-1">
 								<label for="uploader" class="form-label">Uploader</label>
@@ -51,18 +51,19 @@
 							<label class="form-label d-flex">Language</label>
 							<th:block th:each="language : ${supportedLanguages}">
 								<div class="form-check form-check-inline">
-								  <input class="form-check-input" type="checkbox" th:id="${language.languageName}" th:field="*{language}" th:text="${language.languageName}" th:value="${language.languageName}">
+								  <input class="form-check-input" type="radio" th:id="${language.languageName}" th:field="*{language}" 
+								  	th:text="${language.languageName}" th:value="${language.languageName}" name="language">
 								</div>
 							</th:block>
 						</div>
 						<div class="col-12 pb-1">
 							<label class="form-label d-flex">Subtitle</label>
 							<div class="form-check form-check-inline">
-								  <input class="form-check-input" type="checkbox" id="withSubtitle" th:field="*{hasSubtitle}" value="true">
+								  <input class="form-check-input" type="radio" id="withSubtitle" th:checked="${video.id != null ? video.hasSubtitle : false}" value="true" name="hasSubtitle">
 								  <label for="withSubtitle" class="form-check-label">With subtitle</label>
 							</div>
 							<div class="form-check form-check-inline">
-								  <input class="form-check-input" type="checkbox" id="withoutSubtitle" th:field="*{hasSubtitle}" value="false">
+								  <input class="form-check-input" type="radio" id="withoutSubtitle" th:checked="${video.id != null ? video.hasSubtitle : false}" value="false" name="hasSubtitle">
 								  <label for="withoutSubtitle" class="form-check-label">Without subtitle</label>
 							</div>
 						</div>
@@ -167,6 +168,7 @@
 			createTagInTagsSection(createTag);
 		};
 		createHiddenInputEleForExistedTags(addedTagsDiv);
+		validateVideoFormInputs();
 		createClickRemoveFileFunction();
     </script>
 	
