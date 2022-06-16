@@ -2,6 +2,7 @@ package com.lessayer.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,8 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.lessayer.entity.Language;
+import com.lessayer.entity.Lecturer;
 import com.lessayer.entity.Video;
 import com.lessayer.filter.FilterQueryObject;
+import com.lessayer.repository.LecturerRepository;
 import com.lessayer.repository.VideoRepository;
 
 @Service
@@ -22,6 +25,9 @@ public class VideoService {
 	
 	@Autowired
 	private VideoRepository videoRepository;
+	
+	@Autowired
+	private LecturerRepository lecturerRepository;
 	
 	public VideoService(VideoRepository videoRepository) {
 		this.videoRepository = videoRepository;
@@ -118,6 +124,18 @@ public class VideoService {
 		Page<Video> returnPage = new PageImpl<Video>(finalContent.subList(fistIndex, lastIndex), pageable, finalContent.size());
 		
 		return returnPage;
+	}
+	
+	public Video saveVideo(Video video) {
+		return videoRepository.save(video);
+	}
+	
+	public Optional<Lecturer> findLecturerByName(Lecturer lecturer) {
+		return lecturerRepository.findByName(lecturer.getName());
+	}
+	
+	public Lecturer saveLecturer(Lecturer lecturer) {
+		return lecturerRepository.save(lecturer);
 	}
 	
 	private List<Video> findVideosWithLanguage(String keyword, Language language) {

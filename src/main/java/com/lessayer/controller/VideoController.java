@@ -2,10 +2,13 @@ package com.lessayer.controller;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -19,7 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.lessayer.FileUploadUtil;
 import com.lessayer.entity.Language;
+import com.lessayer.entity.Lecturer;
 import com.lessayer.entity.Tag;
 import com.lessayer.entity.Video;
 import com.lessayer.filter.FilterHelper;
@@ -85,6 +90,7 @@ public class VideoController {
 		List<Tag> tagList = tagService.retrieveAllTags();
 		
 		Video video = new Video();
+		Lecturer lecturer = new Lecturer();
 		
 		if (video.getId() == null) {
 			pageTitle = "Upload New Video";
@@ -94,6 +100,7 @@ public class VideoController {
 		}
 		
 		model.addAttribute("video", video);
+		model.addAttribute("lecturer", lecturer);
 		model.addAttribute("tagList", tagList);
 		model.addAttribute("pageTitle", pageTitle);
 		model.addAttribute("returnPage", 0);
@@ -105,28 +112,62 @@ public class VideoController {
 	}
 	
 	@PostMapping("/video/videos/save/{pageNum}")
-	public String saveArticle(@PathVariable("pageNum") Integer pageNum, Video video, 
-		RedirectAttributes redirectAttributes, String keyword, MultipartFile[] uploadedFiles,
-		String tag, String date) throws IOException, ParseException {
+	public String saveVideo(@PathVariable("pageNum") Integer pageNum, Video video, Lecturer lecturer, 
+		RedirectAttributes redirectAttributes, String keyword, String filterSelect, String tag, String date,
+		MultipartFile uploadedVideo, MultipartFile uploadedImage) throws IOException, ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		video.setDate(dateFormat.parse(date));
 		updateTags(video, parseTagString(tag));
-
-//		Video savedVideo = videoService.saveVideo(article);
-//		
-//		if (!imageFile[0].isEmpty()) {
-//			uploadImageFiles(savedArticle.getId(), imageFile);
-//			articleService.setImageFiles(savedArticle, imageFile);
-//		}
-//		
-//		String modalBody = (article.getId() == null) ? "Create Article with ID " + savedArticle.getId() : "Update Article with ID " + article.getId();
-//		setModalMessage(redirectAttributes, "Success", modalBody);
 		
-//		return formatRedirectURL("redirect:/video/videos/" + pageNum, keyword);
-		return null;
+		Optional<Lecturer> lecturerOptional = videoService.findLecturerByName(lecturer);
+		if (lecturerOptional.isEmpty()) {
+			Lecturer savedLecturer = videoService.saveLecturer(lecturer);
+			video.setLecturer(savedLecturer);
+		}
+		else {
+			video.setLecturer(lecturerOptional.get());
+		}
+		
+		if (!uploadedVideo.isEmpty()) {
+			video.setUrl(uploadedVideo.getOriginalFilename());
+		}
+		
+		if (!uploadedImage.isEmpty()) {
+			video.setCoverImage(uploadedImage.getOriginalFilename());
+		}
+		
+		Video savedVideo = videoService.saveVideo(video);
+		
+		if (!uploadedVideo.isEmpty()) {
+			uploadedFile(savedVideo.getId(), uploadedVideo, "video");
+		}
+		
+		if (!uploadedImage.isEmpty()) {
+			uploadedFile(savedVideo.getId(), uploadedImage, "image");
+		}
+
+		String modalBody = (video.getId() == null) ? "Create Video with ID " + savedVideo.getId() : "Update Video with ID " + video.getId();
+		setModalMessage(redirectAttributes, "Success", modalBody);
+		
+		return formatRedirectURL("redirect:/video/videos/" + pageNum, keyword, filterSelect);
 	}
 	
+	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
+		redirectAttributes.addFlashAttribute("modalTitle", modalTitle);
+		redirectAttributes.addFlashAttribute("modalBody", modalBody);
+	}
+	
+	private void uploadedFile(Integer videoId, MultipartFile file, String type) throws IOException {
+		String uploadDir = "videos/" + videoId + "/" + type;
+		FileUploadUtil.remove(uploadDir);
+		FileUploadUtil.saveFile(uploadDir, file.getOriginalFilename(), file, type.equals("video"));
+	}
+
+	private String formatRedirectURL(String redirectURL, String keyword, String filterSelect) throws UnsupportedEncodingException {
+		return redirectURL +  URLEncoder.encode(returnKeywordAndFilterSelectSuffixURL(keyword, filterSelect), "utf-8");
+	}
+
 	private void updateTags(Video video, List<Tag> updatedTags) {
 		List<Tag> tagCacheList = tagService.retrieveAllTags();
 		Set<Tag> newTags = new TreeSet<>();
@@ -156,7 +197,7 @@ public class VideoController {
 		return tagList;
 	}
 	
-	private String returnKeywordAndFilterSelectSuffixURL (String keyword, String filterSelect) {
+	private String returnKeywordAndFilterSelectSuffixURL(String keyword, String filterSelect) {
 		if (filterSelect != null) {
 			String filterSelectSuffix = filterSelect.replace(",", "&filterSelect=");
 			if (keyword == null) {
