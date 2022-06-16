@@ -188,7 +188,8 @@ function validateVideoFormInputs () {
 		let languages = document.getElementsByName('language');
 		let hasSubtitle = document.getElementsByName('hasSubtitle');
 		let description = document.getElementById('description');
-		let url = document.getElementById('url');
+		let uploadedVideo = document.getElementById('uploadedVideo');
+		let videoLength = document.getElementById('videoLength');
 		
 		if (title.value === '' || title.value == null) {
 			warningMessage += '\n  - title';
@@ -218,8 +219,12 @@ function validateVideoFormInputs () {
 			warningMessage += '\n  - subtitle';
 			blankFieldCount++;
 		}
-		if (url.value === '' || url.value == null) {
+		if (uploadedVideo.value === '' || uploadedVideo.value == null) {
 			warningMessage += '\n  - uploaded video';
+			blankFieldCount++;
+		}
+		if (videoLength.value === '' || videoLength.value == null) {
+			warningMessage += '\n  - video length';
 			blankFieldCount++;
 		}
 		if (addedTagsDiv.childElementCount < 2) {
