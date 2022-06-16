@@ -162,8 +162,8 @@ public class Video {
 	
 	@Transient
 	public String getCoverImagePath() {
-		if (coverImage != null) {
-			return "videos/" + id + "/" + coverImage;
+		if (this.coverImage != null && !this.coverImage.equals("")) {
+			return "/videos/" + id + "/image/" + coverImage;
 		}
 		else {
 			return "/images/video-play.png";
