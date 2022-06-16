@@ -36,9 +36,9 @@ class ArticleCsvExporter<E> extends AbstractFileExporter<E> {
 		
 		csvWriter.writeHeader(csvHeader);
 		
-		for (E user : contentList) {
-			if (user instanceof Article) {
-				csvWriter.write((Article) user, fieldMapping);
+		for (E article : contentList) {
+			if (article instanceof Article) {
+				csvWriter.write((Article) article, fieldMapping);
 			}
 		}
 		
