@@ -65,3 +65,6 @@ hs_err_pid*
 
 # Article images
 /article-image-files/
+
+# Uploaded videos and cover images
+/videos/
