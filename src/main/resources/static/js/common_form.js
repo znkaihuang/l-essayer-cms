@@ -189,7 +189,7 @@ function validateVideoFormInputs () {
 		let hasSubtitle = document.getElementsByName('hasSubtitle');
 		let description = document.getElementById('description');
 		let uploadedVideo = document.getElementById('uploadedVideo');
-		let videoLength = document.getElementById('videoLength');
+		let videoLength = document.getElementById('length');
 		
 		if (title.value === '' || title.value == null) {
 			warningMessage += '\n  - title';
