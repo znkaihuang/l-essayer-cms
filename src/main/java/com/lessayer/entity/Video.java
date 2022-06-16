@@ -153,11 +153,16 @@ public class Video {
 	
 	@Transient
 	public String getTagsString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		tags.forEach(tag -> stringBuilder.append(tag.getTag() + ", "));
-		stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length() - 1);
-		
-		return stringBuilder.toString();
+		if (tags.size() > 0) {
+			StringBuilder stringBuilder = new StringBuilder();
+			tags.forEach(tag -> stringBuilder.append(tag.getTag() + ", "));
+			stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length() - 1);
+			
+			return stringBuilder.toString();
+		}
+		else {
+			return "";
+		}
 	}
 	
 	@Transient
