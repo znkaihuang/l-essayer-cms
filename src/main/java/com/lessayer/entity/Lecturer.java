@@ -11,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,34 +29,29 @@ public class Lecturer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@Column(name = "first_name", length = 50, nullable = false)
-	private String firstName;
-
-	@Column(name = "last_name", length = 50, nullable = false)
-	private String lastName;
+	@Column(name = "name", length = 50, nullable = false)
+	private String name;
 	
-	@Column(name = "lecturer_desc", length = 500, nullable = false)
+	@Column(name = "lecturer_desc", length = 500)
 	private String lecturerDescription;
 	
 	@OneToMany(mappedBy = "lecturer", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Video> videos;
 	
-	public Lecturer(String firstName, String lastName) {
+	public Lecturer(String name) {
 		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.name = name;
 	}
 	
-	public Lecturer(String firstName, String lastName, String lecturerDescription) {
+	public Lecturer(String name, String lecturerDescription) {
 		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.name = name;
 		this.lecturerDescription = lecturerDescription;
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(firstName, lastName);
+		return Objects.hash(name);
 	}
 
 	@Override
@@ -69,16 +63,12 @@ public class Lecturer {
 		if (getClass() != obj.getClass())
 			return false;
 		Lecturer other = (Lecturer) obj;
-		return Objects.equals(firstName, other.firstName) && Objects.equals(lastName, other.lastName);
+		return Objects.equals(name, other.name);
 	}
 
 	@Override
 	public String toString() {
-		return "Lecturer [firstName=" + firstName + ", lastName=" + lastName + "]";
+		return "Lecturer [name=" + name + "]";
 	}
 	
-	@Transient
-	public String getFullName() {
-		return firstName + " " + lastName;
-	}
 }

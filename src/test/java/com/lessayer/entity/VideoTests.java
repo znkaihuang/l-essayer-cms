@@ -33,7 +33,7 @@ public class VideoTests {
 		System.out.println(video);
 		System.out.println(video.getDateString());
 		System.out.println(video.getTagsString());
-		System.out.println(video.getLecturer().getFullName());
+		System.out.println(video.getLecturer().getName());
 		System.out.println(video.getCoverImagePath());
 		System.out.println(video.getURLPath());
 	}

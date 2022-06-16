@@ -41,9 +41,9 @@ public class VideoRepositoryTests {
 	
 	@Test
 	public void createLecturersTest() {
-		Lecturer lecturer1 = new Lecturer("Lena", "Lin", "A professional English teacher devoting teaching for more than 10 years.");
-		Lecturer lecturer2 = new Lecturer("Anne", " Le Grand", "A certified and experienced French instructor.");
-		Lecturer lecturer3 = new Lecturer("Bo-nan", "Wu", "A passiontate speaker that enjoys sharing how to program.");
+		Lecturer lecturer1 = new Lecturer("Lena Lin", "A professional English teacher devoting teaching for more than 10 years.");
+		Lecturer lecturer2 = new Lecturer("Anne Le Grand", "A certified and experienced French instructor.");
+		Lecturer lecturer3 = new Lecturer("Bo-nan Wu", "A passiontate speaker that enjoys sharing how to program.");
 		
 		lecturerRepository.save(lecturer1);
 		lecturerRepository.save(lecturer2);
