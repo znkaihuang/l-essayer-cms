@@ -33,18 +33,18 @@
 				    		<input type="text" class="form-control" id="title" th:field="*{title}" minlength="10" maxlength="100">
 				    		<label for="title" class="form-label">(Note: The length of title should be between 10~100 characters.)</label>
 				    	</div>
-						<div class="col-6 pb-1">
+						<div class="col-6 pb-1" th:object="${lecturer}">
 							<label for="lecturer" class="form-label">Lecturer</label>
-							<input type="text" class="form-control" id="lecturer" minlength="10" maxlength="100" th:field="*{lecturer}">
+							<input type="text" class="form-control" id="lecturer" minlength="5" maxlength="100" th:field="*{name}">
 						</div>
 						<div class="col-6 pb-1 row">
 							<div class="col-6">
 								<label for="date" class="form-label">Upload date</label>
-								<input type="date" class="form-control" id="uploaded-date" th:field="*{date}">
+								<input type="date" class="form-control" id="uploaded-date" th:field="*{date}" name="date">
 							</div>
 							<div class="col-6 pb-1">
 								<label for="uploader" class="form-label">Uploader</label>
-								<input type="text" class="form-control" id="uploader" th:field="*{uploader}" minlength="10" maxlength="50">
+								<input type="text" class="form-control" id="uploader" th:field="*{uploader}" minlength="5" maxlength="50">
 							</div>
 						</div>
 						<div class="col-12 pb-1">
@@ -52,7 +52,7 @@
 							<th:block th:each="language : ${supportedLanguages}">
 								<div class="form-check form-check-inline">
 								  <input class="form-check-input" type="radio" th:id="${language.languageName}" th:field="*{language}" 
-								  	th:text="${language.languageName}" th:value="${language.languageName}" name="language">
+								  	th:text="${language.languageName}" th:value="${language}" name="language">
 								</div>
 							</th:block>
 						</div>
@@ -76,16 +76,21 @@
 					<div class="tab-pane fade" id="nav-content" role="tabpanel" aria-labelledby="nav-content-tab">
 						<div class="row">
 							<div class="col-10 my-2">
+								<input type="hidden" th:field="*{url}">
 								<label for="url" class="form-label">Uploaded video</label>
-								<input type="file" class="form-control" id="url" accept="video/**" name="url">
+								<input type="file" class="form-control" id="uploadedVideo" accept="video/**" name="uploadedVideo">
 							</div>
 							<div class="col-2 my-2">
 								<label for="length" class="form-label">Video length</label>
-								<input type="text" class="form-control" id="length" disabled="disabled" th:field="*{videoLength}">
+								<input type="text" class="form-control" id="length" th:field="*{videoLength}">
 							</div>
 							<div class="col-12 my-2">
+								<label for="description" class="form-label">(Note: The unit of video length is second.)</label>
+							</div>
+							<div class="col-12 my-2">
+								<input type="hidden" th:field="*{coverImage}">
 								<label for="coverImage" class="form-label">Cover image</label>
-								<input type="file" class="form-control" id="coverImage" accept="image/**" name="coverImage">
+								<input type="file" class="form-control" id="uploadedImage" accept="image/**" name="uploadedImage">
 							</div>
 							<div th:if="${video.url != null}" id="added-video-section">
 								<label class="form-label"><strong>Uploaded video</strong></label>
