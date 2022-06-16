@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -22,11 +24,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.lessayer.AbstractFileExporter;
 import com.lessayer.FileUploadUtil;
 import com.lessayer.entity.Language;
 import com.lessayer.entity.Lecturer;
 import com.lessayer.entity.Tag;
 import com.lessayer.entity.Video;
+import com.lessayer.exporter.VideoCsvExporterDelegate;
+import com.lessayer.exporter.VideoPdfExporterDelegate;
 import com.lessayer.filter.FilterHelper;
 import com.lessayer.service.TagService;
 import com.lessayer.service.VideoService;
@@ -151,6 +156,20 @@ public class VideoController {
 		setModalMessage(redirectAttributes, "Success", modalBody);
 		
 		return formatRedirectURL("redirect:/video/videos/" + pageNum, keyword, filterSelect);
+	}
+	
+	@GetMapping("/video/videos/exportCsv")
+	public void exportToCsv(HttpServletResponse response) throws IOException {
+		List<Video> videoList = videoService.listAllVideos();
+		AbstractFileExporter<Video> csvExporter = VideoCsvExporterDelegate.getCsvExporter();
+		csvExporter.export(videoList, response);
+	}
+	
+	@GetMapping("/video/videos/exportPdf")
+	public void exportToPdf(HttpServletResponse response) throws IOException {
+		List<Video> videoList = videoService.listAllVideos();
+		AbstractFileExporter<Video> pdfExporter = VideoPdfExporterDelegate.getPdfExporter();
+		pdfExporter.export(videoList, response);
 	}
 	
 	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
