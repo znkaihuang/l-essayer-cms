@@ -42,17 +42,19 @@
 					<div class="col-3 my-4 mx-5">
 						<div class="card w-100">
 							<div class="card-header">
-								<a href="#"
+								<a th:href="${baseURL} + '/view/' + ${currentPage} + '/' + ${video.id} + '/' + ${iterStat.index} + ${suffixURL}"
 									class="fa-solid fa-file fa-1x mx-2 text-white link-detail"
-									data-bs-toggle="tooltip" title="View"></a> <a href="#"
+									data-bs-toggle="tooltip" title="View"></a>
+								<a href="#"
 									class="fa-solid fa-pen-to-square fa-1x mx-2 text-white link-edit"
-									data-bs-toggle="tooltip" title="Edit"></a> <a href="#"
+									data-bs-toggle="tooltip" title="Edit"></a>
+								<a href="#"
 									class="fa-solid fa-trash-can fa-1x mx-2 text-white link-delete"
 									data-bs-toggle="tooltip" title="Delete"></a>
 							</div>
-							<div class="card-body pt-0" style="height: 300px;">
+							<div class="card-body pt-0" style="width: 300px; height: 300px;">
 								<div class="text-center">
-									<img alt="coverImage" th:src="${video.coverImagePath}" height="200px">
+									<img alt="coverImage" th:src="${video.coverImagePath}" style="max-width: 250px; height:200px;">
 								</div>
 								<div style="max-height: 100px;">
 									<h5 class="card-title">[[${video.title}]]</h5>
@@ -71,6 +73,7 @@
 	<div th:replace="fragments :: pagination(${baseURL}, ${suffixURL})" />
 
 	<div th:replace="modal_fragments :: messageModal(${yesButtonURL})" />
+	<div th:replace="modal_fragments :: videoInformationModal" />
 	<div th:replace="fragments :: site_footer" />
 	<div th:replace="fragments :: common_js" />
 	<script type="text/javascript">

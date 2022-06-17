@@ -172,6 +172,23 @@ public class VideoController {
 		pdfExporter.export(videoList, response);
 	}
 	
+	@GetMapping("/video/videos/view/{pageNum}/{videoId}/{showId}")
+	public String viewVideo(@PathVariable("pageNum") Integer pageNum, @PathVariable("videoId") Integer videoId,
+		@PathVariable("showId") Integer showId, RedirectAttributes redirectAttributes, String keyword, String filterSelect)
+		throws UnsupportedEncodingException {
+		Optional<Video> videoOptional = videoService.findVideoById(videoId);
+		
+		if (videoOptional.isEmpty()) {
+			setModalMessage(redirectAttributes, "Error", "Cannot find Video with ID " + videoId);
+		}
+		else {
+			setModalMessage(redirectAttributes, "Video " + videoId, "");
+			redirectAttributes.addFlashAttribute("showId", showId);
+		}
+		
+		return formatRedirectURL("redirect:/video/videos/" + pageNum, keyword, filterSelect);
+	}
+	
 	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
 		redirectAttributes.addFlashAttribute("modalTitle", modalTitle);
 		redirectAttributes.addFlashAttribute("modalBody", modalBody);
@@ -180,7 +197,7 @@ public class VideoController {
 	private void uploadedFile(Integer videoId, MultipartFile file, String type) throws IOException {
 		String uploadDir = "videos/" + videoId + "/" + type;
 		FileUploadUtil.remove(uploadDir);
-		FileUploadUtil.saveFile(uploadDir, file.getOriginalFilename(), file, type.equals("video"));
+		FileUploadUtil.saveFile(uploadDir, file.getOriginalFilename(), file, false);
 	}
 
 	private String formatRedirectURL(String redirectURL, String keyword, String filterSelect) throws UnsupportedEncodingException {

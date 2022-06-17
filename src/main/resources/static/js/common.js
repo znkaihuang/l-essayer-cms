@@ -17,6 +17,9 @@ function selectModal(modalTitle) {
 		articleContent.innerHTML = tempEle.childNodes[0].nodeValue;
 		return 'articleViewModal';
 	}
+	else if (modalTitle.includes("Video")) {
+		return 'videoInformationModal';
+	}
 	else {
 		
 	}
