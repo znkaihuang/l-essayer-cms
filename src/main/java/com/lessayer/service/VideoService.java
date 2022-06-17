@@ -32,7 +32,11 @@ public class VideoService {
 	public VideoService(VideoRepository videoRepository) {
 		this.videoRepository = videoRepository;
 	}
-
+	
+	public Optional<Video> findVideoById(Integer videoId) {
+		return videoRepository.findById(videoId);
+	}
+	
 	public List<Video> listAllVideos() {
 		return videoRepository.findAllVideos();
 	}
