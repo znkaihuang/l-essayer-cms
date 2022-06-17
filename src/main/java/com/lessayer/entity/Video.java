@@ -176,7 +176,7 @@ public class Video {
 	}
 	
 	@Transient
-	public String getURLPath() {
-		return "videos/" + id + "/" + url;
+	public String getVideoPath() {
+		return "/videos/" + id + "/video/" + url;
 	}
 }
