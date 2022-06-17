@@ -76,3 +76,35 @@
 		</div>
 	</div>
 </div>
+
+<div th:fragment="videoInformationModal" th:remove="tag">
+	<div class="modal fade" id="videoInformationModal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title text-success" id="informationModalTitle">[[${modalTitle}]]</h3>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body" th:if="${showId != null}">
+					<div class="d-flex flex-column">
+						<h4>[[${videoList[showId].title}]]</h4><br>
+						<h6 class="text-muted">Uploaded date: [[${videoList[showId].dateString}]] / Lecturer: [[${videoList[showId].lecturer.name}]] 
+							/ Uploader: [[${videoList[showId].uploader}]]</h6>
+						<h6 class="text-muted">Language: [[${videoList[showId].language.languageName}]] / Subtitle: [[${videoList[showId].hasSubtitle}]]</h6>
+						<h6 class="text-muted">Tags: [[${videoList[showId].tagsString}]]</h6>
+						<div class="mx-auto">
+							<video class="w-100" controls>
+							  <source th:src="${videoList[showId].videoPath}" type="video/mp4">
+							</video>
+						</div>
+						<h6>Description:</h6>
+						<p>&nbsp;&nbsp;&nbsp;&nbsp;[[${videoList[showId].description}]]</p>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
