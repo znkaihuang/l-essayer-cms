@@ -189,6 +189,7 @@ function validateVideoFormInputs () {
 		let hasSubtitle = document.getElementsByName('hasSubtitle');
 		let description = document.getElementById('description');
 		let uploadedVideo = document.getElementById('uploadedVideo');
+		let url = document.getElementById('url');
 		let videoLength = document.getElementById('length');
 		
 		if (title.value === '' || title.value == null) {
@@ -219,7 +220,8 @@ function validateVideoFormInputs () {
 			warningMessage += '\n  - subtitle';
 			blankFieldCount++;
 		}
-		if (uploadedVideo.value === '' || uploadedVideo.value == null) {
+		if ((uploadedVideo.value === '' || uploadedVideo.value == null) &&
+			(url.value === '' || url.value === null)) {
 			warningMessage += '\n  - uploaded video';
 			blankFieldCount++;
 		}
