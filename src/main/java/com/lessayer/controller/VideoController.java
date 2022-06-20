@@ -49,7 +49,7 @@ public class VideoController {
 	private FilterHelper filterHelper;
 	
 	@GetMapping("/video/videos")
-	public String showVideoPage(Model model, String keyword) {
+	public String showVideoPage(Model model, String keyword) throws UnsupportedEncodingException {
 		constructFilter();
 		filterHelper.setPrevFilterSelect("0-0");
 		
@@ -58,7 +58,7 @@ public class VideoController {
 	
 	@GetMapping("/video/videos/{pageNum}")
 	public String showVideoPageByPage(@PathVariable("pageNum") Integer currentPage, Model model,
-		String keyword, String filterSelect) {
+		String keyword, String filterSelect) throws UnsupportedEncodingException {
 		
 		Page<Video> page;
 		
@@ -90,7 +90,7 @@ public class VideoController {
 	}
 	
 	@GetMapping("/video/videos/create")
-	public String showCreateVideoPage(Model model) {
+	public String showCreateVideoPage(Model model) throws UnsupportedEncodingException {
 		String pageTitle;
 		List<Tag> tagList = tagService.retrieveAllTags();
 		
@@ -189,6 +189,37 @@ public class VideoController {
 		return formatRedirectURL("redirect:/video/videos/" + pageNum, keyword, filterSelect);
 	}
 	
+	@GetMapping("/video/videos/edit/{pageNum}/{videoId}")
+	public String editVideo(@PathVariable("pageNum") Integer pageNum, @PathVariable("videoId") Integer videoId,
+		Model model, RedirectAttributes redirectAttributes, String keyword, String filterSelect) throws UnsupportedEncodingException {
+		Optional<Video> videoOptional = videoService.findVideoById(videoId);
+		
+		if (videoOptional.isEmpty()) {
+			setModalMessage(redirectAttributes, "Error", "Cannot find Video with ID " + videoId);
+		}
+		else {
+			String pageTitle = "Edit Video ID " + videoId;
+			List<Tag> tagList = tagService.retrieveAllTags();
+			
+			model.addAttribute("video", videoOptional.get());
+			model.addAttribute("lecturer", videoOptional.get().getLecturer());
+			model.addAttribute("tagList", tagList);
+			model.addAttribute("supportedLanguages", Language.values());
+			model.addAttribute("pageTitle", pageTitle);
+			model.addAttribute("returnPage", pageNum);
+			if (keyword != null) {
+				model.addAttribute("keyword", keyword);
+			}
+			if (filterSelect != null) {
+				model.addAttribute("filterSelect", filterSelect);
+			}
+			model.addAttribute("baseURL", "/video/videos");
+			model.addAttribute("suffixURL", returnKeywordAndFilterSelectSuffixURL(keyword, filterSelect));
+		}
+		
+		return "video/video_form";
+	}
+	
 	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
 		redirectAttributes.addFlashAttribute("modalTitle", modalTitle);
 		redirectAttributes.addFlashAttribute("modalBody", modalBody);
@@ -201,7 +232,7 @@ public class VideoController {
 	}
 
 	private String formatRedirectURL(String redirectURL, String keyword, String filterSelect) throws UnsupportedEncodingException {
-		return redirectURL +  URLEncoder.encode(returnKeywordAndFilterSelectSuffixURL(keyword, filterSelect), "utf-8");
+		return redirectURL +  returnKeywordAndFilterSelectSuffixURL(keyword, filterSelect);
 	}
 
 	private void updateTags(Video video, List<Tag> updatedTags) {
@@ -233,14 +264,14 @@ public class VideoController {
 		return tagList;
 	}
 	
-	private String returnKeywordAndFilterSelectSuffixURL(String keyword, String filterSelect) {
+	private String returnKeywordAndFilterSelectSuffixURL(String keyword, String filterSelect) throws UnsupportedEncodingException {
 		if (filterSelect != null) {
 			String filterSelectSuffix = filterSelect.replace(",", "&filterSelect=");
 			if (keyword == null) {
 				return "?filterSelect=" + filterSelectSuffix;
 			}
 			else {
-				return "?keyword=" + keyword + "&filterSelect=" + filterSelectSuffix;
+				return "?keyword=" + URLEncoder.encode(keyword, "utf-8") + "&filterSelect=" + filterSelectSuffix;
 			}
 		}
 		else {
@@ -248,7 +279,7 @@ public class VideoController {
 				return "";
 			}
 			else {
-				return "?keyword=" + keyword;
+				return "?keyword=" + URLEncoder.encode(keyword, "utf-8");
 			}
 		}
 	}

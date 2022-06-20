@@ -40,7 +40,7 @@
 						<div class="col-6 pb-1 row">
 							<div class="col-6">
 								<label for="date" class="form-label">Upload date</label>
-								<input type="date" class="form-control" id="uploaded-date" th:field="*{date}" name="date">
+								<input type="date" class="form-control" id="uploaded-date" name="date" th:value="${video.date != null ? video.dateString : ''}">
 							</div>
 							<div class="col-6 pb-1">
 								<label for="uploader" class="form-label">Uploader</label>
@@ -63,7 +63,7 @@
 								  <label for="withSubtitle" class="form-check-label">With subtitle</label>
 							</div>
 							<div class="form-check form-check-inline">
-								  <input class="form-check-input" type="radio" id="withoutSubtitle" th:checked="${video.id != null ? video.hasSubtitle : false}" value="false" name="hasSubtitle">
+								  <input class="form-check-input" type="radio" id="withoutSubtitle" th:checked="${video.id != null ? video.hasSubtitle == false : false}" value="false" name="hasSubtitle">
 								  <label for="withoutSubtitle" class="form-check-label">Without subtitle</label>
 							</div>
 						</div>
@@ -95,7 +95,7 @@
 							<div th:if="${video.url != null}" id="added-video-section">
 								<label class="form-label"><strong>Uploaded video</strong></label>
 								<div class="py-1" th:id="'file' + ${video.url}">
-									<a th:href="${video.url}" target="_blank" >
+									<a th:href="${video.videoPath}" target="_blank" >
 										<span class="fa-solid fa-image fa-2x pe-2"></span><span class="mb-2">[[${video.url}]]</span>
 									</a>
 									<span class="fa-solid fa-xmark remove-file px-2" th:id="'removeFile' + ${video.id}"></span>
@@ -104,7 +104,7 @@
 							<div th:if="${video.coverImage != null}" id="added-video-section">
 								<label class="form-label"><strong>Uploaded cover image</strong></label>
 								<div class="py-1" th:id="'file' + ${video.coverImage}">
-									<a th:href="${video.getCoverImage}" target="_blank" >
+									<a th:href="${video.coverImagePath}" target="_blank" >
 										<span class="fa-solid fa-image fa-2x pe-2"></span><span class="mb-2">[[${video.coverImage}]]</span>
 									</a>
 									<span class="fa-solid fa-xmark remove-file px-2" th:id="'removeFile' + ${video.id}"></span>

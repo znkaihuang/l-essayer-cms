@@ -45,7 +45,7 @@
 								<a th:href="${baseURL} + '/view/' + ${currentPage} + '/' + ${video.id} + '/' + ${iterStat.index} + ${suffixURL}"
 									class="fa-solid fa-file fa-1x mx-2 text-white link-detail"
 									data-bs-toggle="tooltip" title="View"></a>
-								<a href="#"
+								<a th:href="${baseURL} + '/edit/' + ${currentPage} + '/' + ${video.id} + ${suffixURL}"
 									class="fa-solid fa-pen-to-square fa-1x mx-2 text-white link-edit"
 									data-bs-toggle="tooltip" title="Edit"></a>
 								<a href="#"
