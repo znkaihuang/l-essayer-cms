@@ -220,6 +220,42 @@ public class VideoController {
 		return "video/video_form";
 	}
 	
+	@GetMapping("/video/videos/requestRemove/{pageNum}/{videoId}/{showId}")
+	public String requestRemoveUser(@PathVariable("pageNum") Integer pageNum,@PathVariable("videoId") Integer videoId, 
+		@PathVariable("showId") Integer showId, RedirectAttributes redirectAttributes, String keyword, String filterSelect)
+		throws UnsupportedEncodingException {
+		Optional<Video> videoOptional = videoService.findVideoById(videoId);
+		
+		if (videoOptional.isEmpty()) {
+			setModalMessage(redirectAttributes, "Error", "Cannot find Video with ID " + videoId);
+		}
+		else {
+			setModalMessage(redirectAttributes, "Warning", "Are you sure to delete the video with ID " + videoId + "?");
+			redirectAttributes.addFlashAttribute("videoId", videoId);
+			redirectAttributes.addFlashAttribute("showId", showId);
+			redirectAttributes.addFlashAttribute("yesButtonURL", 
+					formatRedirectURL("/video/videos/remove/" + pageNum + "/" + videoId + "/" + showId, keyword, filterSelect));
+		}
+		
+		return formatRedirectURL("redirect:/video/videos/" + pageNum, keyword, filterSelect);
+	}
+	
+	@GetMapping("/video/videos/remove/{pageNum}/{videoId}/{showId}")
+	public String removeUser(@PathVariable("pageNum") Integer pageNum, @PathVariable("videoId") Integer videoId,
+		@PathVariable("showId") Integer showId, RedirectAttributes redirectAttributes, String keyword, String filterSelect)
+		throws UnsupportedEncodingException {
+		
+		videoService.deleteVideoById(videoId);
+		FileUploadUtil.remove("videos/" + videoId);
+		
+		if (showId == 0 && pageNum > 0) {
+			pageNum--;
+		}
+		setModalMessage(redirectAttributes, "Success", "Successfully delete video with ID " + videoId);
+		
+		return formatRedirectURL("redirect:/video/videos/" + pageNum, keyword, filterSelect);
+	}
+	
 	private void setModalMessage(RedirectAttributes redirectAttributes, String modalTitle, String modalBody) {
 		redirectAttributes.addFlashAttribute("modalTitle", modalTitle);
 		redirectAttributes.addFlashAttribute("modalBody", modalBody);
