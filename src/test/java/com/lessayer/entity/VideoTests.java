@@ -35,7 +35,7 @@ public class VideoTests {
 		System.out.println(video.getTagsString());
 		System.out.println(video.getLecturer().getName());
 		System.out.println(video.getCoverImagePath());
-		System.out.println(video.getURLPath());
+		System.out.println(video.getVideoPath());
 	}
 	
 	@Test
