@@ -134,6 +134,15 @@ public class VideoService {
 		return videoRepository.save(video);
 	}
 	
+	public void deleteVideoById(Integer videoId) {
+		Optional<Video> videoOptional = videoRepository.findById(videoId);
+		
+		if (videoOptional.isPresent()) {
+			videoRepository.delete(videoOptional.get());
+		}
+		
+	}
+	
 	public Optional<Lecturer> findLecturerByName(Lecturer lecturer) {
 		return lecturerRepository.findByName(lecturer.getName());
 	}
