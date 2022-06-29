@@ -20,6 +20,8 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.lessayer.Constants;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -111,7 +113,7 @@ public class User {
 			return "/images/user-solid.svg";
 		}
 		else {
-			return "/user-photos/" + this.id + "/" + this.photos;
+			return Constants.S3_BASE_URI + "/user-photos/" + this.id + "/" + this.photos;
 		}
 	}
 	

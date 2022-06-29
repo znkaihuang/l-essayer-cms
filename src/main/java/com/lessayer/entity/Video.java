@@ -21,6 +21,8 @@ import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.lessayer.Constants;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -168,7 +170,7 @@ public class Video {
 	@Transient
 	public String getCoverImagePath() {
 		if (this.coverImage != null && !this.coverImage.equals("")) {
-			return "/videos/" + id + "/image/" + coverImage;
+			return Constants.S3_BASE_URI + "/videos/" + id + "/image/" + coverImage;
 		}
 		else {
 			return "/images/video-play.png";
@@ -177,6 +179,6 @@ public class Video {
 	
 	@Transient
 	public String getVideoPath() {
-		return "/videos/" + id + "/video/" + url;
+		return Constants.S3_BASE_URI + "/videos/" + id + "/video/" + url;
 	}
 }

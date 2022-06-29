@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.lessayer.Constants;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -68,7 +70,7 @@ public class ArticleImage {
 	
 	@Transient
 	public String getImageFilePath() {
-		return "/article-image-files/" + article.getId() + "/" + fileName;
+		return Constants.S3_BASE_URI + "/article-image-files/" + article.getId() + "/" + fileName;
 	}
 	
 }

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.lessayer.Constants;
 import com.lessayer.converter.ContentConverter;
 import com.lessayer.converter.ContentConverter.ConvertType;
 import com.lessayer.entity.Article;
@@ -22,7 +23,8 @@ import com.lessayer.repository.ArticleRepository;
 public class ArticleService {
 	
 	public static Integer ARTICLES_PER_PAGE = 6;
-	private final String imageFilePath = "http://localhost:8080/article-image-files/";
+//	private final String imageFilePath = "http://localhost:8080/article-image-files/";
+	private final String imageFilePath = Constants.S3_BASE_URI + "/article-image-files/";
 	
 	@Autowired
 	private ArticleRepository articleRepository;
