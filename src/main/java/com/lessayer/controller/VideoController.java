@@ -246,6 +246,8 @@ public class VideoController {
 		throws UnsupportedEncodingException {
 		
 		videoService.deleteVideoById(videoId);
+		FileUploadUtil.remove("videos/" + videoId + "/image/");
+		FileUploadUtil.remove("videos/" + videoId + "/video/");
 		FileUploadUtil.remove("videos/" + videoId);
 		
 		if (showId == 0 && pageNum > 0) {
