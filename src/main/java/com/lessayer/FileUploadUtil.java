@@ -84,6 +84,7 @@ public class FileUploadUtil {
 		}
 		catch (Exception e) {
 			logger.error("Could not remove directory: " + dir);
+			logger.error(e.toString());
 		}
 	}
 	
