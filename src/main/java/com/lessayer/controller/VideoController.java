@@ -25,7 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lessayer.AbstractFileExporter;
-import com.lessayer.FileUploadUtil;
+import com.lessayer.AmazonS3Util;
+//import com.lessayer.FileUploadUtil;
 import com.lessayer.entity.Language;
 import com.lessayer.entity.Lecturer;
 import com.lessayer.entity.Tag;
@@ -117,12 +118,18 @@ public class VideoController {
 	}
 	
 	@PostMapping("/video/videos/save/{pageNum}")
-	public String saveVideo(@PathVariable("pageNum") Integer pageNum, Video video, Lecturer lecturer, 
-		RedirectAttributes redirectAttributes, String keyword, String filterSelect, String tag, String date,
-		MultipartFile uploadedVideo, MultipartFile uploadedImage) throws IOException, ParseException {
+	public String saveVideo(@PathVariable("pageNum") Integer pageNum, Video video, Lecturer lecturer,
+		Integer length, RedirectAttributes redirectAttributes, String keyword, String filterSelect,
+		String tag, String date, MultipartFile uploadedVideo, MultipartFile uploadedImage) 
+		throws IOException, ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		video.setDate(dateFormat.parse(date));
+		
+		if (length != null) {
+			video.setVideoLength(length);
+		}
+		
 		updateTags(video, parseTagString(tag));
 		
 		Optional<Lecturer> lecturerOptional = videoService.findLecturerByName(lecturer);
@@ -246,9 +253,12 @@ public class VideoController {
 		throws UnsupportedEncodingException {
 		
 		videoService.deleteVideoById(videoId);
-		FileUploadUtil.remove("videos/" + videoId + "/image/");
-		FileUploadUtil.remove("videos/" + videoId + "/video/");
-		FileUploadUtil.remove("videos/" + videoId);
+		AmazonS3Util.removeFolder("videos/" + videoId + "/image/");
+		AmazonS3Util.removeFolder("videos/" + videoId + "/video/");
+		AmazonS3Util.removeFolder("videos/" + videoId);
+//		FileUploadUtil.remove("videos/" + videoId + "/image/");
+//		FileUploadUtil.remove("videos/" + videoId + "/video/");
+//		FileUploadUtil.remove("videos/" + videoId);
 		
 		if (showId == 0 && pageNum > 0) {
 			pageNum--;
@@ -265,8 +275,10 @@ public class VideoController {
 	
 	private void uploadedFile(Integer videoId, MultipartFile file, String type) throws IOException {
 		String uploadDir = "videos/" + videoId + "/" + type;
-		FileUploadUtil.remove(uploadDir);
-		FileUploadUtil.saveFile(uploadDir, file.getOriginalFilename(), file, false);
+		AmazonS3Util.removeFolder(uploadDir);
+		AmazonS3Util.uploadFile(uploadDir, file.getOriginalFilename(), file.getInputStream());
+//		FileUploadUtil.remove(uploadDir);
+//		FileUploadUtil.saveFile(uploadDir, file.getOriginalFilename(), file, false);
 	}
 
 	private String formatRedirectURL(String redirectURL, String keyword, String filterSelect) throws UnsupportedEncodingException {
