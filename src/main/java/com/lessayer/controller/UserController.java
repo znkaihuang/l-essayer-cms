@@ -21,7 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lessayer.AbstractFileExporter;
-import com.lessayer.FileUploadUtil;
+import com.lessayer.AmazonS3Util;
+//import com.lessayer.FileUploadUtil;
 import com.lessayer.entity.Role;
 import com.lessayer.entity.User;
 import com.lessayer.exporter.UserCsvExporterDelegate;
@@ -197,7 +198,8 @@ public class UserController {
 			RedirectAttributes redirectAttributes, String keyword) throws UnsupportedEncodingException {
 		
 		userService.deleteUserById(userId);
-		FileUploadUtil.remove("user-photos/" + userId);
+		AmazonS3Util.removeFolder("user-photos/" + userId);
+//		FileUploadUtil.remove("user-photos/" + userId);
 		
 		if (showId == 0 && pageNum > 0) {
 			pageNum--;
@@ -247,8 +249,10 @@ public class UserController {
 	private void uploadPhoto(Integer userId, String fileName, MultipartFile imageFile)
 		throws IOException {
 		String uploadDir = "user-photos/" + userId;
-		FileUploadUtil.remove(uploadDir);
-		FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
+		AmazonS3Util.removeFolder(uploadDir);
+		AmazonS3Util.uploadFile(uploadDir, fileName, imageFile.getInputStream());
+//		FileUploadUtil.remove(uploadDir);
+//		FileUploadUtil.saveFile(uploadDir, fileName, imageFile);
 	}
 	
 	private void setUserEnableStatus(String enabled, User user) {

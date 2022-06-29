@@ -25,7 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.lessayer.AbstractFileExporter;
-import com.lessayer.FileUploadUtil;
+import com.lessayer.AmazonS3Util;
+//import com.lessayer.FileUploadUtil;
 import com.lessayer.entity.Article;
 import com.lessayer.entity.ArticleImage;
 import com.lessayer.entity.Tag;
@@ -197,7 +198,8 @@ public class ArticleController {
 		@PathVariable("showId") Integer showId, RedirectAttributes redirectAttributes, String keyword) throws UnsupportedEncodingException {
 		
 		articleService.deleteArticleById(articleId);
-		FileUploadUtil.remove("article-image-files/" + articleId);
+		AmazonS3Util.removeFolder("article-image-files/" + articleId);
+//		FileUploadUtil.remove("article-image-files/" + articleId);
 		
 		if (showId == 0 && pageNum > 0) {
 			pageNum--;
@@ -266,10 +268,12 @@ public class ArticleController {
 	private void uploadImageFiles(Integer articleId, MultipartFile[] imageFiles)
 			throws IOException {
 		String uploadDir = "article-image-files/" + articleId;
-		FileUploadUtil.remove(uploadDir);
+		AmazonS3Util.removeFolder(uploadDir);
+//		FileUploadUtil.remove(uploadDir);
 		for (int count = 0; count < imageFiles.length; count++) {
 			if (!imageFiles[count].isEmpty()) {
-				FileUploadUtil.saveFile(uploadDir, imageFiles[count].getOriginalFilename(), imageFiles[count]);
+				AmazonS3Util.uploadFile(uploadDir, imageFiles[count].getOriginalFilename(), imageFiles[count].getInputStream());
+//				FileUploadUtil.saveFile(uploadDir, imageFiles[count].getOriginalFilename(), imageFiles[count]);
 			}
 		}
 	}
