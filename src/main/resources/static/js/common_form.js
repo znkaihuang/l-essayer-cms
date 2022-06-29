@@ -191,6 +191,7 @@ function validateVideoFormInputs () {
 		let uploadedVideo = document.getElementById('uploadedVideo');
 		let url = document.getElementById('url');
 		let videoLength = document.getElementById('length');
+		let uploadedVideoLength = document.getElementById('uploadedVideoLength');
 		
 		if (title.value === '' || title.value == null) {
 			warningMessage += '\n  - title';
@@ -225,7 +226,8 @@ function validateVideoFormInputs () {
 			warningMessage += '\n  - uploaded video';
 			blankFieldCount++;
 		}
-		if (videoLength.value === '' || videoLength.value == null) {
+		if ((videoLength.value === '' || videoLength.value == null) 
+			&& (uploadedVideoLength.value === '' || uploadedVideoLength.value === null)) {
 			warningMessage += '\n  - video length';
 			blankFieldCount++;
 		}

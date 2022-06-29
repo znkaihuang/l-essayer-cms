@@ -82,7 +82,8 @@
 							</div>
 							<div class="col-2 my-2">
 								<label for="length" class="form-label">Video length</label>
-								<input type="number" class="form-control" id="length" th:field="*{videoLength}">
+								<input type="hidden" id="uploadedVideoLength" th:field="*{videoLength}">
+								<input type="number" class="form-control" id="length" name="length" value="">
 							</div>
 							<div class="col-12 my-2">
 								<label for="description" class="form-label">(Note: The unit of video length is second.)</label>
@@ -98,7 +99,7 @@
 									<a th:href="${video.videoPath}" target="_blank" >
 										<span class="fa-solid fa-image fa-2x pe-2"></span><span class="mb-2">[[${video.url}]]</span>
 									</a>
-									<span class="fa-solid fa-xmark remove-file px-2" th:id="'removeFile' + ${video.id}"></span>
+									<p>Video Length: [[${video.videoLength}]] s</p>
 								</div>
 							</div>
 							<div th:if="${video.coverImage != null}" id="added-video-section">
@@ -107,7 +108,6 @@
 									<a th:href="${video.coverImagePath}" target="_blank" >
 										<span class="fa-solid fa-image fa-2x pe-2"></span><span class="mb-2">[[${video.coverImage}]]</span>
 									</a>
-									<span class="fa-solid fa-xmark remove-file px-2" th:id="'removeFile' + ${video.id}"></span>
 								</div>
 							</div>
 						</div>
@@ -174,7 +174,7 @@
 		};
 		createHiddenInputEleForExistedTags(addedTagsDiv);
 		validateVideoFormInputs();
-		createClickRemoveFileFunction();
+		// createClickRemoveFileFunction();
     </script>
 	
 </body>
