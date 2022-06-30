@@ -66,7 +66,7 @@ public class UserController {
 		model.addAttribute("suffixURL", returnKeywordSuffixURL(keyword));
 		model.addAttribute("userType", userType);
 		
-		return "/user/users";
+		return "user/users";
 	}
 
 	@GetMapping("/user/{userType}/create")
@@ -92,7 +92,7 @@ public class UserController {
 		model.addAttribute("returnPage", 0);
 		model.addAttribute("baseURL", "/user/" + userType);
 		model.addAttribute("userType", userType);
-		return "/user/user_form";
+		return "user/user_form";
 	}
 	
 	@PostMapping("/user/{userType}/save/{pageNum}")
@@ -151,7 +151,7 @@ public class UserController {
 			model.addAttribute("baseURL", "/user/" + userType);
 			model.addAttribute("userType", userType);
 			
-			return "/user/user_form";
+			return "user/user_form";
 		}
 	}
 	

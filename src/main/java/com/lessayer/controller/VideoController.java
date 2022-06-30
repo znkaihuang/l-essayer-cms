@@ -87,7 +87,7 @@ public class VideoController {
 		model.addAttribute("filter", filterHelper.getFilter());
 		model.addAttribute("suffixURL", returnKeywordAndFilterSelectSuffixURL(keyword, filterSelect));
 		
-		return "/video/videos";
+		return "video/videos";
 	}
 	
 	@GetMapping("/video/videos/create")
@@ -114,7 +114,7 @@ public class VideoController {
 		model.addAttribute("suffixURL", returnKeywordAndFilterSelectSuffixURL(null, null));
 		model.addAttribute("supportedLanguages", Language.values());
 		
-		return "/video/video_form";
+		return "video/video_form";
 	}
 	
 	@PostMapping("/video/videos/save/{pageNum}")

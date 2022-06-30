@@ -69,7 +69,7 @@ public class ArticleController {
 		model.addAttribute("baseURL", "/article/articles");
 		model.addAttribute("suffixURL", returnKeywordSuffixURL(keyword));
 		
-		return "/article/articles";
+		return "article/articles";
 	}
 	
 	@GetMapping("/article/articles/create")
@@ -92,7 +92,7 @@ public class ArticleController {
 		model.addAttribute("pageTitle", pageTitle);
 		model.addAttribute("returnPage", 0);
 		model.addAttribute("baseURL", "/article/articles");
-		return "/article/article_form";
+		return "article/article_form";
 	}
 	
 	@PostMapping("/article/articles/save/{pageNum}")
@@ -170,7 +170,7 @@ public class ArticleController {
 			}
 			model.addAttribute("baseURL", "/article/articles");
 			
-			return "/article/article_form";
+			return "article/article_form";
 		}
 	}
 	
