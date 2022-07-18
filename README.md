@@ -32,4 +32,4 @@ Rather than managing merely articles,  the system allows users submit their shor
 
 ## License
 
-## Contace
+## Contact
